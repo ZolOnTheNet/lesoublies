@@ -1,0 +1,34 @@
+{
+  "LESOUBLIES.AbilityStr": "Force",
+  "LESOUBLIES.AbilityCon": "Constitution",
+  "LESOUBLIES.AbilityDex": "Agilité",
+  "LESOUBLIES.AbilityInt": "Intelligence",
+  "LESOUBLIES.AbilityWis": "Volonté",
+  "LESOUBLIES.AbilityCha": "Présence",
+
+  "LESOUBLIES.AbilityStrAbbr": "fr",
+  "LESOUBLIES.AbilityConAbbr": "con",
+  "LESOUBLIES.AbilityDexAbbr": "ag",
+  "LESOUBLIES.AbilityIntAbbr": "int",
+  "LESOUBLIES.AbilityWisAbbr": "vol",
+  "LESOUBLIES.AbilityChaAbbr": "Pre",
+
+  "LESOUBLIES.EffectCreate": "Crée un Effect",
+  "LESOUBLIES.EffectToggle": "(Dés)Active l'Effect",
+  "LESOUBLIES.EffectEdit": "Edite l'Effect",
+  "LESOUBLIES.EffectDelete": "Suppr l'Effect",
+
+  "LESOUBLIES.Add": "Ajouter",
+  
+  "LESOUBLIES.profils": {
+    "artiste": "Artiste",
+    "athlete":"Athlète",
+    "chasseur": "Chasseur",
+    "faiseur": "Faiseur",
+    "forceNature" :"Force de la Nature",
+    "guerrier" : "Guerrier",
+    "mystique" : "Mystique", 
+    "ombre" : "Ombre", 
+    "savant" : "Savant"
+  }
+}

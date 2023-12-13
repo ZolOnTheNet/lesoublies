@@ -1,0 +1,192 @@
+{
+  "Actor": {
+    "types": ["character", "npc"],
+    "templates": {
+      "base": {
+        "taille": {
+          "label":"LESOUBILES.Taille",
+          "abrv" : "LESOUBILES.ABRV.Taille",
+          "value" : 1,
+          "min": 0,
+          "max": 10          
+        },
+        "PdV": {
+          "label":"LESOUBILES.PdV",
+          "abrv" : "LESOUBILES.ABRV.PdV",
+          "value": 10,
+          "min": 0,
+          "max": 10,
+          "formula":""
+        },
+        "biography": "",
+        "Songe" : {
+          "label":"LESOUBILES.Songe",
+          "abrv" : "LESOUBILES.ABRV.Songe",
+          "EstSensible": false,
+          "Points" : {
+            "label":"LESOUBILES.PdS",
+            "abrv" : "LESOUBILES.ABRV.PdS",
+            "value": 0,
+            "min": 0,
+            "max": 0
+          },
+          "value":0,
+          "dette": {
+            "label":"LESOUBILES.PdS",
+            "abrv" : "LESOUBILES.ABRV.PdS",
+            "value": 0
+          }
+        },
+        "Cauchemard" : {
+          "label":"LESOUBILES.Cauchemard",
+          "abrv" : "LESOUBILES.ABRV.Cauchemard",
+          "EstSensible": false,
+          "Points" : {
+            "label":"LESOUBILES.PdC",
+            "abrv" : "LESOUBILES.ABRV.PdC",
+            "value": 0,
+            "min": 0,
+            "max": 0
+          },
+          "value":0,
+          "dette": {
+            "label":"LESOUBILES.DdC",
+            "abrv" : "LESOUBILES.ABRV.DdC",
+            "value": 0
+          }
+        },
+        "ecorse" : {
+          "label":"LESOUBILES.Ecorce",
+          "abrv" : "LESOUBILES.ABRV.Ecorse",
+          "value" : 0
+        },
+        "sensValeur": {
+          "label":"LESOUBILES.SensValeur",
+          "abrv" : "LESOUBILES.ABRV.SensValeur",
+          "value" : 0.5
+        },
+        "jsonExt":""
+      }
+    },
+    "character": {
+      "templates": ["base"],
+      "attributes": {
+        "XP": {
+          "value": 0,
+          "total": 0,
+          "consom" : 0
+        }
+      },
+      "compagnie" : {
+        "id" : "",
+        "nom" : ""
+      }
+    },
+    "npc": {
+      "templates": ["base"],
+      "cr": 0
+    }
+  },
+  "Item": {
+    "types": ["race","tribut","profil","arme","armure","cmp", "equipement", "sort", "lien", "compagnie"],
+    "templates": {
+      "base": {
+        "description": "",
+        "jsonBonus":""
+      }
+    },
+    "race": {
+      "templates": ["base"],
+      "motClefs" : "",
+      "esperance" : 60,
+      "taille" : 1,
+      "profils": {
+        "artiste":0,
+        "athlete":0,
+        "chasseur": 0,
+        "faiseur": 0,
+        "forceNature" :0,
+        "guerrier" : 0,
+        "mystique" : 0, 
+        "ombre" : 0, 
+        "savant" : 0        
+      },
+      "jsonProfils" : "",
+      "jsonTributs" : "",
+      "tribut" : []
+    },
+    "tribut": {
+      "templates": ["base"],
+      "motClefs" : "",
+      "race1" : "lutin",
+      "langue" : "vieux lutin",
+      "Philosophie" : "gardiens de la mémoire d’Edenia",
+      "fierté": "la pureté de la race lutine",
+      "dameNature" : "faible. Peu de fêtes pratiquées en son honneur, l’individu et la tribu sont beaucoup plus mis en avant que leur créatrice.",
+      "edenia" : "moyen. Les Krograines recherchent et conservent tous les textes et reliques faisant l’éloge de leur tribu datant d’avant l’Exil, et ils détruisent ou modifient systématiquement les autres !",
+      "territoire" : "le cloître bénédictin et ses environs.",
+      "jsonIdCmps" : "",
+      "special" : ""
+    },
+    "profil": {
+      "templates": ["base"],
+      "idcmp" : {
+        "cmp1" : "",
+        "cmp2" : "",
+        "cmp3" : ""
+      },
+      "jsonIdCmpBonus" : ""
+    },
+    "equipement": {
+      "templates": ["base"],
+      "quantity": 1,
+      "weight": 0,
+      "taille" : 1,
+      "ecorse": 0
+    },
+    "arme": {
+      "taille":1,
+      "ecorse" : 20,
+      "portee" : "",
+      "cmp" : "",
+      "cmpId" : "",
+      "bonus": {
+        "score" : 0,
+        "degats": ""
+      },
+      "jsonPrime" : "",
+      "jsonPenalite" : ""
+    },
+    "armure": {
+      "taille":1,
+      "protection" : 1,
+      "malus":1,
+      "jsonPrime" : "",
+      "jsonPenalite" : ""
+    },
+    "cmp": {
+      "aDomaines" : false,
+      "domaines" : "",
+      "profil" : "artiste",
+      "score" : 0,
+      "estFermee" : false
+    },
+    "sort": {
+      "templates": ["base"],
+      "cout": 1,
+      "CodeSouC": 0,
+      "effet":""
+    },
+    "compagnie" : {
+      "templates": ["base"],
+      "idCapitaine" : "",
+      "pouvoir" : "",
+      "idOmbre" : ""
+    },
+    "lien": {
+      "templates": ["base"],
+      "idActeur": "",
+      "descriptionRapide" : ""
+    }
+  }
+}

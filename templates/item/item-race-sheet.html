@@ -1,0 +1,43 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+    </div>
+  </header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="description">Description</a>
+    <a class="item" data-tab="attributes">Attributes</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+
+    {{!-- Description Tab --}}
+    <div class="tab" data-group="primary" data-tab="description">
+      <label class="resource-label">Mots clefs</label>
+      <input type="text" name="system.motClefs" value="{{system.motClefs}}" data-dtype="String" />
+      <label class="resource-label">Espérance de vie</label>
+      <input type="text" name="system.esperance" value="{{system.esperance}}" data-dtype="Number"/>
+      <label class="resource-label">Taille</label>
+      <input type="text" name="system.taille" value="{{system.taille}}" data-dtype="Number"/>
+      {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+    </div>
+
+    {{!-- Attributes Tab --}}
+    <div class="tab attributes" data-group="primary" data-tab="attributes">
+      {{!-- As you add new fields, add them in here! --}}
+      <ol class="item-list">
+      {{#each system.profils as |itemAttr key|}}
+        <li class="item flexrow" data-item-id="{{item._id}}">
+          <label class="resource-label">{{key}} :</label>
+          <input type="text" name="system.profils.{{key}}" value="{{itemAttr}}" data-dtype="String" />
+        </li>
+      {{/each}}
+      </ol>
+    </div>
+  </section>
+
+</form>

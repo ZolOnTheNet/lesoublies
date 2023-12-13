@@ -1,0 +1,22 @@
+{
+  "LESOUBLIES.AbilityStr": "Strength",
+  "LESOUBLIES.AbilityCon": "Constitution",
+  "LESOUBLIES.AbilityDex": "Dexterity",
+  "LESOUBLIES.AbilityInt": "Intelligence",
+  "LESOUBLIES.AbilityWis": "Wisdom",
+  "LESOUBLIES.AbilityCha": "Charisma",
+
+  "LESOUBLIES.AbilityStrAbbr": "str",
+  "LESOUBLIES.AbilityConAbbr": "con",
+  "LESOUBLIES.AbilityDexAbbr": "dex",
+  "LESOUBLIES.AbilityIntAbbr": "int",
+  "LESOUBLIES.AbilityWisAbbr": "wis",
+  "LESOUBLIES.AbilityChaAbbr": "cha",
+
+  "LESOUBLIES.EffectCreate": "Create Effect",
+  "LESOUBLIES.EffectToggle": "Toggle Effect",
+  "LESOUBLIES.EffectEdit": "Edit Effect",
+  "LESOUBLIES.EffectDelete": "Delete Effect",
+
+  "LESOUBLIES.Add": "Add"
+}
