@@ -1,0 +1,28 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"></h1>
+    </div>
+  </header>
+
+  <section class="sheet-body">
+    <hr>
+    <label class="resource-label">liste des compétences associées<a class="cmd" data-action="profil.add.cmp"> <i class="fas fa-plus"></i></a></label>
+    <br>
+    <div class="droppable">
+    {{#each system.arrayCmp as |item id|}}
+      <label class="resource-label">Compétence {{id}} <a class="cmd" data-action="profil.del.cmp.{{id}}"><i class="fas fa-trash"></i></a> :
+        <select name="system.arrayCmp">
+          {{selectOptions ../LstTotCmps selected=item}}
+        </select>
+      </label>
+      <hr>
+    {{/each}}
+    {{!-- To render inline rolls in a TinyMCE editor, you need to pass the parent actor's (if any) roll data to the rollData prop. --}}
+    <label class="resource-label">Description :</label>
+    <hr>
+    </div>
+    {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+  </section>
+</form>

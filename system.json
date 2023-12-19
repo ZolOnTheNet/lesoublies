@@ -20,8 +20,8 @@
   "media": [
     {
       "type": "setup",
-      "url": "systems/lesoublies/assets/lesoubiles.png",
-      "thumbnail": "systems/lesoublies/assets/lesoubiles.png"
+      "url": "systems/lesoublies/assets/lesoublies.png",
+      "thumbnail": "systems/lesoublies/assets/lesoublies.png"
     }
   ],
   "version": "0.0.1",
@@ -49,7 +49,7 @@
   "socket": false,
   "manifest": "Replace this with a link to the /latest release system.json so people can receive updates after they've installed the system",
   "download": "This must link to a .zip file of the current version",
-  "background": "systems/lesoublies/assets/anvil-impact.png",
+  "background": "systems/lesoublies/assets/lesoublies.png",
   "gridDistance": 5,
   "gridUnits": "ft",
   "primaryTokenAttribute": "health",

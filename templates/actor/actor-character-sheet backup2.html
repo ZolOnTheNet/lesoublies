@@ -21,15 +21,11 @@
           <hr>
           <div class="resource-content flexrow flex-center flex-between">
             <label for="system.PdV.value" class="resource-label">PdV</label>
-            <input type="text" name="system.PdV.value"  size="4em" value="{{system.PdV.value}}" data-dtype="Number"/>
+            <input type="text" name="system.PdV.value" value="{{system.PdV.value}}" data-dtype="Number"/>
             <span> / </span>
-            <input type="text" name="system.PdV.max"  size="4em" value="{{system.PdV.max}}" data-dtype="Number"/>
+            <input type="text" name="system.PdV.max" value="{{system.PdV.max}}" data-dtype="Number"/>
           </div>
-          <hr>
-          <div>
-            <label for="system.ecorse" class="resource-label">Ecorces</label>
-            <input type="text"  size="6em" name="system.ecorse.value" value="{{system.ecorse.value}}" data-dtype="Number"/>
-          </div>
+
         </div>
 
         <div class="resource flex-group-center">
@@ -63,10 +59,8 @@
             <span> / </span>
             <input type="text" name="system.Cauchemard.Points.max" value="{{system.Cauchemard.Points.max}}" data-dtype="Number"/>
           </div>
-          <div>
-            <label for="system.Cauchemard.dette.value" class="resource-label">Dette</label>
-            <input type="text" name="system.Cauchemard.dette.value" value="{{system.Cauchemard.dette.value}}" data-dtype="Number"/>
-          </div>
+          <label for="system.Cauchemard.dette.value" class="resource-label">Dette</label>
+          <input type="text" name="system.Cauchemard.dette.value" value="{{system.Cauchemard.dette.value}}" data-dtype="Number"/>
         </div>
 
       </div>
@@ -76,11 +70,11 @@
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
     {{!-- Default tab is specified in actor-sheet.mjs --}}
-    <a class="item" data-tab="features">Compétences</a>
+    <a class="item" data-tab="features">Features</a>
     <a class="item" data-tab="description">Description</a>
-    <a class="item" data-tab="items">Equipements</a>
-    <a class="item" data-tab="spells">Sorts</a>
-    <a class="item" data-tab="effects">Effets</a>
+    <a class="item" data-tab="items">Items</a>
+    <a class="item" data-tab="spells">Spells</a>
+    <a class="item" data-tab="effects">Effects</a>
   </nav>
 
   {{!-- Sheet Body --}}
@@ -90,18 +84,20 @@
     <div class="tab features" data-group="primary" data-tab="features">
       <section class="grid grid-3col">
         <aside class="sidebar">
+
           {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
           use both the "grid" and "grid-Ncol" class where "N" can be any number
           from 1 to 12 and will create that number of columns.  --}}
           {{#if aRace }}
             <div class="abilities flexcol">
-                {{#each aAfficher1 as |cmp key|}}
+                {{#each aAfficher as |cmp key|}}
                   {{#if cmp.isProfil}}
                   <div class="ability flexrow flex-group-center rollable" data-roll="roll.profil.{{cmp.name}}.{{cmp.value}}">
-                    <h3>
-                      <label class="items-list flexlarge align-left">{{cmp.name}}</label>
-                      <span>({{cmp.value}})</span>
-                    </h3>
+                    <h4>
+                      <label class="resource-label flexlarge align-left">{{cmp.name}}</label>
+                      <span>{{cmp.value}}</span>
+                      <br><hr>
+                    </h4>
                   </div>
                   {{else}}
                   <div class="ability flexrow flex-group-center rollable" data-roll="roll.cmp.{{cmp.name}}.{{cmp.totValue}}">
@@ -109,69 +105,22 @@
                     <span>{{cmp.totValue}}</span>
                   </div>
                   {{/if}}
-                  <br>
-                {{/each}}
-            </div>
-          {{else}}
-            <h1>&gt;&gt;&gt;&gt;&gt;&gt;</h1>
-          {{/if}}
-        </aside>
-
-        {{!-- For the main features list, span the right two columns --}}
-        {{!-- <section class="main grid-span-2"> --}}
-          <section class="main">
-          {{!-- This is a Handlebars partial. They're stored in the `/parts` folder next to this sheet, and defined in module/helpers/templates.mjs --}}
-          {{#if aRace }}
-            <div class="abilities flexcol">
-                {{#each aAfficher2 as |cmp key|}}
-                  {{#if cmp.isProfil}}
-                  <div class="ability flexrow flex-group-center rollable" data-roll="roll.profil.{{cmp.name}}.{{cmp.value}}">
-                    <h3>
-                      <label class="items-list flexlarge align-left">{{cmp.name}}</label>
-                      <span>({{cmp.value}})</span>
-                    </h3>
-                  </div>
-                  {{else}}
-                  <div class="item-list flexrow flex-group-center rollable" data-roll="roll.cmp.{{cmp.name}}.{{cmp.totValue}}">
-                    <label  class="resource-label flexlarge align-left">{{cmp.name}} ({{cmp.value}})</label>
-                    <span>{{cmp.totValue}}</span>
-                  </div>
-                  {{/if}}
-                  <br>
                 {{/each}}
             </div>
           {{else}}
             <h1>Choisissez une Race</h1>
           {{/if}}
-      </section>
-      <aside class="sidebar">
-        {{!-- This is a Handlebars partial. They're stored in the `/parts` folder next to this sheet, and defined in module/helpers/templates.mjs --}}
-        {{#if aRace }}
-        <div class="abilities flexcol">
-            {{#each aAfficher3 as |cmp key|}}
-              {{#if cmp.isProfil}}
-              <div class="ability flexrow flex-group-center rollable" data-roll="roll.profil.{{cmp.name}}.{{cmp.value}}">
-                <h3>
-                  <label class="items-list flexlarge align-left">{{cmp.name}}</label>
-                  <span>({{cmp.value}})</span>
-                </h3>
-              </div>
-              {{else}}
-              <div class="ability flexrow flex-group-center rollable" data-roll="roll.cmp.{{cmp.name}}.{{cmp.totValue}}">
-                <label  class="resource-label flexlarge align-left">{{cmp.name}} ({{cmp.value}})</label>
-                <span>{{cmp.totValue}}</span>
-              </div>
-              {{/if}}
-              <br>
-            {{/each}}
-        </div>
-      {{else}}
-        <h1>&lt;&lt;&lt;</h1>
-      {{/if}}
+        </aside>
 
-      {{!--  {{> "systems/lesoublies/templates/actor/parts/actor-features.html"}} --}}
-      </aside>
-    </section>
+        {{!-- For the main features list, span the right two columns --}}
+        {{!-- <section class="main grid-span-2"> --}}
+          <section class="main"></section>
+          {{!-- This is a Handlebars partial. They're stored in the `/parts` folder next to this sheet, and defined in module/helpers/templates.mjs --}}
+          {{> "systems/lesoublies/templates/actor/parts/actor-features.html"}}
+        </section>
+
+      </section>
+    </div>
 
     {{!-- Biography Tab --}}
     <div class="tab biography" data-group="primary" data-tab="description">

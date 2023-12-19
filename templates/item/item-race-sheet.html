@@ -17,12 +17,14 @@
 
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
-      <label class="resource-label">Mots clefs</label>
-      <input type="text" name="system.motClefs" value="{{system.motClefs}}" data-dtype="String" />
-      <label class="resource-label">Espérance de vie</label>
-      <input type="text" name="system.esperance" value="{{system.esperance}}" data-dtype="Number"/>
       <label class="resource-label">Taille</label>
       <input type="text" name="system.taille" value="{{system.taille}}" data-dtype="Number"/>
+      <label class="resource-label">Espérance de vie</label>
+      <input type="text" name="system.esperance" value="{{system.esperance}}" data-dtype="Number"/>
+      <label class="resource-label">Mots clefs</label>
+      <textarea name="system.motClefs" rows="3">{{{system.motClefs}}}</textarea>
+      <label class="resource-label">Description</label>
+      <hr>
       {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
     </div>
 

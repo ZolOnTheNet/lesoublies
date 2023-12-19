@@ -7,6 +7,7 @@ import { LesOubliesItemSheet } from "./sheets/item-sheet.mjs";
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { LESOUBLIES } from "./helpers/config.mjs";
+import { AffecterProfils } from "./utils.mjs";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -44,6 +45,10 @@ Hooks.once('init', async function() {
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("lesoublies", LesOubliesItemSheet, { makeDefault: true });
 
+  // game.api
+  game.api = {
+    "affecertProfils" : AffecterProfils
+  }
   // Preload Handlebars templates.
   return preloadHandlebarsTemplates();
 });

@@ -65,4 +65,9 @@ export class LesOubliesItem extends Item {
       return roll;
     }
   }
+  _onUpdateDocuments(documents, result, options, userId){
+    console.log("info Maj", documents, result, options, userId)
+    super._onUpdateDocuments(documents,result,options,userId)
+    console.log("info Maj après SuperMaj", documents, result, options, userId)
+  }
 }

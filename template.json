@@ -65,22 +65,27 @@
           "abrv" : "LESOUBILES.ABRV.SensValeur",
           "value" : 0.5
         },
-        "jsonExt":""
+        "idRace" : ""
       }
     },
     "character": {
       "templates": ["base"],
-      "attributes": {
-        "XP": {
-          "value": 0,
-          "total": 0,
-          "consom" : 0
-        }
+      "XP": {
+        "value": 0,
+        "total": 0,
+        "consom" : 0
       },
-      "compagnie" : {
-        "id" : "",
-        "nom" : ""
-      }
+      "idMetier" : "" 
+    },
+    "compagnie" : {
+      "id" : "",
+      "nom" : "",
+      "pouvoir" : {
+        "nom" : "le pouvoir",
+        "description" : "pouvior de compagnie",
+        "condition" :"quand où comment ?"
+      },
+      "personnages": []
     },
     "npc": {
       "templates": ["base"],
@@ -92,7 +97,7 @@
     "templates": {
       "base": {
         "description": "",
-        "jsonBonus":""
+        "jsonBonus": []
       }
     },
     "race": {
@@ -120,21 +125,18 @@
       "motClefs" : "",
       "race1" : "lutin",
       "langue" : "vieux lutin",
-      "Philosophie" : "gardiens de la mémoire d’Edenia",
+      "philosophie" : "gardiens de la mémoire d’Edenia",
       "fierté": "la pureté de la race lutine",
       "dameNature" : "faible. Peu de fêtes pratiquées en son honneur, l’individu et la tribu sont beaucoup plus mis en avant que leur créatrice.",
       "edenia" : "moyen. Les Krograines recherchent et conservent tous les textes et reliques faisant l’éloge de leur tribu datant d’avant l’Exil, et ils détruisent ou modifient systématiquement les autres !",
       "territoire" : "le cloître bénédictin et ses environs.",
-      "jsonIdCmps" : "",
+      "arrayCmp" : [],
+      "arrayValDef" : [],
       "special" : ""
     },
     "profil": {
       "templates": ["base"],
-      "idcmp" : {
-        "cmp1" : "",
-        "cmp2" : "",
-        "cmp3" : ""
-      },
+      "arrayCmp" : [],
       "jsonIdCmpBonus" : ""
     },
     "equipement": {
@@ -145,6 +147,7 @@
       "ecorse": 0
     },
     "arme": {
+      "templates": ["base"],
       "taille":1,
       "ecorse" : 20,
       "portee" : "",
@@ -158,6 +161,7 @@
       "jsonPenalite" : ""
     },
     "armure": {
+      "templates": ["base"],
       "taille":1,
       "protection" : 1,
       "malus":1,
@@ -165,17 +169,22 @@
       "jsonPenalite" : ""
     },
     "cmp": {
+      "templates": ["base"],
       "aDomaines" : false,
       "domaines" : "",
       "profil" : "artiste",
       "score" : 0,
-      "estFermee" : false
+      "estFermee" : false,
+      "XP": 0,
+      "IdProfil": ""
     },
     "sort": {
       "templates": ["base"],
       "cout": 1,
       "CodeSouC": 0,
-      "effet":""
+      "effet":"",
+      "idCmpMagie" : "",
+      "coefCout" : 1
     },
     "compagnie" : {
       "templates": ["base"],

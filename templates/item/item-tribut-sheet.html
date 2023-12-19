@@ -9,7 +9,8 @@
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
     <a class="item" data-tab="description">Description</a>
-    <a class="item" data-tab="attributes">Attributes</a>
+    <a class="item" data-tab="attributes">Information</a>
+    <a class="item" data-tab="cmps">Compétences</a>
   </nav>
 
   {{!-- Sheet Body --}}
@@ -17,12 +18,63 @@
 
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
+      <label class="resource-label">Mots clefs</label>
+      <textarea name="system.motClefs" rows="3">{{{system.motClefs}}}</textarea>
+      <label class="resource-label">Langue maternelle</label>
+      <input type="text" name="system.langue" value="{{system.langue}}" data-dtype="String" />
+      <label class="resource-label">Territoire</label>
+      <input type="text" name="system.territoire" value="{{system.territoire}}" data-dtype="String" />
+      <hr> Rem : allez jusqu'en bas pour le champ spécial (a corriger plus tard)<br>
+      <label class="resource-label">Description</label>
       {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
-    </div>
+      <hr>
+      <label class="resource-label">Special</label>
+      {{editor system.special target="system.special" rollData=rollData button=true owner=owner editable=editable}}
+  </div>
 
-    {{!-- Attributes Tab --}}
+    {{!-- Information Tab --}}
     <div class="tab attributes" data-group="primary" data-tab="attributes">
       {{!-- As you add new fields, add them in here! --}}
+      <ol class="item-list">
+        <li class="item flexrow" data-item-id="{{item._id}}">
+          <label class="resource-label">Race principale</label>
+          <input type="text" name="system.race1" value="{{system.race1}}" data-dtype="String"/>
+        </li>
+        <li class="item flexrow" data-item-id="{{item._id}}">
+          <label class="resource-label">Philosophie</label>
+          <input type="text" name="system.philosophie" value="{{system.philosophie}}" data-dtype="String" />
+        </li>
+        <li class="item" data-item-id="{{item._id}}">
+          <hr>
+          <label class="resource-label">Dame Nature</label>
+        {{editor system.dameNature target="system.dameNature" rollData=rollData button=true owner=owner editable=editable}}
+        </li>
+        <li class="item" data-item-id="{{item._id}}">
+          <hr>
+          <label class="resource-label">Edenia</label>
+          {{editor system.edenia target="system.edenia" rollData=rollData button=true owner=owner editable=editable}}
+        </li>
+      </ol>
+    </div>
+    {{!-- Compétence Tab --}}
+    <div class="tab attributes" data-group="primary" data-tab="cmps">
+      <div class="lesoublies droppable"> 
+        <label class="resource-label">liste des compétences associées<a class="cmd" data-action="tribut.add.cmp"> <i class="fas fa-plus"></i></a></label>
+        <hr>
+        <div>
+        {{#each system.arrayCmp as |item id|}}
+        <div>
+          <label class="items-header">Compétence {{id}} <a class="cmd" data-action="profil.del.cmp.{{id}}"><i class="fas fa-trash"></i></a> :
+            <select name="system.arrayCmp">
+              {{selectOptions ../LstTotCmps selected=item}}
+            </select>
+          </label>
+          <input class="" type="text" name="system.arrayValDef" value="{{system.arrayValDef}}" data-dtype="Number" />
+        </div>
+        <hr>
+        {{/each}}
+        </div>
+      </div>
     </div>
   </section>
 

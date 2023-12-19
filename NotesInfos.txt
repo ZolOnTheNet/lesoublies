@@ -1,0 +1,17 @@
+item-profil-sheet.html
+ {{#each system.idcmp as |item id|}}
+    <hr>
+      <label class="resource-label">Profil</label>
+      <select name="system.idcmp.{{id}}">
+        {{selectOptions LstTotCmps selected=item}}
+    </select>
+    {{/each}}
+    ---------------------
+    <label class="resource-label">Profil</label>
+    <select name="system.idcmp.cmp1">
+      {{selectOptions LstTotCmps selected=system.idcmp.cmp1}}
+    </select>
+    --------------------
+    <select name="system.idcmp.{{id}}">
+        {{selectOptions ./LstTotCmps selected=item}}
+    </select>
