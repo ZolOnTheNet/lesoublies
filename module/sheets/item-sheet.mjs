@@ -80,7 +80,7 @@ export class LesOubliesItemSheet extends ItemSheet {
         if(! Array.isArray(this.item.system.arrayCmp)) context.system.arrayCmp = [ context.system.arrayCmp ]
         break;
       case 'tribut':
-        if(! Array.isArray(this.item.system.arrayCmp)) context.system.arrayCmp = [ context.system.arrayCmp ]
+        //if(! Array.isArray(this.item.system.arrayCmp)) context.system.arrayCmp = [ context.system.arrayCmp ]
         break;
     }
   }
@@ -108,7 +108,7 @@ export class LesOubliesItemSheet extends ItemSheet {
       let id = data.uuid.split(".")
       let itemD = game.items.get(id[1])
       if (itemD.type == 'cmp') {
-        this.item.system.arrayCmp.push(id[1])
+        this.item.system.objCmp[""+Object.entries(item.system.objCmp).length] ={"id": id[1], "value":0, "domaine":"" }
         this.render(true)
       }
 
@@ -125,17 +125,7 @@ export class LesOubliesItemSheet extends ItemSheet {
   // }
   /* -------------------------------------------- */
 
-    #gestionCmp(context){
-    // cree une liste d'objets lié au paramètre de idcmp
-    // context.lstCmps = []
-    // context.array.forEach(element => {
-    //   if(element != '') { // compoetence trouvé ?
-    //     let cmpObj = game.items.get(element)
-    //     if(cmpObj) {
-    //       context.lstCmps.push(cmpObj.name)
-    //     }
-    //   }
-    // });
+  #gestionCmp(context){
     context.LstTotCmps = listCmp() // récupère la liste des compétences de "Compétences"
     // attention arrayCmp doit être un tableau
     if(! Array.isArray( context.system.arrayCmp)) context.system.arrayCmp = [ context.system.arrayCmp ]
@@ -152,7 +142,6 @@ export class LesOubliesItemSheet extends ItemSheet {
     let cmd = action.split('.')
     switch (cmd[0]){
       case 'profil':
-      case 'tribut':
         switch(cmd[1]) {
           case 'add': // normalement il ya cmp en cmd[2]
             item.system.arrayCmp.push("")
@@ -160,8 +149,22 @@ export class LesOubliesItemSheet extends ItemSheet {
             break
           case 'del':
             let ind = parseInt(cmd[3])
-            const x = item.system.arrayCmp.splice(ind, ind);
+            const x = item.system.arrayCmp.splice(ind, ind+1);
             console.log("Le tableau vaut : ", item.system.arrayCmp)
+            this.render(true)
+        }
+        break;
+      case 'tribut':
+        switch(cmd[1]) {
+          case 'add': // normalement il ya cmp en cmd[2] Rem : Object.entries(context.system.objCmp).length
+            let lng = Object.entries(item.system.objCmp).length
+            item.system.objCmp[""+lng] = {"id":"", "value":0, "domaine":"" }
+            this.render(true)
+            break
+          case 'del':
+            let ind = parseInt(cmd[3])
+            const x = delete item.system.objCmp[""+ind];
+            console.log("Le tableau vaut : ", item.system.objCmp)
             this.render(true)
         }
         break

@@ -115,6 +115,7 @@ export class LesOubliesActorSheet extends ActorSheet {
         context.NomRace = i.name;
         context.race = i;
         context.aRace = true;
+        context.taille = i.system.taille
       }
       else if (i.type === 'tribut') {
         context.NomTribut = i.name;
@@ -175,6 +176,7 @@ export class LesOubliesActorSheet extends ActorSheet {
       })
     }
         // Assign and return
+    if(context.taille != context.system.taille.value) context.system.taille.value = context.taille
     context.gear = gear;
     context.features = features;
     context.spells = spells;
@@ -355,7 +357,7 @@ export class LesOubliesActorSheet extends ActorSheet {
         const cmpsLst = this.LstCmpBase()
         // ajouter les items des cmps
         itemData = itemData.concat(cmpsLst)
-        await this.actor.update({"system.idRace": itemData[0].id, "system.taille" : itemData[0].system.taille})
+        await this.actor.update({"system.idRace": itemData[0].id, "system.taille.value" : itemData[0].system.taille})
         return await this.actor.createEmbeddedDocuments("Item", itemData ).then((items) => {
           return items
         })

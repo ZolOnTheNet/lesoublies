@@ -131,7 +131,7 @@
       "edenia" : "moyen. Les Krograines recherchent et conservent tous les textes et reliques faisant l’éloge de leur tribu datant d’avant l’Exil, et ils détruisent ou modifient systématiquement les autres !",
       "territoire" : "le cloître bénédictin et ses environs.",
       "arrayCmp" : [],
-      "arrayValDef" : [],
+      "objCmp" : {},
       "special" : ""
     },
     "profil": {

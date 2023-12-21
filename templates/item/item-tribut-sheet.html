@@ -62,14 +62,19 @@
         <label class="resource-label">liste des compétences associées<a class="cmd" data-action="tribut.add.cmp"> <i class="fas fa-plus"></i></a></label>
         <hr>
         <div>
-        {{#each system.arrayCmp as |item id|}}
+        {{#each system.objCmp as |obj id|}}
         <div>
-          <label class="items-header">Compétence {{id}} <a class="cmd" data-action="profil.del.cmp.{{id}}"><i class="fas fa-trash"></i></a> :
-            <select name="system.arrayCmp">
-              {{selectOptions ../LstTotCmps selected=item}}
-            </select>
+          <label class="items-header">Compétence {{id}} <a class="cmd" data-action="tribut.del.cmp.{{id}}"><i class="fas fa-trash"></i></a> :
           </label>
-          <input class="" type="text" name="system.arrayValDef" value="{{system.arrayValDef}}" data-dtype="Number" />
+          <select name="system.objCmp.{{id}}.id">
+            {{selectOptions ../LstTotCmps selected=obj.id}}
+          </select>
+          <span class="lesoublies">
+            <input class="lesoublies autow" type="text" size="3em" name="system.objCmp.{{id}}.value" value="{{obj.value}}" data-dtype="Number" style="width: auto;" />
+          </span>
+          <div>
+            <input class="lesoublies autow" type="text" name="system.objCmp.{{id}}.domaine" value="{{obj.domaine}}" data-dtype="String" />
+          </div>
         </div>
         <hr>
         {{/each}}

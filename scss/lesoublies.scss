@@ -18,6 +18,11 @@
   @import 'components/resource';
   @import 'components/items';
   @import 'components/effects';
+
+  .autow {
+    width: auto;
+  }
+
 }
 
 .cmd {
@@ -28,3 +33,4 @@
     cursor: pointer;
   }
 }
+
