@@ -126,11 +126,10 @@
       "race1" : "lutin",
       "langue" : "vieux lutin",
       "philosophie" : "gardiens de la mémoire d’Edenia",
-      "fierté": "la pureté de la race lutine",
+      "fierte": "la pureté de la race lutine",
       "dameNature" : "faible. Peu de fêtes pratiquées en son honneur, l’individu et la tribu sont beaucoup plus mis en avant que leur créatrice.",
       "edenia" : "moyen. Les Krograines recherchent et conservent tous les textes et reliques faisant l’éloge de leur tribu datant d’avant l’Exil, et ils détruisent ou modifient systématiquement les autres !",
       "territoire" : "le cloître bénédictin et ses environs.",
-      "arrayCmp" : [],
       "objCmp" : {},
       "special" : ""
     },

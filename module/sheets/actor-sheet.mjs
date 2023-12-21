@@ -271,7 +271,11 @@ export class LesOubliesActorSheet extends ActorSheet {
     event.preventDefault();
     const element = event.currentTarget;
     const dataset = element.dataset;
-
+    // test sur roll 
+    if(dataset?.roll == "") return // marquer une erreur ?
+    let rollTab = dataset.roll.split(".")
+    if(rollTab.length != 4) return // marquer une erreur ?
+    let score = parseInt(rollTab[3])
     console.log("jet : ", element,dataset)
     let r = new Roll("{ 1d12x, 1d12x[black]}")
 
@@ -280,9 +284,9 @@ export class LesOubliesActorSheet extends ActorSheet {
     r.evaluate({async :false })
     let label = "Jet !"
     const retArray = r.terms[0].rolls
-    const retS = retArray[0]._total // le songe
-    const retC = retArray[1]._total // le Cauchemard
-    label += "<br>Que vous choississez vous ? <br \> Le <strong>Songe ("+retS+")</strong> ou le <strong>Cauchemard("+retC+")</strong>"
+    const retS = retArray[0]._total +score // le songe
+    const retC = retArray[1]._total +score // le Cauchemard
+    label += "lancer de "+rollTab[2]+"<br>Que vous choississez vous ? <br \> Le <strong>Songe ("+retS+")</strong> ou le <strong>Cauchemard("+retC+")</strong>"
     r.toMessage({
       speaker: speaker,
       rollMode: rollMode,
@@ -363,34 +367,60 @@ export class LesOubliesActorSheet extends ActorSheet {
         })
       case 'tribut':
         let listTribut = this.actor.items.filter(x => x.type == 'tribut')
-        if(listRace.length> 0){
-          //let listTributId =[]; listTribut.forEach(x => { listTributId.push(x.id)} )
+        if(listTribut.length> 0){
+          // supprimer les autres tributs possiblement présntes
           let listTributId = listTribut.map(x => x.id)
           await this.actor.deleteEmbeddedDocuments('Item',listTributId).then((items) => {
-            this.actor.items.forEach(x => {
-              if(x.type =='cmp'){
-                let prof = x.system.profil
-                if(prof == 'Force de la nature') prof = "forceNature"
-                  else if(prof == 'Athlète') prof = "athlete"
-                    else prof = prof.toLowerCase()
-                  //x.system.score = refProfils[prof];
-                  x.update({"system.score": refProfils[prof]})
+            //passer en revue les liste de tribut pour supprimer au score de la compétence
+            const lstCmp = itemData.system.objCmp
+            const lstId = Object.entries(lstCmp)
+            if(lstId.length > 0) {
+              for(let i = 0; i < lstId.length; i++) {
+                let cmpRef  = game.items.get(lstCmp[i].id) // on récupère la compétences
+                if(cmpRef){
+                  // cherche la compétence dans l'acteur
+                  let cmp = this.actor.items.getName(cmpRef.name)
+                  if(cmp){
+                    let objUdp = { system : {} }
+                    objUdp.system.score = cmp.system.score - lstCmp[i].value
+                      // pas de gestion des domaines !
+                      if(cmp.system.domaines != "" && lstCmp[i].domaine != "")
+                        if(cmp.system.domaines != lstCmp[i].domaine) objUdp.system.domaines = cpm.system.domaines + " a suppr : ("+ lstCmp[i].domaine+")"
+                        else objUdp.system.domaines = ""
+                      cmp.update(objUdp)
+                  }
+                }
               }
-            })
+            }
             return items
           })
         }
+        // ajout des compétences de la tribut
         itemData = itemData instanceof Array ? itemData : [itemData];
         // ajout des competences manquantes et surtout augmentation de certaines
-        return await this.actor.createEmbeddedDocuments("Item", itemData ).then((item) => { return item })
-      case "path":
-        return await Path.addToActor(this.actor, itemData);
-      case "profile":
-        return await Profile.addToActor(this.actor, itemData);
-      case "species":
-        return await Species.addToActor(this.actor, itemData);
-      case "capacity":
-        return await Capacity.addToActor(this.actor, itemData);
+        return await this.actor.createEmbeddedDocuments("Item", itemData ).then((item) => { 
+          let cmpTrib = itemData[0].system.objCmp
+          let entrCmp = Object.entries(cmpTrib)
+          if(entrCmp.length > 0) {
+            for(let i = 0; i < entrCmp.length; i++) {
+              let cmpRef  = game.items.get(cmpTrib[i].id) // on récupère la compétences générale
+              if(cmpRef){
+                // cherche la compétence dans l'acteur
+                let cmp = this.actor.items.getName(cmpRef.name)
+                if(cmp){
+                  let objUdp = { system : {} }
+                  objUdp.system.score = cmp.system.score + cmpTrib[i].value
+                    if(cmpTrib[i].domaine != "")
+                      if(cmp.system.domaines =="") objUdp.system.domaines = cmpTrib[i].domaine
+                        else objUdp.system.domaines = cmp.system.domaines + "," + cmpTrib[i].domaine
+                    cmp.update(objUdp)
+                }
+              }
+            }
+
+          }
+          return item
+        })
       default: {
         const itemId = itemData._id;
 
