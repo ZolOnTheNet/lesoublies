@@ -65,7 +65,8 @@
           "abrv" : "LESOUBILES.ABRV.SensValeur",
           "value" : 0.5
         },
-        "idRace" : ""
+        "idRace" : "",
+        "equipementsR": {}
       }
     },
     "character": {
@@ -77,23 +78,13 @@
       },
       "idMetier" : "" 
     },
-    "compagnie" : {
-      "id" : "",
-      "nom" : "",
-      "pouvoir" : {
-        "nom" : "le pouvoir",
-        "description" : "pouvior de compagnie",
-        "condition" :"quand où comment ?"
-      },
-      "personnages": []
-    },
     "npc": {
       "templates": ["base"],
       "cr": 0
     }
   },
   "Item": {
-    "types": ["race","tribut","profil","arme","armure","cmp", "equipement", "sort", "lien", "compagnie"],
+    "types": [ "arme", "armure", "cmp", "compagnie", "equipement", "lien", "metier", "profil", "race", "sort", "tribut" ],
     "templates": {
       "base": {
         "description": "",
@@ -132,6 +123,14 @@
       "territoire" : "le cloître bénédictin et ses environs.",
       "objCmp" : {},
       "special" : ""
+    },
+    "metier" : {
+      "templates": ["base"],
+      "objCmp" : {},
+      "equipements": {},
+      "txtEquipt" : "",
+      "ecorse": 0,
+      "cmpMagie" : ""
     },
     "profil": {
       "templates": ["base"],
@@ -175,21 +174,35 @@
       "score" : 0,
       "estFermee" : false,
       "XP": 0,
-      "IdProfil": ""
+      "IdProfil": "",
+      "estMagique" : false
     },
     "sort": {
       "templates": ["base"],
       "cout": 1,
-      "CodeSouC": 0,
+      "codeSouC": 1,
+      "prepartation" : "",
+      "duree" : "",
+      "portee" : "",
+      "airDEffet" : "",
+      "cumul" : false,
       "effet":"",
-      "idCmpMagie" : "",
-      "coefCout" : 1
+      "effets" : [],
+      "cmpMagie" : "",
+      "coefCout" : 1,
+      "exclusifF": false,
+      "armureCompte" : true
     },
     "compagnie" : {
       "templates": ["base"],
-      "idCapitaine" : "",
-      "pouvoir" : "",
-      "idOmbre" : ""
+      "pouvoir" : {
+        "nom" : "le pouvoir",
+        "description" : "pouvior de compagnie",
+        "condition" :"quand où comment ?"
+      },
+      "idCapitaine": "",
+      "ombreTourment" :"",
+      "personnages": []
     },
     "lien": {
       "templates": ["base"],

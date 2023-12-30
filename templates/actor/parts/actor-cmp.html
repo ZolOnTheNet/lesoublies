@@ -1,0 +1,83 @@
+<section class="grid grid-3col">
+  <aside class="sidebar">
+    {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
+    use both the "grid" and "grid-Ncol" class where "N" can be any number
+    from 1 to 12 and will create that number of columns.  --}}
+    {{#if aRace }}
+      <div class="abilities flexcol">
+          {{#each aAfficher1 as |cmp key|}}
+            {{#if cmp.isProfil}}
+            <div class="ability flexrow flex-group-center rollable" data-action="roll.profil.{{cmp.name}}.{{cmp.value}}">
+              <h3>
+                <label class="items-list flexlarge align-left">{{cmp.name}}</label>
+                <span>({{cmp.value}})</span>
+              </h3>
+            </div>
+            {{else}}
+            <div class="ability flexrow flex-group-center">
+              <label  class="resource-label flexlarge align-left rollable" data-action="roll.cmp.{{cmp.name}}.{{cmp.totValue}}">{{cmp.name}} ({{cmp.value}})</label>
+              <span><strong>{{cmp.totValue}}</strong> <a class="rollable" data-action="acteur.edit.cmp.{{cmp.id}}.{{cmp.name}}"><i class="fas fa-edit"></i></a></span>
+            </div>
+            {{/if}}
+            <br>
+          {{/each}}
+      </div>
+    {{else}}
+      <h1>&gt;&gt;&gt;&gt;&gt;&gt;</h1>
+    {{/if}}
+  </aside>
+
+  {{!-- For the main features list, span the right two columns --}}
+  {{!-- <section class="main grid-span-2"> --}}
+  <section class="main">
+
+    {{!-- This is a Handlebars partial. They're stored in the `/parts` folder next to this sheet, and defined in module/helpers/templates.mjs --}}
+    {{#if aRace }}
+      <div class="abilities flexcol">
+        {{#each aAfficher2 as |cmp key|}}
+          {{#if cmp.isProfil}}
+          <div class="ability flexrow flex-group-center rollable" data-action="roll.profil.{{cmp.name}}.{{cmp.value}}">
+            <h3>
+              <label class="items-list flexlarge align-left">{{cmp.name}}</label>
+              <span>({{cmp.value}})</span>
+            </h3>
+          </div>
+          {{else}}
+          <div class="ability flexrow flex-group-center">
+            <label  class="resource-label flexlarge align-left rollable" data-action="roll.cmp.{{cmp.name}}.{{cmp.totValue}}">{{cmp.name}} ({{cmp.value}})</label>
+            <span><strong>{{cmp.totValue}}</strong> <a class="rollable" data-action="acteur.edit.cmp.{{cmp.id}}.{{cmp.name}}"><i class="fas fa-edit"></i></a></span>
+          </div>
+          {{/if}}
+          <br>
+        {{/each}}
+      </div>
+    {{else}}
+      <h1>Choisissez une Race</h1>
+    {{/if}}
+  </section>
+  <aside class="sidebar">
+  {{!-- This is a Handlebars partial. They're stored in the `/parts` folder next to this sheet, and defined in module/helpers/templates.mjs --}}
+    {{#if aRace }}
+    <div class="abilities flexcol">
+      {{#each aAfficher3 as |cmp key|}}
+        {{#if cmp.isProfil}}
+          <div class="ability flexrow flex-group-center rollable" data-action="roll.profil.{{cmp.name}}.{{cmp.value}}">
+            <h3>
+              <label class="items-list flexlarge align-left">{{cmp.name}}</label>
+              <span>({{cmp.value}})</span>
+            </h3>
+          </div>
+        {{else}}
+          <div class="ability flexrow flex-group-center">
+            <label  class="resource-label flexlarge align-left rollable" data-action="roll.cmp.{{cmp.name}}.{{cmp.totValue}}">{{cmp.name}} ({{cmp.value}})</label>
+            <span><strong>{{cmp.totValue}}</strong> <a class="rollable" data-action="acteur.edit.cmp.{{cmp.id}}.{{cmp.name}}"><i class="fas fa-edit"></i></a></span>
+          </div>
+        {{/if}}
+        <br>
+      {{/each}}
+    </div>
+    {{else}}
+    <h1>&lt;&lt;&lt;</h1>
+    {{/if}}
+  </aside>
+</section>

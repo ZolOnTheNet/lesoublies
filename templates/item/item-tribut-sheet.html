@@ -2,7 +2,7 @@
   <header class="sheet-header">
     <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
     <div class="header-fields">
-      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
     </div>
   </header>
 
@@ -77,7 +77,7 @@
             <input class="lesoublies autow" type="text" size="3em" name="system.objCmp.{{id}}.value" value="{{obj.value}}" data-dtype="Number" style="width: auto;" />
           </span>
           <div>
-            <input class="lesoublies autow" type="text" name="system.objCmp.{{id}}.domaine" value="{{obj.domaine}}" data-dtype="String" />
+            <input class="lesoublies autow" type="text" name="system.objCmp.{{id}}.domaine" placeholder="Domaines séparés avec des virgules" value="{{obj.domaine}}" data-dtype="String" />
           </div>
         </div>
         <hr>

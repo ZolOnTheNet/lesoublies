@@ -1,4 +1,4 @@
-import { listCmp } from "../utils.mjs";
+import { listCmp, listCmpMagiques, listEquipt, listPJ, objNoReduce } from "../utils.mjs";
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
@@ -47,6 +47,7 @@ export class LesOubliesItemSheet extends ItemSheet {
     // Add the actor's data to context.data for easier access, as well as flags.
     context.system = itemData.system;
     context.flags = itemData.flags;
+    context.type = itemData.type
     // gestion des cas particulier des type d'items : une fonction pour chaque type
     switch(itemData.type) {
       case 'profil':
@@ -55,7 +56,19 @@ export class LesOubliesItemSheet extends ItemSheet {
       case 'tribut':
         this.#gestionCmp(context)
         break;
+      case 'metier':
+        this.#gestionCmp(context)
+        context.LstEquipmt = listEquipt()
+        context.LstCmpMagie = listCmpMagiques()
+        break;
+      case 'compagnie':
+        context.LstPJ = listPJ()
+        break
+      case 'sort':
+        context.LstSongeCauch={ 0:"Cauchemard", 1:"Songe"}
+        context.LstCmpMagie = listCmpMagiques()
     }
+    if( context.system.description == "") context.system.description =' '
     return context;
   }
 
@@ -75,9 +88,12 @@ export class LesOubliesItemSheet extends ItemSheet {
   /** @inheritDoc */
   async _onChangeInput(event) {
     await super._onChangeInput(event);
-    switch(this.item.type) {
+    switch(this.item.type) { // Gestion champs tableau (car si une seule valeur considérer comme 1 champ)
       case 'profil':
         if(! Array.isArray(this.item.system.arrayCmp)) context.system.arrayCmp = [ context.system.arrayCmp ]
+        break;
+      case 'compagnie':
+        if(! Array.isArray(this.item.system.personnages)) context.system.personnages = [ context.system.personnages ]
         break;
       case 'tribut':
         //if(! Array.isArray(this.item.system.arrayCmp)) context.system.arrayCmp = [ context.system.arrayCmp ]
@@ -87,49 +103,63 @@ export class LesOubliesItemSheet extends ItemSheet {
 
   /**
    * Add support for drop data on Item sheets.
+   * note : sous FireFox, le point d'arrêt obtient un data vide !
    */
   /** @inheritdoc */
   async _onDrop(event) {
     event.preventDefault();
     const data = TextEditor.getDragEventData(event); //ex :{ type: "Item", uuid: "Item.0JR5rtFV3dHZgVZ4" }
     console.log("Drop : ",event, data)
-    if(this.item.type == 'profil') {
-      if(this.item.system.arrayCmp == undefined) this.item.system.arrayCmp = []
-      if(! Array.isArray(this.item.system.arrayCmp)) context.system.arrayCmp = [ context.system.arrayCmp ]
-      let id = data.uuid.split(".")
-      let itemD = game.items.get(id[1])
-      if (itemD.type == 'cmp') {
-        this.item.system.arrayCmp.push(id[1])
+    let id; let itemD;
+    switch(this.item.type) {
+      case 'profil':
+        if(this.item.system.arrayCmp == undefined) this.item.system.arrayCmp = []
+        if(! Array.isArray(this.item.system.arrayCmp)) context.system.arrayCmp = [ context.system.arrayCmp ]
+        id = data.uuid.split(".")
+        itemD = game.items.get(id[1])
+        if (itemD.type == 'cmp') {
+          this.item.system.arrayCmp.push(id[1])
+          this.render(true)
+        }
+        break
+      case 'tribut':
+        id = data.uuid.split(".")
+        itemD = game.items.get(id[1])
+        if (itemD.type == 'cmp') {
+          this.item.system.objCmp[""+Object.entries(this.item.system.objCmp).length] ={"id": id[1], "value":0, "domaine":"" }
+          this.render(true)
+        }
+        break
+      case 'metier':
+        id = data.uuid.split(".")
+        itemD = game.items.get(id[1])
+        if (itemD.type == 'cmp') {
+          this.item.system.objCmp[""+Object.entries(this.item.system.objCmp).length] ={"id": id[1], "value":0, "domaine":"" }
+          this.render(true)
+        }else if(itemD.type == 'equipement') {
+          this.item.system.equipements[""+Object.entries(this.item.system.equipements).length] ={"id": id[1], "value":1 }
+          this.render(true)
+        }
+        break
+      case 'compagnie':
+      if(this.item.system.personnages == undefined) this.item.system.personnages = []
+      if(! Array.isArray(this.item.system.personnages)) context.system.personnages = [ context.system.personnages ]
+      id = data.uuid.split(".")
+      itemD = game.actors.get(id[1])
+      if (itemD.type == 'character') { // a tester si character ou actor
+        this.item.system.personnages.push(id[1])
         this.render(true)
       }
-    } else if(this.item.type == 'tribut') {
-      if(this.item.system.arrayCmp == undefined) this.item.system.arrayCmp = []
-      if(! Array.isArray(this.item.system.arrayCmp)) context.system.arrayCmp = [ context.system.arrayCmp ]
-      let id = data.uuid.split(".")
-      let itemD = game.items.get(id[1])
-      if (itemD.type == 'cmp') {
-        this.item.system.objCmp[""+Object.entries(item.system.objCmp).length] ={"id": id[1], "value":0, "domaine":"" }
-        this.render(true)
-      }
-
+      break
     }
   }
 
-  // _onDragStart(event){
-  //   event.preventDefault();
-  //   console.log("Start:",event);
-  // }
-  // _onDragOver(event){
-  //   event.preventDefault();
-  //   console.log("Over:",event);
-  // }
   /* -------------------------------------------- */
 
   #gestionCmp(context){
     context.LstTotCmps = listCmp() // récupère la liste des compétences de "Compétences"
     // attention arrayCmp doit être un tableau
-    if(! Array.isArray( context.system.arrayCmp)) context.system.arrayCmp = [ context.system.arrayCmp ]
-    if( context.system.description == "") context.system.description =' '
+    if(context.type == 'profil' && (! Array.isArray( context.system.arrayCmp))) context.system.arrayCmp = [ context.system.arrayCmp ]
   }
 
   cmd_item(ev, item) {
@@ -164,13 +194,62 @@ export class LesOubliesItemSheet extends ItemSheet {
           case 'del':
             let ind = parseInt(cmd[3])
             const x = delete item.system.objCmp[""+ind];
-            console.log("Le tableau vaut : ", item.system.objCmp)
+            item.system.objCmp = objNoReduce(item.system.objCmp)
+            item.update({ "system.objCmp": item.system.objCmp})
             this.render(true)
         }
         break
-      case 'ex':
+      case 'metier':
+        switch(cmd[2]) {
+          case "equip":
+            switch(cmd[1]) {
+              case 'add': // normalement il ya cmp en cmd[2] Rem : Object.entries(context.system.objCmp).length
+                let lng = Object.entries(item.system.equipements).length
+                item.system.equipements[""+lng] = {"id":"", "value":1 }
+                this.render(true)
+                break
+              case 'del':
+                let ind = parseInt(cmd[3])
+                const x = delete item.system.equipements[""+ind];
+                item.update({ "system.equipements": item.system.equipements})
+                console.log("Le tableau vaut : ", item.system.equipements)
+                this.render(true)
+            }
+            break;
+          case "cmp":
+            switch(cmd[1]) {
+              case 'add': // normalement il ya cmp en cmd[2] Rem : Object.entries(context.system.objCmp).length
+                let lng = Object.entries(item.system.objCmp).length
+                item.system.objCmp[""+lng] = {"id":"", "value":0, "domaine":"" }
+                this.render(true)
+                break
+              case 'del':
+                let ind = parseInt(cmd[3])
+                const x = delete item.system.objCmp[""+ind];
+                //recontruire l'objet (pour éliminer le saut)
+                item.update({ "system.objCmp": item.system.objCmp})
+                this.render(true)
+            }
+            break;
+        }
+        break
+      case 'compagnie':
+        switch(cmd[2]) {
+          case "membre": //personnages
+            switch(cmd[1]) {
+              case 'add': // normalement il ya cmp en cmd[2] Rem : Object.entries(context.system.objCmp).length
+              if(! Array.isArray(this.item.system.personnages)) this.item.system.personnages = [ this.item.system.personnages ]
+              item.system.personnages.push("")
+              this.render(true)
+              break
+            case 'del':
+              let ind = parseInt(cmd[3])
+              const x = item.system.personnages.splice(ind, ind+1);
+              this.render(true)
+               }
+            break;
+        }
         break
     }
-
   }
 }

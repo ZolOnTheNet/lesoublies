@@ -16,7 +16,7 @@
         <div class="resource flex-group-center">
             <strong>Race :</strong> {{NomRace}}<br>
             <strong>Tribut :</strong> {{NomTribut}}<br>
-            <strong>metier :</strong> {{Metier}}<br>
+            <strong>metier :</strong> {{NomMetier}}<br>
             <strong>taille :</strong> {{system.taille.value}}<br>
           <hr>
           <div class="resource-content flexrow flex-center flex-between">
@@ -26,18 +26,12 @@
             <input type="text" name="system.PdV.max"  size="4em" value="{{system.PdV.max}}" data-dtype="Number"/>
           </div>
           <hr>
-          <div>
-            <label for="system.ecorse" class="resource-label">Ecorces</label>
-            <input type="text"  size="6em" name="system.ecorse.value" value="{{system.ecorse.value}}" data-dtype="Number"/>
-          </div>
         </div>
 
         <div class="resource flex-group-center">
-          <label for="system.Songe.value" class="resource-label">Songe</label>
+          <label for="system.Songe.value" class="resource-label">Songe <a class="rollable" data-action="songe.recalcul"><i class="fa-solid fa-arrows-rotate"></i></a></label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.Songe.value" value="{{system.Songe.value}}" data-dtype="Number"/>
-            <span> / </span>
-            <input type="text" name="system.Songe.max" value="{{system.Songe.max}}" data-dtype="Number"/>
           </div>
           <label for="system.Songe.Points.value" class="resource-label">Pts de Songe</label>
           <div class="resource-content flexrow flex-center flex-between">
@@ -54,8 +48,6 @@
           <label for="system.Cauchemard.value" class="resource-label">Cauchemard</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.Cauchemard.value" value="{{system.Cauchemard.value}}" data-dtype="Number"/>
-            <span> / </span>
-            <input type="text" name="system.Cauchemard.max" value="{{system.Cauchemard.max}}" data-dtype="Number"/>
           </div>
           <label for="system.Cauchemard.value" class="resource-label">Pts de Cauchemard</label>
           <div class="resource-content flexrow flex-center flex-between">
@@ -68,15 +60,24 @@
             <input type="text" name="system.Cauchemard.dette.value" value="{{system.Cauchemard.dette.value}}" data-dtype="Number"/>
           </div>
         </div>
-
       </div>
     </div>
   </header>
+    <div class="flexrow">
+        <label class="resource-label">Compagnie : {{NomCompagnie}}</label>
+        <label for="system.ecorse" class="resource-label">Ecorces</label>
+        <input type="text"  size="6em" name="system.ecorse.value" value="{{system.ecorse.value}}" data-dtype="Number"/>
+    </div>
+    <div >
+      <label class="resource-label">Pouvoir : </label>{{DescPouvoir}}
+      <label class="resource-label">Condition : </label>{{CondPouvoir}}
+    </div>
+
 
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
     {{!-- Default tab is specified in actor-sheet.mjs --}}
-    <a class="item" data-tab="features">Compétences</a>
+    <a class="item" data-tab="cmp">Compétences</a>
     <a class="item" data-tab="description">Description</a>
     <a class="item" data-tab="items">Equipements</a>
     <a class="item" data-tab="spells">Sorts</a>
@@ -87,93 +88,10 @@
   <section class="sheet-body">
 
     {{!-- Owned Features Tab --}}
-    <div class="tab features" data-group="primary" data-tab="features">
-      <section class="grid grid-3col">
-        <aside class="sidebar">
-          {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
-          use both the "grid" and "grid-Ncol" class where "N" can be any number
-          from 1 to 12 and will create that number of columns.  --}}
-          {{#if aRace }}
-            <div class="abilities flexcol">
-                {{#each aAfficher1 as |cmp key|}}
-                  {{#if cmp.isProfil}}
-                  <div class="ability flexrow flex-group-center rollable" data-roll="roll.profil.{{cmp.name}}.{{cmp.value}}">
-                    <h3>
-                      <label class="items-list flexlarge align-left">{{cmp.name}}</label>
-                      <span>({{cmp.value}})</span>
-                    </h3>
-                  </div>
-                  {{else}}
-                  <div class="ability flexrow flex-group-center rollable" data-roll="roll.cmp.{{cmp.name}}.{{cmp.totValue}}">
-                    <label  class="resource-label flexlarge align-left">{{cmp.name}} ({{cmp.value}})</label>
-                    <span>{{cmp.totValue}}</span>
-                  </div>
-                  {{/if}}
-                  <br>
-                {{/each}}
-            </div>
-          {{else}}
-            <h1>&gt;&gt;&gt;&gt;&gt;&gt;</h1>
-          {{/if}}
-        </aside>
-
-        {{!-- For the main features list, span the right two columns --}}
-        {{!-- <section class="main grid-span-2"> --}}
-          <section class="main">
-          {{!-- This is a Handlebars partial. They're stored in the `/parts` folder next to this sheet, and defined in module/helpers/templates.mjs --}}
-          {{#if aRace }}
-            <div class="abilities flexcol">
-                {{#each aAfficher2 as |cmp key|}}
-                  {{#if cmp.isProfil}}
-                  <div class="ability flexrow flex-group-center rollable" data-roll="roll.profil.{{cmp.name}}.{{cmp.value}}">
-                    <h3>
-                      <label class="items-list flexlarge align-left">{{cmp.name}}</label>
-                      <span>({{cmp.value}})</span>
-                    </h3>
-                  </div>
-                  {{else}}
-                  <div class="item-list flexrow flex-group-center rollable" data-roll="roll.cmp.{{cmp.name}}.{{cmp.totValue}}">
-                    <label  class="resource-label flexlarge align-left">{{cmp.name}} ({{cmp.value}})</label>
-                    <span>{{cmp.totValue}}</span>
-                  </div>
-                  {{/if}}
-                  <br>
-                {{/each}}
-            </div>
-          {{else}}
-            <h1>Choisissez une Race</h1>
-          {{/if}}
-      </section>
-      <aside class="sidebar">
-        {{!-- This is a Handlebars partial. They're stored in the `/parts` folder next to this sheet, and defined in module/helpers/templates.mjs --}}
-        {{#if aRace }}
-        <div class="abilities flexcol">
-            {{#each aAfficher3 as |cmp key|}}
-              {{#if cmp.isProfil}}
-              <div class="ability flexrow flex-group-center rollable" data-roll="roll.profil.{{cmp.name}}.{{cmp.value}}">
-                <h3>
-                  <label class="items-list flexlarge align-left">{{cmp.name}}</label>
-                  <span>({{cmp.value}})</span>
-                </h3>
-              </div>
-              {{else}}
-              <div class="ability flexrow flex-group-center rollable" data-roll="roll.cmp.{{cmp.name}}.{{cmp.totValue}}">
-                <label  class="resource-label flexlarge align-left">{{cmp.name}} ({{cmp.value}})</label>
-                <span>{{cmp.totValue}}</span>
-              </div>
-              {{/if}}
-              <br>
-            {{/each}}
-        </div>
-      {{else}}
-        <h1>&lt;&lt;&lt;</h1>
-      {{/if}}
-
-      {{!--  {{> "systems/lesoublies/templates/actor/parts/actor-features.html"}} --}}
-      </aside>
-    </section>
-
-    {{!-- Biography Tab --}}
+    <div class="tab features" data-group="primary" data-tab="cmp">
+      {{> "systems/lesoublies/templates/actor/parts/actor-cmp.html"}}
+    </div>
+      {{!-- Biography Tab --}}
     <div class="tab biography" data-group="primary" data-tab="description">
       {{!-- If you want TinyMCE editors to output inline rolls when rendered, you need to pass the actor's roll data to the rollData property. --}}
       {{editor system.biography target="system.biography" rollData=rollData button=true owner=owner editable=editable}}

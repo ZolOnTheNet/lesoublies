@@ -5,12 +5,16 @@
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
       <div class="grid grid-2col">
         <div class="resource">
-          <label class="resource-label">Quantity</label>
-          <input type="text" name="system.quantity" value="{{system.quantity}}" data-dtype="Number"/>
+          <label class="resource-label">Capitaine</label>
+          <select name="system.idCapitaine">
+            {{selectOptions LstPJ selected=system.idCapitaine}}
+          </select>
         </div>
         <div class="resource">
-          <label class="resource-label">Weight</label>
-          <input type="text" name="system.weight" value="{{system.weight}}" data-dtype="Number"/>
+          <label class="resource-label">Ombre du Tourment</label>
+          <select name="system.ombreTourment">
+            {{selectOptions LstPJ selected=system.ombreTourment}}
+          </select>
         </div>
       </div>
     </div>
@@ -19,7 +23,8 @@
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
     <a class="item" data-tab="description">Description</a>
-    <a class="item" data-tab="attributes">Attributes</a>
+    <a class="item" data-tab="details">Membres</a>
+    <a class="item" data-tab="pouvoir">Pouvoir</a>
   </nav>
 
   {{!-- Sheet Body --}}
@@ -32,12 +37,31 @@
     </div>
 
     {{!-- Attributes Tab --}}
-    <div class="tab attributes" data-group="primary" data-tab="attributes">
+    <div class="tab attributes droppable" data-group="primary" data-tab="details">
       {{!-- As you add new fields, add them in here! --}}
-      <div class="resource">
-        <label class="resource-label">Roll Formula</label>
-        <input type="text" name="system.formula" value="{{system.formula}}" data-dtype="String"/>
+      <label class="resource-label">Membre de la compagnie <a class="cmd" data-action="compagnie.add.membre"> <i class="fas fa-plus"></i></a></label>
+      <ol class="item-list">
+        {{#each system.personnages as |obj id|}}
+          <li class="flexrow">
+            <label class="items-header" size="3em">{{id}}<a class="cmd" data-action="compagnie.del.membre.{{id}}.{{obj}}"><i class="fas fa-trash"></i></a></label>
+            <select name="system.personnages">
+              {{selectOptions ../LstPJ selected=obj}}
+            </select>
+          </li>
+          <hr>
+        {{/each}}
+      </ol>
+    </div>
+    <div class="tab attributes" data-group="primary" data-tab="pouvoir">
+      {{!-- As you add new fields, add them in here! --}}
+      <div class="flexrow">
+        <label class="resource-label">Nom du Pouvoir</label>
+        <input type="text" name="system.pouvoir.nom" value="{{system.pouvoir.nom}}" data-dtype="String" />  
       </div>
+      <label class="resource-label">Description :</label>
+      <textarea name="system.pouvoir.description" rows="2">{{system.pouvoir.description}}</textarea>  
+      <label class="resource-label">condition d'utilisation</label>
+      <textarea name="system.pouvoir.condition" rows="2">{{system.pouvoir.condition}}</textarea>
     </div>
   </section>
 </form>

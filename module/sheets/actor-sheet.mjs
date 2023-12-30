@@ -1,5 +1,6 @@
 import { LESOUBLIES } from "../helpers/config.mjs";
 import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
+import { afficheResultat } from "../gestion-chat.mjs"
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -54,7 +55,7 @@ export class LesOubliesActorSheet extends ActorSheet {
 
     // Add roll data for TinyMCE editors.
     context.rollData = context.actor.getRollData();
-
+    if(context.system.biography == "" ) context.system.biography = ' '
     // Prepare active effects
     context.effects = prepareActiveEffectCategories(this.actor.effects);
 
@@ -93,7 +94,7 @@ export class LesOubliesActorSheet extends ActorSheet {
     const armures = []
     const liens = []
     //const aAfficher = [] // pour la liste complète sans colonnes
-    const spells = {
+    const spells = { // il n'a que 5 niveau de sort
       0: [],
       1: [],
       2: [],
@@ -103,9 +104,11 @@ export class LesOubliesActorSheet extends ActorSheet {
       6: [],
       7: [],
       8: [],
-      9: []
+      9: [],
+      10: []
     };
     context.aRace = false;
+    context.MagieA1 = "x" // il faudrai être sur que le nom de la magie soit fixé avant
     // Iterate through items, allocating to containers
     for (let i of context.items) {
       i.img = i.img || DEFAULT_TOKEN;
@@ -119,6 +122,16 @@ export class LesOubliesActorSheet extends ActorSheet {
       }
       else if (i.type === 'tribut') {
         context.NomTribut = i.name;
+      }
+      else if (i.type === 'metier') {
+        context.NomMetier = i.name;
+        context.MagieA1 = i.system.cmpMagie // la magie qui n'a qu'un coup simple
+      }
+      else if (i.type === 'compagnie') {
+        context.NomCompagnie = i.name;
+        context.DescPNom = i.system.pouvoir.nom
+        context.DescPouvoir = i.system.pouvoir.description
+        context.CondPouvoir = i.system.pouvoir.condition
       }
       // Append to equipement
       else if (i.type === 'equipement') {
@@ -147,6 +160,9 @@ export class LesOubliesActorSheet extends ActorSheet {
       // Append to spells.
       else if (i.type === 'sort') {
         if (i.system.cout != undefined) {
+          i.system.typeMagie = (i.system.codeSouC == 0)?"S":"C"
+          i.system.coefCout = (i.system.cmpMagie==context.MagieA1)?1:2
+          i.system.cout = i.system.cout * i.system.coefCout
           spells[i.system.cout].push(i);
         }
       }
@@ -169,7 +185,7 @@ export class LesOubliesActorSheet extends ActorSheet {
         lstItem.forEach(y => {
           const valCmp = parseInt(y.system.score)
           //aAfficher.push( { "name": y.name, "profil": x, "value":valCmp, "isProfil": false, "totValue":valCmp + stdProfil, "isModifiable": true, "isRoll": !(y.system.estFermee && y.score == 0) })
-          aAffiche3Col[ind].push( { "name": y.name, "profil": x, "value": valCmp, "isProfil": false, "totValue":valCmp+ stdProfil, "isModifiable": true, "isRoll": !(y.system.estFermee && y.score == 0) })
+          aAffiche3Col[ind].push( { "name": y.name, "id": y._id, "profil": x, "value": valCmp, "isProfil": false, "totValue":valCmp+ stdProfil, "isModifiable": true, "isRoll": !(y.system.estFermee && y.score == 0) })
         })
         indice++;
         ind = Math.floor(indice/nbProfils);
@@ -177,6 +193,10 @@ export class LesOubliesActorSheet extends ActorSheet {
     }
         // Assign and return
     if(context.taille != context.system.taille.value) context.system.taille.value = context.taille
+    // reduction des sorts : seulement ceux qui existe
+    for(let i = 0; i < 11; i++) { // a changer si vous changer le nombre de cout référencés (cf spells au début)
+      if(spells[i].length ==0) { const x = delete spells[i]; }
+    }
     context.gear = gear;
     context.features = features;
     context.spells = spells;
@@ -222,7 +242,7 @@ export class LesOubliesActorSheet extends ActorSheet {
     html.find(".effect-control").click(ev => onManageActiveEffect(ev, this.actor));
 
     // Rollable abilities.
-    html.find('.rollable').click(this._onRoll.bind(this));
+    html.find('.rollable').click(this._clickClick.bind(this));
 
     // Drag events for macros.
     if (this.actor.isOwner) {
@@ -263,17 +283,38 @@ export class LesOubliesActorSheet extends ActorSheet {
   }
 
   /**
+   * hub de gestion des click "rollable"
+   * @param {*} event
+   */
+  _clickClick(event){
+    event.preventDefault();
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const clickTab = dataset.action.split(".")
+    switch(clickTab[0]){
+      case 'songe':
+        break;
+      case 'roll':
+        this._onRoll(event, element, dataset)
+        break;
+      case 'acteur':
+        let item = this.actor.items.get(clickTab[3]) // a default d'avoir l'id
+        return item.sheet.render(true);
+      default:
+        console.log("Erreur : clickclick", element, dataset)
+        break
+    }
+  }
+  /**
    * Handle clickable rolls.
    * @param {Event} event   The originating click event
    * @private
    */
-  _onRoll(event) {
-    event.preventDefault();
-    const element = event.currentTarget;
-    const dataset = element.dataset;
-    // test sur roll 
-    if(dataset?.roll == "") return // marquer une erreur ?
-    let rollTab = dataset.roll.split(".")
+
+  _onRoll(event,element, dataset) {
+    // test sur roll
+    if(dataset?.action == "") return // marquer une erreur ?
+    let rollTab = dataset.action.split(".")
     if(rollTab.length != 4) return // marquer une erreur ?
     let score = parseInt(rollTab[3])
     console.log("jet : ", element,dataset)
@@ -282,48 +323,14 @@ export class LesOubliesActorSheet extends ActorSheet {
     const speaker = ChatMessage.getSpeaker({ actor: this.actor });
     const rollMode = game.settings.get('core', 'rollMode');
     r.evaluate({async :false })
-    let label = "Jet !"
-    const retArray = r.terms[0].rolls
-    const retS = retArray[0]._total +score // le songe
-    const retC = retArray[1]._total +score // le Cauchemard
-    label += "lancer de "+rollTab[2]+"<br>Que vous choississez vous ? <br \> Le <strong>Songe ("+retS+")</strong> ou le <strong>Cauchemard("+retC+")</strong>"
-    r.toMessage({
-      speaker: speaker,
-      rollMode: rollMode,
-      flavor: label,
-    });
-    
-    console.log("Resultat", r)
-    //return roll;
-
-    // let monTexte =
-    // let chatData = {
-    //   user: game.user._id,
-    //   speaker: qui,
-    //   content : monTexte
-    // };
-    // ChatMessage.create(chatData);
-    // Handle item rolls.
-    // if (dataset.rollType) {
-    //   if (dataset.rollType == 'item') {
-    //     const itemId = element.closest('.item').dataset.itemId;
-    //     const item = this.actor.items.get(itemId);
-    //     if (item) return item.roll();
-    //   }
-    // }
-
-    // // Handle rolls that supply the formula directly.
-    // if (dataset.roll) {
-    //   let label = dataset.label ? `[ability] ${dataset.label}` : '';
-    //   let roll = new Roll(dataset.roll, this.actor.getRollData());
-    //   roll.toMessage({
-    //     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-    //     flavor: label,
-    //     rollMode: game.settings.get('core', 'rollMode'),
-    //   });
-    //   return roll;
-    // }
+    // lancer du resultat !
+    afficheResultat(this.actor, r, "Jet "+rollTab[2],"votre score est: "+score,true, score)
   }
+
+  /**
+   * recupération de drop
+   * @param {*} event
+   */
   _OnDrop(event) {
     event.preventDefault();
     const data = TextEditor.getDragEventData(event);
@@ -365,6 +372,16 @@ export class LesOubliesActorSheet extends ActorSheet {
         return await this.actor.createEmbeddedDocuments("Item", itemData ).then((items) => {
           return items
         })
+        break //non utile
+      case "compagnie":
+        // supprime les autres compagnies
+        let listCompa = this.actor.items.filter(x => x.type == 'compagnie')
+        if(listCompa.length> 0){
+          //let listRaceId =[]; listRace.forEach(x => { listRaceId.push(x.id)} )
+          let listCompaId = listCompa.map(x => x.id)
+          await this.actor.deleteEmbeddedDocuments('Item',listCompaId)
+        }
+        break
       case 'tribut':
         let listTribut = this.actor.items.filter(x => x.type == 'tribut')
         if(listTribut.length> 0){
@@ -398,7 +415,7 @@ export class LesOubliesActorSheet extends ActorSheet {
         // ajout des compétences de la tribut
         itemData = itemData instanceof Array ? itemData : [itemData];
         // ajout des competences manquantes et surtout augmentation de certaines
-        return await this.actor.createEmbeddedDocuments("Item", itemData ).then((item) => { 
+        return await this.actor.createEmbeddedDocuments("Item", itemData ).then((item) => {
           let cmpTrib = itemData[0].system.objCmp
           let entrCmp = Object.entries(cmpTrib)
           if(entrCmp.length > 0) {
@@ -421,6 +438,73 @@ export class LesOubliesActorSheet extends ActorSheet {
           }
           return item
         })
+        break;
+      case 'metier':
+        let listMetier = this.actor.items.filter(x => x.type == 'metier')
+        if(listMetier.length> 0){
+          // supprimer les autres tributs possiblement présntes
+          let listTributId = listMetier.map(x => x.id)
+          await this.actor.deleteEmbeddedDocuments('Item',listTributId).then((items) => {
+            //passer en revue les liste de tribut pour supprimer au score de la compétence
+            const lstCmp = itemData.system.objCmp
+            const lstId = Object.entries(lstCmp)
+            if(lstId.length > 0) {
+              for(let i = 0; i < lstId.length; i++) {
+                let cmpRef  = game.items.get(lstCmp[i].id) // on récupère la compétences
+                if(cmpRef){
+                  // cherche la compétence dans l'acteur
+                  let cmp = this.actor.items.getName(cmpRef.name)
+                  if(cmp){
+                    let objUdp = { system : {} }
+                    objUdp.system.score = cmp.system.score - lstCmp[i].value
+                      // pas de gestion des domaines !
+                      if(cmp.system.domaines != "" && lstCmp[i].domaine != "")
+                        if(cmp.system.domaines != lstCmp[i].domaine) objUdp.system.domaines = cpm.system.domaines + " a suppr : ("+ lstCmp[i].domaine+")"
+                        else objUdp.system.domaines = ""
+                      cmp.update(objUdp)
+                  }
+                }
+              }
+            }
+            return items
+          })
+        }
+        // ajout des compétences de la tribut
+        itemData = itemData instanceof Array ? itemData : [itemData];
+        // ajout des competences manquantes et surtout augmentation de certaines
+        return await this.actor.createEmbeddedDocuments("Item", itemData ).then((item) => {
+          let cmpMetier = itemData[0].system.objCmp
+          let entrCmp = Object.entries(cmpMetier)
+          if(entrCmp.length > 0) {
+            for(let i = 0; i < entrCmp.length; i++) {
+              let cmpRef  = game.items.get(cmpMetier[i].id) // on récupère la compétences générale
+              if(cmpRef){
+                // cherche la compétence dans l'acteur
+                let cmp = this.actor.items.getName(cmpRef.name)
+                if(cmp){
+                  let objUdp = { system : {} }
+                  objUdp.system.score = cmp.system.score + cmpMetier[i].value
+                    if(cmpMetier[i].domaine != "")
+                      if(cmp.system.domaines =="") objUdp.system.domaines = cmpMetier[i].domaine
+                        else objUdp.system.domaines = cmp.system.domaines + "," + cmpMetier[i].domaine
+                    cmp.update(objUdp)
+                }
+              }
+            }
+          }
+          let equipMetier = itemData[0].system.equipements
+          let entrEquip = Object.entries(equipMetier)
+          if(entrEquip.length> 0){
+            for(let i = 0; i < entrEquip.length; i++){
+              let equipRef = game.items.get(equipMetier[i].id)
+              if(equipRef) {
+
+              }
+            }
+          }
+          return item
+        })
+        break;
       default: {
         const itemId = itemData._id;
 

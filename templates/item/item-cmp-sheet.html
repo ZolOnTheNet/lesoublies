@@ -18,9 +18,13 @@
     <input type="text" name="system.profil" value="{{system.profil}}" data-dtype="String"/>
     <label class="resource-label">Score </label>
     <input type="text" name="system.score" value="{{system.score}}" data-dtype="Number"/>
-    <label class="resource-label"> Est Fermée ?
-      <input type="checkbox" name="system.estFermee" {{checked system.estFermee}}/>
-    </label><br>
+    <label class="resource-label">
+      <input type="checkbox" name="system.estFermee" {{checked system.estFermee}}/> Est Fermée ?
+    </label>
+    <label class="resource-label">
+      <input type="checkbox" name="system.estMagique" {{checked system.estMagique}}/> est Magique ?
+    </label>
+    <br>
       {{!-- To render inline rolls in a TinyMCE editor, you need to pass the parent actor's (if any) roll data to the rollData prop. --}}
       <label class="resource-label">Description :</label>
       <hr>

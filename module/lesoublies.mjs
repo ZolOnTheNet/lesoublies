@@ -7,6 +7,7 @@ import { LesOubliesItemSheet } from "./sheets/item-sheet.mjs";
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { LESOUBLIES } from "./helpers/config.mjs";
+import { EnventDuChat } from "./gestion-chat.mjs"
 import { AffecterProfils } from "./utils.mjs";
 
 /* -------------------------------------------- */
@@ -49,6 +50,10 @@ Hooks.once('init', async function() {
   game.api = {
     "affecertProfils" : AffecterProfils
   }
+
+  Hooks.on("renderChatMessage", (message, html, data) => {
+    html.find(".cmd").click((ev) =>EnventDuChat(ev, html, data));
+  });
   // Preload Handlebars templates.
   return preloadHandlebarsTemplates();
 });

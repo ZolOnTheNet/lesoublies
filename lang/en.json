@@ -18,5 +18,21 @@
   "LESOUBLIES.EffectEdit": "Edit Effect",
   "LESOUBLIES.EffectDelete": "Delete Effect",
 
-  "LESOUBLIES.Add": "Add"
+  "LESOUBLIES.Add": "Add",
+  
+  "LESOUBLIES.profils": {
+    "artiste": "Artiste",
+    "athlete":"Athlète",
+    "chasseur": "Chasseur",
+    "faiseur": "Faiseur",
+    "forceNature" :"Force de la Nature",
+    "guerrier" : "Guerrier",
+    "mystique" : "Mystique", 
+    "ombre" : "Ombre", 
+    "savant" : "Savant"
+  },
+  
+  "LESOUBLIES.choixSongeOuCauchemard" : "What your choise?",
+  "LESOUBLIES.cauchemard" : "Nigthmare",
+  "LESOUBLIES.songe" : "Dream"
 }

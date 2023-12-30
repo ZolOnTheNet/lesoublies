@@ -1,0 +1,32 @@
+<div class="roll roll-skill">
+    {{#if titre}}
+			<h1><div class="roll-description">{{titre}}</div></h1>
+    {{/if}}
+    {{#if description}}
+			<div class="roll-description">{{{description}}}</div>
+    {{/if}}
+    {{#if resultatQual}}
+			<div class="roll-description">{{{resultatQual}}}</div>
+    {{/if}}
+
+    <div class="roll-description">{{localize 'LESOUBLIES.choixSongeOuCauchemard'}} </div>
+    <hr>
+    <div class="flexrow">
+        <div>
+            <a class="cmd" data-action="chat.choix.songe.{{idActor}}.{{detteS}}.{{esti}}">
+               <i class="fa-solid fa-circle-arrow-right"></i>
+                <strong>{{scoreS}}</strong>({{localize 'LESOUBLIES.songe'}})
+                </a>
+        </div>
+        <div>
+            <a class="cmd" data-action="chat.choix.cauchemard.{{idActor}}.{{detteC}}.{{esti}}">
+                <i class="fa-solid fa-circle-arrow-right"></i> 
+                <strong>{{scoreC}}</strong>({{localize 'LESOUBLIES.cauchemard'}})
+            </a>
+        </div>
+    </div>
+    <hr>
+    <div>
+        {{cout}}
+    </div>
+</div>

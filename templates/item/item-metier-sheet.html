@@ -1,0 +1,85 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+    </div>
+  </header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="description">Description</a>
+    <a class="item" data-tab="attributes">Information</a>
+    <a class="item" data-tab="cmps">Compétences</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+
+    {{!-- Description Tab --}}
+    <div class="tab" data-group="primary" data-tab="description">
+        <label class="resource-label">Description</label>
+        {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+  </div>
+
+    {{!-- Information Tab --}}
+    <div class="tab attributes" data-group="primary" data-tab="attributes">
+      <div class="droppable">
+        {{!-- As you add new fields, add them in here! --}}
+        <label class="resource-label">Ecorses initiales</label>
+        <input type="text" name="system.ecorse" value="{{system.ecorse}}" data-dtype="Number" />
+        <div class="resource">
+          <label class="resource-label">Nom de la compétence magique si le métier a une spécialité magique</label>
+          <select name="system.cmpMagie">
+            {{selectOptions LstCmpMagie selected=system.cmpMagie}}
+          </select>
+        </div>
+        <label class="
+        <label class="resource-label">Equipement initial</label>
+        <textarea name="system.txtEquipt" rows="3">{{{system.txtEquipt}}}</textarea>
+        <label class="resource-label">Equipements automatiques <a class="cmd" data-action="metier.add.equip"> <i class="fas fa-plus"></i></a></label>
+        <ol class="item-list">
+          {{#each system.equipements as |obj id|}}
+            <li class="flexrow">
+              <label class="items-header" size="3em">{{id}}<a class="cmd" data-action="metier.del.equip.{{id}}.{{obj.name}}"><i class="fas fa-trash"></i></a></label>
+              <select name="system.equipements.{{id}}.id">
+                {{selectOptions ../LstEquipmt selected=obj.id}}
+              </select>
+              <span class="lesoublies">
+                <label class="resource-label">quantité :</label>
+                <input class="lesoublies autow" type="text" size="3em" name="system.equipements.{{id}}.value" value="{{obj.value}}" data-dtype="Number" style="width: auto;" />
+              </span>
+            </li>
+            <hr>
+          {{/each}}
+        </ol>
+      </div>
+    </div>
+    {{!-- Compétence Tab --}}
+    <div class="tab attributes" data-group="primary" data-tab="cmps">
+      <div class="lesoublies droppable"> 
+        <label class="resource-label">liste des compétences associées<a class="cmd" data-action="metier.add.cmp"> <i class="fas fa-plus"></i></a></label>
+        <hr>
+        <div>
+        {{#each system.objCmp as |obj id|}}
+        <div>
+          <label class="items-header">Compétence {{id}} <a class="cmd" data-action="metier.del.cmp.{{id}}"><i class="fas fa-trash"></i></a> :
+          </label>
+          <select name="system.objCmp.{{id}}.id">
+            {{selectOptions ../LstTotCmps selected=obj.id}}
+          </select>
+          <span class="lesoublies">
+            <input class="lesoublies autow" type="text" size="3em" name="system.objCmp.{{id}}.value" value="{{obj.value}}" data-dtype="Number" style="width: auto;" />
+          </span>
+          <div>
+            <input class="lesoublies autow" type="text" name="system.objCmp.{{id}}.domaine" placeholder="mettez les domaines séparés par virgules si besoin" value="{{obj.domaine}}" data-dtype="String" />
+          </div>
+        </div>
+        <hr>
+        {{/each}}
+        </div>
+      </div>
+    </div>
+  </section>
+
+</form>

@@ -7,7 +7,7 @@
   return loadTemplates([
 
     // Actor partials.
-    "systems/lesoublies/templates/actor/parts/actor-features.html",
+    "systems/lesoublies/templates/actor/parts/actor-cmp.html",
     "systems/lesoublies/templates/actor/parts/actor-items.html",
     "systems/lesoublies/templates/actor/parts/actor-spells.html",
     "systems/lesoublies/templates/actor/parts/actor-effects.html",

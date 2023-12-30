@@ -9,7 +9,7 @@
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
     <a class="item" data-tab="description">Description</a>
-    <a class="item" data-tab="attributes">Attributes</a>
+    <a class="item" data-tab="details">Détails</a>
   </nav>
 
   {{!-- Sheet Body --}}
@@ -21,12 +21,53 @@
     </div>
 
     {{!-- Attributes Tab --}}
-    <div class="tab attributes" data-group="primary" data-tab="attributes">
+    <div class="tab attributes" data-group="primary" data-tab="details">
       {{!-- As you add new fields, add them in here! --}}
       <div class="resource">
-        <label class="resource-label">Spell Level</label>
-        <input type="text" name="system.spellLevel" value="{{system.spellLevel}}" data-dtype="Number"/>
+        <label class="resource-label">Songe ou Cauchemard</label>
+        <select name="system.codeSouC">
+          {{selectOptions LstSongeCauch selected=system.codeSouC}}
+        </select>
       </div>
+      <div class="resource">
+        <label class="resource-label">Cout en fils de Songe ou de Cauchemard</label>
+        <input type="text" name="system.cout" value="{{system.cout}}" data-dtype="Number"/>
+      </div>
+      <div class="resource">
+        <label class="resource-label">Préparation</label>
+        <input type="text" name="system.prepartation" value="{{system.prepartation}}" data-dtype="String"/>
+      </div>
+      <div class="resource">
+        <label class="resource-label">Durée</label>
+        <input type="text" name="system.duree" value="{{system.duree}}" data-dtype="String"/>
+      </div>
+      <div class="resource">
+        <label class="resource-label">Portée</label>
+        <input type="text" name="system.portee" value="{{system.portee}}" data-dtype="String"/>
+      </div>
+      <div class="resource">
+        <label class="resource-label">Air d'effet</label>
+        <input type="text" name="system.airDEffet" value="{{system.airDEffet}}" data-dtype="String"/>
+      </div>
+      <label class="resource-label">
+        <input type="checkbox" name="system.cumul" {{checked system.cumul}}/> Peut se cumuler
+      </label>
+      <div class="resource">
+        <label class="resource-label">Description de l'effet</label>
+        <textarea name="system.effet" rows="3">{{{system.effet}}}</textarea>
+      </div>
+      <div class="resource">
+        <label class="resource-label">Nom de la compétence magique</label>
+        <select name="system.cmpMagie">
+          {{selectOptions LstCmpMagie selected=system.cmpMagie}}
+        </select>
+      </div>
+      <label class="resource-label">
+        <input type="checkbox" name="system.exclusifF" {{checked source.system.exclusifF}}/> est dans la liste des farfadets
+      </label>
+      <label class="resource-label">
+        <input type="checkbox" name="system.armureCompte" {{checked source.system.armureCompte}}/> l'armure compte si cela produit des dommages.
+      </label>
     </div>
   </section>
 </form>

@@ -50,7 +50,7 @@ export class LesOubliesActor extends Actor {
 
     // METTRE ICI LES PROFILS CALCULER et LES CMP ?
     console.log("recacul des données acteurs")
-    
+
     const lesCmps = this.items.filter(x => x.type=='cmp')
     // Loop through ability scores, and add their modifiers to our sheet output.
     // for (let [key, ability] of Object.entries(systemData.abilities)) {
