@@ -13,10 +13,10 @@ export class LesOubliesActorSheet extends ActorSheet {
     return mergeObject(super.defaultOptions, {
       classes: ["lesoublies", "sheet", "actor"],
       template: "systems/lesoublies/templates/actor/actor-sheet.html",
-      width: 650,
+      width: 700,
       height: 600,
       dragDrop: [{dragSelector: null, dropSelector: ".droppable"}],
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "cmp" }]
     });
   }
 
@@ -42,6 +42,7 @@ export class LesOubliesActorSheet extends ActorSheet {
     context.system = actorData.system;
     context.flags = actorData.flags;
     context.NomRace = "Hybride?" // Race par défaut
+    context.type = actorData.type
     // Prepare character data and items.
     if (actorData.type == 'character') {
       this._prepareItems(context);
@@ -58,7 +59,8 @@ export class LesOubliesActorSheet extends ActorSheet {
     if(context.system.biography == "" ) context.system.biography = ' '
     // Prepare active effects
     context.effects = prepareActiveEffectCategories(this.actor.effects);
-
+    context.infoTaille = LESOUBLIES.tailles[actorData.system.taille.value].label
+    context.infoTailleCm = LESOUBLIES.tailles[actorData.system.taille.value].cm
     return context;
   }
 
@@ -109,6 +111,7 @@ export class LesOubliesActorSheet extends ActorSheet {
     };
     context.aRace = false;
     context.MagieA1 = "x" // il faudrai être sur que le nom de la magie soit fixé avant
+    let aAffiche3Col=[ [],[],[] ];
     // Iterate through items, allocating to containers
     for (let i of context.items) {
       i.img = i.img || DEFAULT_TOKEN;
@@ -139,11 +142,13 @@ export class LesOubliesActorSheet extends ActorSheet {
       }
       else if (i.type === 'cmp') {
         // alogot d'enrichissement de l'objet cmpProf
-        if(profils.includes(i.system.profil)) {
-          cmpProf[i.system.profil].items.push(i)
-        } else {
-          cmpProf[i.system.profil] = { 'value' : 0, 'items' : [i]  }
-          profils.push(i.system.profil); // ajout du texte du nom de profil
+        if(context.type == 'character') {
+          if(profils.includes(i.system.profil)) {
+            cmpProf[i.system.profil].items.push(i)
+          } else {
+            cmpProf[i.system.profil] = { 'value' : 0, 'items' : [i]  }
+            profils.push(i.system.profil); // ajout du texte du nom de profil
+          }
         }
         lstCmps.push(i)
       }
@@ -169,30 +174,33 @@ export class LesOubliesActorSheet extends ActorSheet {
     }
 
     // test sur la race (les autres ne font qu'augmenter les cmp)
-    profils = profils.toSorted((a,b) => a > b)
-    let aAffiche3Col=[ [],[],[] ]; let ind = 0; let nbProfils = profils.length / 3; let indice =0
-    if(context.aRace) {
-      profils.forEach(x => {
-        let prof = x
-        if(prof.toUpperCase() == 'FORCE DE LA NATURE') prof = "forceNature"
-          else if(prof == 'Athlète') prof = "athlete"
-            else prof = prof.toLowerCase()
-        let lstItem = cmpProf[x].items.toSorted((a,b) => a.name > b.name)
-        //let vProf = this.actor.
-        const stdProfil =  parseInt(context.race.system.profils[prof])
-        //aAfficher.push( { "name": x, "profil": "", "value": stdProfil, "isProfil": true, "totValue": stdProfil, "isModifiable": false, "isRoll": true})
-        aAffiche3Col[ind].push( { "name": x, "profil": "", "value": stdProfil, "isProfil": true, "totValue":stdProfil, "isModifiable": false, "isRoll": true})
-        lstItem.forEach(y => {
-          const valCmp = parseInt(y.system.score)
-          //aAfficher.push( { "name": y.name, "profil": x, "value":valCmp, "isProfil": false, "totValue":valCmp + stdProfil, "isModifiable": true, "isRoll": !(y.system.estFermee && y.score == 0) })
-          aAffiche3Col[ind].push( { "name": y.name, "id": y._id, "profil": x, "value": valCmp, "isProfil": false, "totValue":valCmp+ stdProfil, "isModifiable": true, "isRoll": !(y.system.estFermee && y.score == 0) })
+    //profils = profils.toSorted((a,b) => a > b)
+    if(context.type == 'character') {
+      profils = profils.sort()
+      let ind = 0; let nbProfils = profils.length / 3; let indice =0
+      if(context.aRace) {
+        profils.forEach(x => {
+          let prof = x
+          if(prof.toUpperCase() == 'FORCE DE LA NATURE') prof = "forceNature"
+            else if(prof == 'Athlète') prof = "athlete"
+              else prof = prof.toLowerCase()
+          let lstItem = cmpProf[x].items.toSorted((a,b) => a.name > b.name)
+          //let vProf = this.actor.
+          const stdProfil =  parseInt(context.race.system.profils[prof])
+          //aAfficher.push( { "name": x, "profil": "", "value": stdProfil, "isProfil": true, "totValue": stdProfil, "isModifiable": false, "isRoll": true})
+          aAffiche3Col[ind].push( { "name": x, "profil": "", "value": stdProfil, "isProfil": true, "totValue":stdProfil, "isModifiable": false, "isRoll": true})
+          lstItem.forEach(y => {
+            const valCmp = parseInt(y.system.score)
+            //aAfficher.push( { "name": y.name, "profil": x, "value":valCmp, "isProfil": false, "totValue":valCmp + stdProfil, "isModifiable": true, "isRoll": !(y.system.estFermee && y.score == 0) })
+            aAffiche3Col[ind].push( { "name": y.name, "id": y._id, "profil": x, "value": valCmp, "isProfil": false, "totValue":valCmp+ stdProfil, "isModifiable": true, "isRoll": !(y.system.estFermee && y.score == 0) })
+          })
+          indice++;
+          ind = Math.floor(indice/nbProfils);
         })
-        indice++;
-        ind = Math.floor(indice/nbProfils);
-      })
+      }
     }
         // Assign and return
-    if(context.taille != context.system.taille.value) context.system.taille.value = context.taille
+    //if(context.taille != context.system.taille.value) context.system.taille.value = context.taille
     // reduction des sorts : seulement ceux qui existe
     for(let i = 0; i < 11; i++) { // a changer si vous changer le nombre de cout référencés (cf spells au début)
       if(spells[i].length ==0) { const x = delete spells[i]; }
@@ -204,9 +212,11 @@ export class LesOubliesActorSheet extends ActorSheet {
     context.profils = profils;
     context.lstCmps = lstCmps;
     //context.aAfficher = aAfficher;
-    context.aAfficher1 = aAffiche3Col[0];
-    context.aAfficher2 = aAffiche3Col[1];
-    context.aAfficher3 = aAffiche3Col[2];
+    if(context.type == 'character') { // affichage en trois colonnes seulement poru les PJ
+      context.aAfficher1 = aAffiche3Col[0];
+      context.aAfficher2 = aAffiche3Col[1];
+      context.aAfficher3 = aAffiche3Col[2];
+    }
     // contient toutes lignes correctement agencées
   }
 
@@ -298,8 +308,18 @@ export class LesOubliesActorSheet extends ActorSheet {
         this._onRoll(event, element, dataset)
         break;
       case 'acteur':
-        let item = this.actor.items.get(clickTab[3]) // a default d'avoir l'id
-        return item.sheet.render(true);
+        switch(clickTab[2]) {
+          case 'equip':
+            let item = this.actor.items.get(clickTab[3]) // a default d'avoir l'id
+            return item.sheet.render(true);
+            break
+          case 'equipr':
+            let obj = this.actor.system.equipementsR
+            obj[""+Object.entries(obj).length] ={ "name": "nouv equipement", "quantity":1, "cout":0 }
+            this.actor.update({"system.equipementsR": obj})
+            //this.render(true)
+        }
+        break
       default:
         console.log("Erreur : clickclick", element, dataset)
         break

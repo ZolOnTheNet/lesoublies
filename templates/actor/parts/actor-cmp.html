@@ -16,6 +16,7 @@
             {{else}}
             <div class="ability flexrow flex-group-center">
               <label  class="resource-label flexlarge align-left rollable" data-action="roll.cmp.{{cmp.name}}.{{cmp.totValue}}">{{cmp.name}} ({{cmp.value}})</label>
+              <a class="rollable" data-action="roll.diag.cmp.{{cmp.name}}.{{cmp.totValue}}"><i class="fas fa-dice"></i></a>
               <span><strong>{{cmp.totValue}}</strong> <a class="rollable" data-action="acteur.edit.cmp.{{cmp.id}}.{{cmp.name}}"><i class="fas fa-edit"></i></a></span>
             </div>
             {{/if}}
@@ -44,7 +45,8 @@
           </div>
           {{else}}
           <div class="ability flexrow flex-group-center">
-            <label  class="resource-label flexlarge align-left rollable" data-action="roll.cmp.{{cmp.name}}.{{cmp.totValue}}">{{cmp.name}} ({{cmp.value}})</label>
+            <label  class="resource-label flexlarge align-left rollable" data-action="roll.cmp.{{cmp.name}}.{{cmp.totValue}}">{{cmp.name}}({{cmp.value}})</label>
+            <a class="rollable" data-action="roll.diag.cmp.{{cmp.name}}.{{cmp.totValue}}"><i class="fas fa-dice"></i></a>
             <span><strong>{{cmp.totValue}}</strong> <a class="rollable" data-action="acteur.edit.cmp.{{cmp.id}}.{{cmp.name}}"><i class="fas fa-edit"></i></a></span>
           </div>
           {{/if}}
@@ -70,6 +72,7 @@
         {{else}}
           <div class="ability flexrow flex-group-center">
             <label  class="resource-label flexlarge align-left rollable" data-action="roll.cmp.{{cmp.name}}.{{cmp.totValue}}">{{cmp.name}} ({{cmp.value}})</label>
+            <a class="rollable" data-action="roll.diag.cmp.{{cmp.name}}.{{cmp.totValue}}"><i class="far fa-dice"></i></a>
             <span><strong>{{cmp.totValue}}</strong> <a class="rollable" data-action="acteur.edit.cmp.{{cmp.id}}.{{cmp.name}}"><i class="fas fa-edit"></i></a></span>
           </div>
         {{/if}}

@@ -17,7 +17,7 @@
             <strong>Race :</strong> {{NomRace}}<br>
             <strong>Tribut :</strong> {{NomTribut}}<br>
             <strong>metier :</strong> {{NomMetier}}<br>
-            <strong>taille :</strong> {{system.taille.value}}<br>
+            <strong>taille :</strong> {{system.taille.value}} ({{infoTaille}} : {{infoTailleCm}})<br>
           <hr>
           <div class="resource-content flexrow flex-center flex-between">
             <label for="system.PdV.value" class="resource-label">PdV</label>
@@ -64,9 +64,10 @@
     </div>
   </header>
     <div class="flexrow">
-        <label class="resource-label">Compagnie : {{NomCompagnie}}</label>
+        <label class="flex3 resource-label">Compagnie : {{NomCompagnie}}</label>
         <label for="system.ecorse" class="resource-label">Ecorces</label>
         <input type="text"  size="6em" name="system.ecorse.value" value="{{system.ecorse.value}}" data-dtype="Number"/>
+        <label class="resource-label align-center">Auto-Dialogue :<br><a class="rollable" data-action="diag.auto.toggle"><i class="fas fa-toggle-on"></i>On</a></label>
     </div>
     <div >
       <label class="resource-label">Pouvoir : </label>{{DescPouvoir}}
@@ -81,7 +82,7 @@
     <a class="item" data-tab="description">Description</a>
     <a class="item" data-tab="items">Equipements</a>
     <a class="item" data-tab="spells">Sorts</a>
-    <a class="item" data-tab="effects">Effets</a>
+    {{!--  <a class="item" data-tab="effects">Effets</a> --}}
   </nav>
 
   {{!-- Sheet Body --}}

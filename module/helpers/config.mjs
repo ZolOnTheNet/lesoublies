@@ -39,11 +39,18 @@ LESOUBLIES.difficultes = {
   "Prodigieuse" : -9
 }
 
-LESOUBLIES.reussite = {
+LESOUBLIES.reussites = {
   "Normale" : 0,
   "Avantageuse" : 3,
   "Spéciale" : 6,
   "Exceptionnelle":9,
   "Critique" : 12,
   "Héroique" : 15
+}
+
+LESOUBLIES.tailles = {
+  "1": { "label": "Minuscule", "cm" : "moins de 4 cm" ,"races":"fées"},
+  "2": { "label": "Petite", "cm" : "4 à 6 cm", "races":"gnomes(4/5cm), korrigans (5/6cm)"},
+  "3": { "label": "Moyenne", "cm" : "6 à 8 cm", "races":"farfadets (6/8cm), lutins, kobolds (7/8cm)"},
+  "4": { "label": "Grande", "cm" : "plus de 10 cm", "races":"Velu nutons (10/13+cm)"}
 }

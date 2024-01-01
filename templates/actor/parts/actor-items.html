@@ -4,7 +4,7 @@
     <div class="item-name">Descriptions</div>
     <div class="item-name">quantité</div>
     <div class="item-controls">
-      <a class="item-control item-create" title="Create item" data-type="item"><i class="fas fa-plus"></i>{{localize "LESOUBLIES.Add"}}</a>
+      <a class="item-control item-create" title="Create item" data-action="acteur.add.equip" data-type="equipement"><i class="fas fa-plus"></i>{{localize "LESOUBLIES.Add"}}</a>
     </div>
   </li>
   {{#each gear as |item id|}}
@@ -24,22 +24,30 @@
   {{/each}}
 </ol>
 <hr>
-<label >Equipement rapide</label>
+<label >Liste d'équipement "rapide"</label>
 ajouter rapidement un objet, sans interaction
 <ol class="items-list">
   <li class="item flexrow items-header">
-    <div class="item-name">Equipement</div>
-    <div class="item-name">quantité/taille</div>
+    <div class="item-name flex3">Equipement Rapide</div>
+    <div class="item-name"></div>
+    {{!-- <div class="item-name">Q/T : quantité ou taille</div> --}}
+    <div class="item-name">Quantité/taille &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cout</div>
     <div class="item-controls">
       <a class="item-control rollable" data-action="acteur.add.equipr" title="Create item" data-type="item"><i class="fas fa-plus"></i>{{localize "LESOUBLIES.Add"}}</a>
     </div>
   </li>
-  {{#each equipementR as |item id|}}
-    <li class="item flexrow" data-item-id="{{item._id}}">
+  {{#each system.equipementsR as |item id|}}
+    <li class="item flexrow" data-item-id="{{id}}">
       <div class="item-name">
-        <h4>{{item.name}}</h4>
+        <h4>{{id}}.</h4>
+        <input class="flex2" type="text" name="system.equipementsR.{{id}}.name" value="{{item.name}}" data-dtype="String"/>
       </div>
-      <div class="item-formula item-prop">{{item.system.formula}}</div>
+      <div class="resource-content flexrow flex-center flex-between">
+        {{!-- <label for="system.equipementsR.{{id}}.quantity" class="resource-label">Q/T :</label> --}}
+        <input type="text" name="system.equipementsR.{{id}}.quantity" value="{{item.quantity}}" data-dtype="Number"/>
+        {{!-- <label for="system.equipementsR.{{id}}.cout" class="resource-label">Cout :</label> --}}
+        <input type="text" name="system.equipementsR.{{id}}.cout" value="{{item.cout}}" data-dtype="String"/>
+      </div>
       <div class="item-controls">
         <a class="item-control rollable" data-action="acteur.del.equipr.{{id}}" title="Delete Item"><i class="fas fa-trash"></i></a>
       </div>

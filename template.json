@@ -19,6 +19,11 @@
           "formula":""
         },
         "biography": "",
+        "ecorse" : {
+          "label":"LESOUBILES.Ecorce",
+          "abrv" : "LESOUBILES.ABRV.Ecorse",
+          "value" : 0
+        },
         "Songe" : {
           "label":"LESOUBILES.Songe",
           "abrv" : "LESOUBILES.ABRV.Songe",
@@ -55,17 +60,6 @@
             "value": 0
           }
         },
-        "ecorse" : {
-          "label":"LESOUBILES.Ecorce",
-          "abrv" : "LESOUBILES.ABRV.Ecorse",
-          "value" : 0
-        },
-        "sensValeur": {
-          "label":"LESOUBILES.SensValeur",
-          "abrv" : "LESOUBILES.ABRV.SensValeur",
-          "value" : 0.5
-        },
-        "idRace" : "",
         "equipementsR": {}
       }
     },
@@ -76,11 +70,20 @@
         "total": 0,
         "consom" : 0
       },
-      "idMetier" : "" 
+      "idRace" : "",
+      "idMetier" : "",
+      "sensValeur": {
+        "label":"LESOUBILES.SensValeur",
+        "abrv" : "LESOUBILES.ABRV.SensValeur",
+        "value" : 0.5
+      }
     },
     "npc": {
       "templates": ["base"],
-      "cr": 0
+      "texte":"",
+      "special":"",
+      "nbDes" : 1,
+      "degats": {}
     }
   },
   "Item": {
