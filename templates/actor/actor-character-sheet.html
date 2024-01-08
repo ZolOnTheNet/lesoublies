@@ -21,16 +21,16 @@
           <hr>
           <div class="resource-content flexrow flex-center flex-between">
             <label for="system.PdV.value" class="resource-label">PdV</label>
-            <input type="text" name="system.PdV.value"  size="4em" value="{{system.PdV.value}}" data-dtype="Number"/>
+            <input class="normal-input" type="text" name="system.PdV.value"  size="3em" value="{{system.PdV.value}}" data-dtype="Number"/>
             <span> / </span>
-            <input type="text" name="system.PdV.max"  size="4em" value="{{system.PdV.max}}" data-dtype="Number"/>
+            <input class="normal-input" size="3em" type="text" name="system.PdV.max" value="{{system.PdV.max}}" data-dtype="Number"/>
           </div>
           <hr>
         </div>
 
         <div class="resource flex-group-center">
-          <label for="system.Songe.value" class="resource-label">Songe <a class="rollable" data-action="songe.recalcul"><i class="fa-solid fa-arrows-rotate"></i></a></label>
           <div class="resource-content flexrow flex-center flex-between">
+            <label for="system.Songe.value" class="resource-label">Songe <a class="rollable" data-action="songe.recalcul"><i class="fa-solid fa-arrows-rotate"></i></a></label>
             <input type="text" name="system.Songe.value" value="{{system.Songe.value}}" data-dtype="Number"/>
           </div>
           <label for="system.Songe.Points.value" class="resource-label">Pts de Songe</label>
@@ -40,13 +40,13 @@
             <input type="text" name="system.Songe.Points.max" value="{{system.Songe.Points.max}}" data-dtype="Number"/>
           </div>
           <label for="system.Songe.dette.value" class="resource-label">Dette</label>
-          <input type="text" name="system.Songe.dette.value" value="{{system.Songe.dette.value}}" data-dtype="Number"/>
+          <input class="normal-input" size="3em" type="text" name="system.Songe.dette.value" value="{{system.Songe.dette.value}}" data-dtype="Number"/>
           <span> <br> </span>
         </div>
 
         <div class="resource flex-group-center">
-          <label for="system.Cauchemard.value" class="resource-label">Cauchemard</label>
           <div class="resource-content flexrow flex-center flex-between">
+            <label for="system.Cauchemard.value" class="resource-label">Cauchemard</label>
             <input type="text" name="system.Cauchemard.value" value="{{system.Cauchemard.value}}" data-dtype="Number"/>
           </div>
           <label for="system.Cauchemard.value" class="resource-label">Pts de Cauchemard</label>
@@ -57,7 +57,7 @@
           </div>
           <div>
             <label for="system.Cauchemard.dette.value" class="resource-label">Dette</label>
-            <input type="text" name="system.Cauchemard.dette.value" value="{{system.Cauchemard.dette.value}}" data-dtype="Number"/>
+            <input class="normal-input" size="3em" type="text" name="system.Cauchemard.dette.value" value="{{system.Cauchemard.dette.value}}" data-dtype="Number"/>
           </div>
         </div>
       </div>

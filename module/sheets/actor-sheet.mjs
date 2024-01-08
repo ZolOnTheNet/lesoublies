@@ -1,6 +1,7 @@
 import { LESOUBLIES } from "../helpers/config.mjs";
 import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
 import { afficheResultat } from "../gestion-chat.mjs"
+import { diagCmb } from "../diags/diag-cmb.mjs";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -304,8 +305,9 @@ export class LesOubliesActorSheet extends ActorSheet {
     switch(clickTab[0]){
       case 'songe':
         break;
-      case 'roll':
-        this._onRoll(event, element, dataset)
+      case 'roll': // il faudra changer quand digCmb sera au point par le transformer en diagCmp
+        if(clickTab[1] == 'diag') diagCmb({ token:this.token, cmpNom : clickTab[3], acteur:{}, caseAction:"F", equipt:{} })
+        else this._onRoll(event, element, dataset)
         break;
       case 'acteur':
         switch(clickTab[2]) {
@@ -318,6 +320,19 @@ export class LesOubliesActorSheet extends ActorSheet {
             obj[""+Object.entries(obj).length] ={ "name": "nouv equipement", "quantity":1, "cout":0 }
             this.actor.update({"system.equipementsR": obj})
             //this.render(true)
+            break;
+          case 'cmp':
+            let itemCmp = this.actor.items.get(clickTab[3])
+            switch(clickTab[1]){
+              case 'edit':
+                 // a default d'avoir l'id
+                return itemCmp.sheet.render(true);
+              break;
+              case 'del' :
+                return itemCmp.delete();
+                break;
+            }
+            break;
         }
         break
       default:

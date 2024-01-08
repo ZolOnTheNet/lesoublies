@@ -1,0 +1,75 @@
+<form class="zol-dice-prompt" autocomplete="off">
+    <div class="zol-dice-prompt">
+        <header >
+            <span >Gestion des combats</span>
+            <span class="hint" >{{description}}</span>
+        </header>
+        <div>nombre d'action libres choisie : 
+            <td class="plusPolice">
+              Actions : <i class="fas fa-minus-square cmd" title="Reduit" data-action="action.set.moins.{{nbActions}}"></i> 
+              <input class="normal-input" type="text" size="1em" name="nbActions" value="{{nbActions}}" data-dtype="Number"/>
+              <i class="fas fa-plus-square cmd" title="Augmente" data-action="action.set.plus.{{nbActions}}"></i>
+              <span class="grdPolice">{{{visuAction}}}</span><i class="fad fa-sync rollable" data-action="action.reset.1"></i>
+            </td></div>
+        <div>Choix de la difficulté:</div>
+        <div class="grid-diff">
+            {{#each lstDifficultes as |diff key|}}
+        <div><a class="cmd" data-action="bonus.troggle.{{key}}.{{diff}}"><span>
+            {{#ifEq key ../difficulte}}
+                <i class="fas fa-circle-check"></i>
+            {{/ifEq}}
+            {{key}}</span></a></div>
+        <div> {{diff}} </div>
+            {{/each}}
+        </div>
+        <div class="data">
+            <label>Difficulté total : </label>
+            <input class="normal-input" size="3em" type="number" name="difficulte" value="0"/>
+        </div>
+        <hr>
+        <div class="grid grid-3col" >
+            
+            <div>
+                <div class="grid-border">
+                {{#each lstPrimes as |prime key|}}
+                    <div class="cmd" data-action="prime.choix.{{key}}">
+                         {{#ifin key ../choixPrimes}}
+                            <i class="fas fa-circle-check"></i>
+                        {{/ifin}}
+                        <strong>{{prime.label}}</strong>
+                        {{#if prime.description}}
+                            <br><small>{{prime.description}}</small>
+                        {{/if}}
+                    </div><br><br>    
+                {{/each}}
+                </div>
+            </div>
+            <div>
+                
+            </div>
+            <div>
+                <div class="grid-border">
+                    {{#each lstPenalites as |peine key|}}
+                        <div class="cmd" data-action="penalite.choix.{{key}}">
+                            {{#ifin key ../choixPenalites}}
+                            <i class="fas fa-circle-check"></i>
+                            {{/ifin}}
+                        <strong>{{peine.label}}</strong>
+                        {{#if peine.description}}
+                            <br><small>{{peine.description}}</small>
+                        {{/if}}
+                        </div><br><br>   
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+        <input name="obj" type="text" value='{{objValue}}' />
+    </div>
+    <footer class="sheet-footer grid grid-6col">
+        <div class="grid-span-5" ></div>
+        
+        <button type="submit" name="submit">
+            <i class="fa fa-check"></i> OK
+        </button>
+  </footer>
+</form>

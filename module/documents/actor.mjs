@@ -1,3 +1,5 @@
+import { LESOUBLIES } from "../helpers/config.mjs";
+import { strNoAccent } from "../utils.mjs"
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
@@ -37,6 +39,8 @@ export class LesOubliesActor extends Actor {
     // things organized.
     this._prepareCharacterData(actorData);
     this._prepareNpcData(actorData);
+    /* Partie commune au deux */
+    this._prepareData(actorData)
   }
 
   /**
@@ -51,7 +55,9 @@ export class LesOubliesActor extends Actor {
     // METTRE ICI LES PROFILS CALCULER et LES CMP ?
     console.log("recacul des données acteurs")
 
-    const lesCmps = this.items.filter(x => x.type=='cmp')
+    //const lesCmps = this.items.filter(x => x.type=='cmp')
+    
+
     // Loop through ability scores, and add their modifiers to our sheet output.
     // for (let [key, ability] of Object.entries(systemData.abilities)) {
     //   // Calculate the modifier using d20 rules.
@@ -68,6 +74,30 @@ export class LesOubliesActor extends Actor {
     // Make modifications to data here. For example:
     const systemData = actorData.system;
     systemData.xp = (systemData.cr * systemData.cr) * 100;
+  }
+
+  _prepareData(actorData){
+    const systemData = actorData.system;
+    let initItem = this.items.getName("Rapidité")
+    let race = undefined
+    if(actorData.system.idRace == '') { 
+      race = this.items.filter(x => x.type == 'race')
+      race = race[0]
+      actorData.system.idRace = race.id
+    } else {
+      race = this.items.get(actorData.idRace)
+    }
+    let bonusRapidite = 0
+    if(race) {
+      bonusRapidite = parseInt(race.system.profils.athlete) // la race peut influencer Rapidité
+    }
+    if(initItem == undefined) initItem = this.items.getName("Rapidite") // si la compétence Rapidité ou Rapidite existe alors on l'utilise
+    if(initItem) {
+      systemData.init = initItem.system.score + bonusRapidite
+    } else {
+      systemData.init = 0
+    }
+    if(systemData.autoDialog == undefined) systemData.autoDialog = false
   }
 
   /**
@@ -88,19 +118,21 @@ export class LesOubliesActor extends Actor {
    */
   _getCharacterRollData(data) {
     if (this.type !== 'character') return;
-
-    // Copy the ability scores to the top level, so that rolls can use
-    // formulas like `@str.mod + 4`.
-    // if (data.abilities) {
-    //   for (let [k, v] of Object.entries(data.abilities)) {
-    //     data[k] = foundry.utils.deepClone(v);
-    //   }
-    // }
-
+    // recopie au niveau system tout l'ensemble des compétences 
+    const raceProfil = this.items.filter(x => x.type == 'race')
+    let probase = { "artiste":0, "athlete":0, "chasseur": 0, "faiseur": 0, "forceNature" :0, "guerrier" : 0, "mystique" : 0,  "ombre" : 0,  "savant" : 0 }
+    if(raceProfil) {
+      probase = raceProfil[0].system.profils
+      for (let [k, v] of Object.entries(probase)) { probase[k] = parseInt(v) } 
+    }
+    const cmp = this.items.filter(x => x.type == 'cmp')
+    // recopie sans accents (sinon @ ne fonctionne pas !)
+    cmp.forEach(x => { data[strNoAccent(x.name)]=x.system.score + probase[LESOUBLIES.profilsInv[x.system.profil]] })
     // Add level for easier access, or fall back to 0.
   //   if (data.attributes.level) {
   //     data.lvl = data.attributes.level.value ?? 0;
   //   }
+    console.log("RollData", data)
   }
 
   /**
@@ -108,7 +140,8 @@ export class LesOubliesActor extends Actor {
    */
   _getNpcRollData(data) {
     if (this.type !== 'npc') return;
-
+    const cmp = this.items.filter(x => x.type == 'cmp') // pas de cumul avec autre chose que l'item
+    cmp.forEach(x => { data[strNoAccent(x.name)]=x.system.score })
     // Process additional NPC data here.
   }
 

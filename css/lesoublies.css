@@ -223,6 +223,70 @@
   text-align: center;
 }
 
+/**
+ * Ajout de règles OG 
+ * dialog-content pris de tinites
+ */
+ .window-content .grid-diff {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr 1fr 2fr 1fr;
+  align-items: center;
+  margin: 3px;
+  margin-top: 6px;
+  margin-bottom: 10px;
+  border: 1px solid var(--color-border-light-2);
+  border-radius: 3px;
+  box-shadow: 0 0 2px #FFF inset;
+  background: #c0b8b877;
+}
+.window-content-content .grid-diff div {
+  display: flex;
+  justify-content: center;
+  padding: 3px;
+} 
+
+.window-content .grid-border {
+  display: grid;
+  align-items: center;
+  text-align: center;
+  margin: 3px;
+  margin-top: 6px;
+  margin-bottom: 10px;
+  border: 1px solid var(--color-border-light-2);
+  border-radius: 3px;
+  box-shadow: 0 0 2px #FFF inset;
+  background: #c0b8b877;
+}
+
+/* a partir de mes sources */
+.normal-input {
+  width : auto ! important;
+ }
+ 
+.cmd {
+  &:hover,
+  &:focus {
+    color: #000;
+    text-shadow: 0 0 10px red;
+    cursor: pointer;
+  }
+}
+
+.txtUtiEnCours{
+  color: red;
+  font-weight: bold;
+}
+
+.txtUtiNon {
+  font-weight: lighter;
+  color: gray;
+}
+
+.txtUtiOui {
+  font-weight: bold;
+  color: black;
+}
+
 /* Styles limited to lesoublies sheets */
 .lesoublies {
   /* ----------------------------------------- */

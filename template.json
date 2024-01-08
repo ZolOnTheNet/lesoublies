@@ -4,15 +4,15 @@
     "templates": {
       "base": {
         "taille": {
-          "label":"LESOUBILES.Taille",
-          "abrv" : "LESOUBILES.ABRV.Taille",
+          "label":"LESOUBLIES.Taille",
+          "abrv" : "LESOUBLIES.ABRV.Taille",
           "value" : 1,
           "min": 0,
           "max": 10          
         },
         "PdV": {
-          "label":"LESOUBILES.PdV",
-          "abrv" : "LESOUBILES.ABRV.PdV",
+          "label":"LESOUBLIES.PdV",
+          "abrv" : "LESOUBLIES.ABRV.PdV",
           "value": 10,
           "min": 0,
           "max": 10,
@@ -20,43 +20,43 @@
         },
         "biography": "",
         "ecorse" : {
-          "label":"LESOUBILES.Ecorce",
-          "abrv" : "LESOUBILES.ABRV.Ecorse",
+          "label":"LESOUBLIES.Ecorce",
+          "abrv" : "LESOUBLIES.ABRV.Ecorse",
           "value" : 0
         },
         "Songe" : {
-          "label":"LESOUBILES.Songe",
-          "abrv" : "LESOUBILES.ABRV.Songe",
+          "label":"LESOUBLIES.Songe",
+          "abrv" : "LESOUBLIES.ABRV.Songe",
           "EstSensible": false,
           "Points" : {
-            "label":"LESOUBILES.PdS",
-            "abrv" : "LESOUBILES.ABRV.PdS",
+            "label":"LESOUBLIES.PdS",
+            "abrv" : "LESOUBLIES.ABRV.PdS",
             "value": 0,
             "min": 0,
             "max": 0
           },
           "value":0,
           "dette": {
-            "label":"LESOUBILES.PdS",
-            "abrv" : "LESOUBILES.ABRV.PdS",
+            "label":"LESOUBLIES.PdS",
+            "abrv" : "LESOUBLIES.ABRV.PdS",
             "value": 0
           }
         },
         "Cauchemard" : {
-          "label":"LESOUBILES.Cauchemard",
-          "abrv" : "LESOUBILES.ABRV.Cauchemard",
+          "label":"LESOUBLIES.Cauchemard",
+          "abrv" : "LESOUBLIES.ABRV.Cauchemard",
           "EstSensible": false,
           "Points" : {
-            "label":"LESOUBILES.PdC",
-            "abrv" : "LESOUBILES.ABRV.PdC",
+            "label":"LESOUBLIES.PdC",
+            "abrv" : "LESOUBLIES.ABRV.PdC",
             "value": 0,
             "min": 0,
             "max": 0
           },
           "value":0,
           "dette": {
-            "label":"LESOUBILES.DdC",
-            "abrv" : "LESOUBILES.ABRV.DdC",
+            "label":"LESOUBLIES.DdC",
+            "abrv" : "LESOUBLIES.ABRV.DdC",
             "value": 0
           }
         },
@@ -73,8 +73,8 @@
       "idRace" : "",
       "idMetier" : "",
       "sensValeur": {
-        "label":"LESOUBILES.SensValeur",
-        "abrv" : "LESOUBILES.ABRV.SensValeur",
+        "label":"LESOUBLIES.SensValeur",
+        "abrv" : "LESOUBLIES.ABRV.SensValeur",
         "value" : 0.5
       }
     },
@@ -106,9 +106,9 @@
         "faiseur": 0,
         "forceNature" :0,
         "guerrier" : 0,
-        "mystique" : 0, 
-        "ombre" : 0, 
-        "savant" : 0        
+        "mystique" : 0,
+        "ombre" : 0,
+        "savant" : 0
       },
       "jsonProfils" : "",
       "jsonTributs" : "",

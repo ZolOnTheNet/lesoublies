@@ -5,6 +5,7 @@ import { LesOubliesItem } from "./documents/item.mjs";
 import { LesOubliesActorSheet } from "./sheets/actor-sheet.mjs";
 import { LesOubliesItemSheet } from "./sheets/item-sheet.mjs";
 // Import helper/utility classes and constants.
+import {RegisterHelperHandlebar} from "./helpers/handlebar.mjs"
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { LESOUBLIES } from "./helpers/config.mjs";
 import { EnventDuChat } from "./gestion-chat.mjs"
@@ -29,10 +30,12 @@ Hooks.once('init', async function() {
 
   /**
    * Set an initiative formula for the system
+   * aller dans l'actor.mjs => preparedData, on pourrait aussi mettre @Rapidite (les accents sautes)
+   *  mais init est défini pour tous !
    * @type {String}
    */
   CONFIG.Combat.initiative = {
-    formula: "1d20 + @abilities.dex.mod",
+    formula: "min(ceil(1d12+@init),12)", 
     decimals: 2
   };
 
@@ -55,6 +58,9 @@ Hooks.once('init', async function() {
     html.find(".cmd").click((ev) =>EnventDuChat(ev, html, data));
   });
   // Preload Handlebars templates.
+  
+  RegisterHelperHandlebar()
+
   return preloadHandlebarsTemplates();
 });
 
