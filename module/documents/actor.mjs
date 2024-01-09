@@ -56,8 +56,24 @@ export class LesOubliesActor extends Actor {
     console.log("recacul des données acteurs")
 
     //const lesCmps = this.items.filter(x => x.type=='cmp')
-    
-
+    //calcul des points de songe et de cauchemard
+    if(actorData.system.Songe.value == actorData.system.Cauchemard.value) {
+      actorData.system.Songe.Points.max = actorData.system.Songe.value
+      actorData.system.Cauchemard.Points.max = actorData.system.Cauchemard.value
+    } else if( actorData.system.Songe.value > actorData.system.Cauchemard.value){
+      actorData.system.Songe.Points.max = actorData.system.Songe.value * 2
+      actorData.system.Cauchemard.Points.max = actorData.system.Cauchemard.value
+    } else {
+      actorData.system.Songe.Points.max = actorData.system.Songe.value
+      actorData.system.Cauchemard.Points.max = actorData.system.Cauchemard.value * 3 - actorData.system.Songe.Points.max
+    }
+    if(actorData.system.Songe.Points.value > actorData.system.Songe.Points.max) actorData.system.Songe.Points.value = actorData.system.Songe.Points.max
+    if(actorData.system.Cauchemard.Points.value > actorData.system.Cauchemard.Points.max) actorData.system.Cauchemard.Points.value = actorData.system.Cauchemard.Points.max
+    // Cacul de PdV
+    if(actorData.system.PdV.max != (actorData.system.taille.value * 4)){
+      actorData.system.PdV.max = (actorData.system.taille.value * 4)
+      if(actorData.system.PdV.value > actorData.system.PdV.max) actorData.system.PdV.value = actorData.system.PdV.max
+    }
     // Loop through ability scores, and add their modifiers to our sheet output.
     // for (let [key, ability] of Object.entries(systemData.abilities)) {
     //   // Calculate the modifier using d20 rules.

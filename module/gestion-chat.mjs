@@ -1,3 +1,5 @@
+import { LESOUBLIES } from "./helpers/config.mjs";
+import { toArrayLstTxt } from "./utils.mjs"
 
 export function EnventDuChat(event, html, data){
     // const btn = $(event.currentTarget);
@@ -10,8 +12,23 @@ export function EnventDuChat(event, html, data){
             //aiguillageGeMsg(cmdArgs, obj);
             break;
         case "chat":
-            //aiguillageYaze(cmdArgs, obj);
-            console.log("Commande a faire "+ dataset.action, htlm, data, cmdArgs)
+            //console.log("Commande a faire "+ dataSet.action, html, data, cmdArgs)
+            let descp=""
+            if(cmdArgs[5]!="0") { // on doit retrirer la valeur à un des deux point
+                descp = "Vous avez choisit de dépenser un point de "+cmdArgs[2]
+                let pertePt = 1//parseInt(cmdArgs[5])
+                let token = game.scenes.current.tokens.get(cmdArgs[3])
+                let actor = token?.actor
+                if(actor == undefined) actor = game.actors.get(cmdArgs[4])
+                let reste = actor.system[cmdArgs[2]].dette.value + pertePt
+                let updObj = { }
+                updObj[ "system."+cmdArgs[2]+".dette.value" ] = reste
+                if(token) token.actor.update(updObj)
+                else actor.update(updObj)
+
+            }
+            // donner le resultat final !
+            gererResultat({tokenId:cmdArgs[3], actorId:cmdArgs[4], titre:"Votre Choix", description:descp, score:parseInt(cmdArgs[6]), rappel: "", lstPrimes:cmdArgs[7], lstPenalites: cmdArgs[8] })
             break;
         default :
             console.log("Event Du Chat : Devrait pas être ici", dataSet)
@@ -19,13 +36,15 @@ export function EnventDuChat(event, html, data){
      return;
    }
 
-export function afficheResultat(actor, roll, titre='Jet !',descriptif='', estimation=false, score=0 ) {
+export function afficheResultat(token, actor, roll, titre='Jet !',descriptif='', estimation=false, score=0, pLstPrimes="",pLstPenalites="" ) {
+    if(token) actor= token.actor
     if(actor==undefined) {
         if(_token) {
             actor = _token.actor
         }
     }
     const rollData = {
+        idToken : token.id,
         idActor : actor.id, // relation avec l'acteur (ajouter la dette)
         titre: titre,
         description : descriptif,
@@ -34,6 +53,8 @@ export function afficheResultat(actor, roll, titre='Jet !',descriptif='', estima
         detteC : 0,
         scoreS : 0,
         scoreC : 0,
+        lstPrimes : pLstPrimes, // transimission des penalités et des primes
+        lstPenalites : pLstPenalites,
         esti : estimation,
         cout : ""          // texte de sortie pour dire où et la dette
     }
@@ -62,6 +83,49 @@ export function afficheResultat(actor, roll, titre='Jet !',descriptif='', estima
             content: html,
             type: CONST.CHAT_MESSAGE_TYPES.ROLL,
             roll
+        };
+        ChatMessage.create(chatData);
+    })
+   }
+
+   function gererResultat(objResultat={tokenId: "", actorId : "", titre:"Résultat du Dés", description:"", score:0, rappel: "", lstPrimes:"", lstPenalites :""}) {
+    let obj = mergeObject({tokenId: "", actorId : "", titre:"Résultat du Dés", description:"", score:0, rappel: "" }, objResultat)
+    let qual = obj.score-12; let resultQ = "Echec"
+    let dom = -1; let formD = ""; let arme=""
+    let actorId = obj.actorId;
+    if(obj.tokenId != "") { // priorité au token.
+        let token = game.scenes.current.tokens.get(obj.tokenId)
+        actorId = token.actor.id
+    }
+    if(qual > 0){
+        resultQ = LESOUBLIES.toReussites[Math.ceil(qual/3)]
+    }
+    let tabPrimes = toArrayLstTxt(obj.lstPrimes); let tabPenalites = toArrayLstTxt(obj.lstPenalites)
+    let tabElePrimes = []; let tabElePenalites = []
+    tabPrimes.forEach(ele => { tabElePrimes.push(LESOUBLIES.primes[ele].label + ":" + LESOUBLIES.primes[ele].description) })
+    tabPenalites.forEach(ele => { tabElePenalites.push(LESOUBLIES.penalites[ele].label + ":" + LESOUBLIES.penalites[ele].description) })
+    let context = {
+        titre: obj.titre,
+        description : obj.description,
+        score: obj.score,
+        estUnSucces : (obj.score>11),
+        resultatQual : resultQ,
+        aDommage : (dom != -1),
+        dommage : dom,
+        formule : formD,
+        textArme : arme,
+        textRappel : obj.rappel,
+        lstPrimes : tabElePrimes,
+        lstPenalites : tabElePenalites
+    }
+    renderTemplate('systems/lesoublies/templates/chat/resultat.hbs', context).then(html => {
+        //console.log("Texte HTLM",html)
+        const chatData = {
+            user: game.user.id,
+            speaker: { actor: actorId },
+            rollMode: game.settings.get('core', 'rollMode'),
+            content: html,
+            type: CONST.CHAT_MESSAGE_TYPES.ROLL
         };
         ChatMessage.create(chatData);
     })

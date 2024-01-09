@@ -16,7 +16,8 @@
           "value": 10,
           "min": 0,
           "max": 10,
-          "formula":""
+          "formula":"",
+          "bonus" : 0
         },
         "biography": "",
         "ecorse" : {
@@ -31,7 +32,7 @@
           "Points" : {
             "label":"LESOUBLIES.PdS",
             "abrv" : "LESOUBLIES.ABRV.PdS",
-            "value": 0,
+            "value": -1,
             "min": 0,
             "max": 0
           },
@@ -49,7 +50,7 @@
           "Points" : {
             "label":"LESOUBLIES.PdC",
             "abrv" : "LESOUBLIES.ABRV.PdC",
-            "value": 0,
+            "value": -1,
             "min": 0,
             "max": 0
           },
@@ -60,7 +61,11 @@
             "value": 0
           }
         },
-        "equipementsR": {}
+        "equipementsR": {},
+        "combat": {
+          "position":"",
+          "init":1
+        }
       }
     },
     "character": {

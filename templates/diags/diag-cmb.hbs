@@ -16,15 +16,16 @@
             {{#each lstDifficultes as |diff key|}}
         <div><a class="cmd" data-action="bonus.troggle.{{key}}.{{diff}}"><span>
             {{#ifEq key ../difficulte}}
-                <i class="fas fa-circle-check"></i>
+                <i class="fas fa-circle-arrow-right"></i>
             {{/ifEq}}
             {{key}}</span></a></div>
         <div> {{diff}} </div>
             {{/each}}
         </div>
         <div class="data">
-            <label>Difficulté total : </label>
-            <input class="normal-input" size="3em" type="number" name="difficulte" value="0"/>
+            <label>Difficulté : </label>
+            <input class="normal-input" size="3em" type="number" name="diffSupp" value="{{diffSupp}}"/>
+            <label>Total : {{diffTotal}}</label>
         </div>
         <hr>
         <div class="grid grid-3col" >
@@ -45,7 +46,45 @@
                 </div>
             </div>
             <div>
-                
+                <h2 class="items-header">Votre Position</h2>
+                {{#ifEq caseAction "R"}}
+                    <h3>En retrait</h3>
+                    <button class="dialog-button" data-button="position.garde.G">
+                        passer en garde (1 action)
+                    </button>
+                    {{else}}
+                    <h3>En garde</h3>
+                    <button class="dialog-button" data-button="position.retrait.R">
+                        passer en retrait
+                    </button>
+                {{/ifEq}}
+                <hr>
+                <br>
+                <div class="flexrow">
+                    <h2>Choix de l'action : </h2>
+                    <select  name="action" style="width:175px !important;">
+                    {{selectOptions lstActionStd selected=action}}
+                    </select>
+                </div>
+                <h2>Dépense de Points : </h2>
+                {{#if nbPtSonge}}
+                    <div class="cmd align-center" data-action="des.songe.1">
+                        {{#if ptSongePris}}
+                        <i class="fas fa-circle-check"></i>
+                        {{/if}}
+                    utilisez un point de<br> Songe (sur {{nbPtSonge}})
+                    </div>
+                    <hr>
+                {{/if}}
+                {{#if nbPtCauch}}
+                    <div class="cmd align-center" data-action="des.cauchemard.1">
+                        {{#if ptCauchemardPris}}
+                        <i class="fas fa-circle-check"></i>
+                        {{/if}}
+                        utiliser un point de<br> Cauchemard (sur {{nbPtCauch}})
+                    </div>
+                    <hr>
+                {{/if}}
             </div>
             <div>
                 <div class="grid-border">
@@ -63,13 +102,29 @@
                 </div>
             </div>
         </div>
-        <input name="obj" type="text" value='{{objValue}}' />
+        {{!--  <input name="obj" type="text" value='{{objValue}}' /> --}}
     </div>
-    <footer class="sheet-footer grid grid-6col">
-        <div class="grid-span-5" ></div>
-        
-        <button type="submit" name="submit">
-            <i class="fa fa-check"></i> OK
+    <footer class="sheet-footer grid grid-5col">
+         <button class="dialog-button cancel" data-button="cancel">
+            <i class="fa fa-check"></i> Abandon
         </button>
+        <div class="grid-span-2" ></div>
+        <div>
+        {{#ifEq noActionEnCours nbActions}}
+        </div>
+        <div>
+            <button class="dialog-button submit default" data-button="submit">
+                <i class="fa fa-check"></i> Dernier Jet !
+            </button>
+        {{else}}
+            <button class="dialog-button" data-button="lancer">
+                <i class="fa fa-check"></i> Jet pour l'action {{noActionEnCours}} !
+            </button>
+        </div><div>
+            <button class="dialog-button submit default" data-button="submit">
+                <i class="fa fa-check"></i> Jet final !
+            </button>
+        {{/ifEq}}
+        </div>
   </footer>
 </form>

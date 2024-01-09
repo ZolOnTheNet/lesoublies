@@ -83,11 +83,11 @@
             <label for="system.special" class="resource-label">Spécial ou Notes :</label>
             <textarea name="system.special" rows="4">{{system.special}}</textarea>
             <label class="resource-label">Description (texte élaboré) :</label>
+            {{!-- If you want TinyMCE editors to output inline rolls when rendered, you need to pass the actor's roll data to the rollData property. --}}
+            {{editor system.biography target="system.biography" rollData=rollData button=true owner=owner editable=editable}}
           </div>
         </div>
       </div>
-      {{!-- If you want TinyMCE editors to output inline rolls when rendered, you need to pass the actor's roll data to the rollData property. --}}
-      {{editor system.biography target="system.biography" rollData=rollData button=true owner=owner editable=editable}}
     </div>
 
     {{!-- Owned Items Tab --}}

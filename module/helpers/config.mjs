@@ -32,6 +32,8 @@ LESOUBLIES.reussites = {
   "Héroique" : 15
 }
 
+LESOUBLIES.toReussites = Object.keys(LESOUBLIES.reussites)
+
 LESOUBLIES.tailles = {
   "1": { "label": "Minuscule", "cm" : "moins de 4 cm" ,"races":"fées"},
   "2": { "label": "Petite", "cm" : "4 à 6 cm", "races":"gnomes(4/5cm), korrigans (5/6cm)"},
@@ -58,6 +60,7 @@ LESOUBLIES.typeCondition = {"desengage": "Désengagé", "engage": "engagé"}
 LESOUBLIES.typeDiffcultes = { "N":"rien", "T" : "objet étant un tableau de bonus/malus", "O": "objet d'une seule valeur"}
 // modele : "" : { label : "", cmp : "", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"}
 LESOUBLIES.actions = {
+  "rien"      : { label : "", cmp : "-", typeAction : "G", difficultes : { type:"N", code : { "":"" } }, conditions : "", reaction : "-"},
   "anticiper" : { label : "Anticiper un évènement", cmp : "-", typeAction : "G", difficultes : { type:"N", code : { "":"" } }, conditions : "", reaction : "-"},
   "debusquer" : { label : "Débusquer un adversaire", cmp : "Sens", typeAction : "L", difficultes : { type:"T", code : { "En pleine lumière":3, "Silence":3, "Pénombre" : -3, "Ambiance bruyante" : -3 } }, conditions : "desengage", reaction : "-"},
   "degainer"  : { label : "Dégainer ou rengainer une arme", cmp : "Rapidité", typeAction : "L", difficultes : { type:"T", code : { "Si désengagé":12, "Dans un foureau": 3, "Arme dissimulée" : -3, "Arme à terre":-3 } }, conditions : "", reaction : "Corps à Corps;Mélée"},
@@ -72,7 +75,8 @@ LESOUBLIES.actions = {
   "maitriser" : { label : "Maîtriser un adversaire", cmp : "Corps à corps", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
   "sedissimuler" : { label : "Se Dissimuler", cmp : "Discrétion", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
   "sedeplacer": { label : "Se Déplacer", cmp : "Athlétisme", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
-  "tirer"     : { label : "Tirer", cmp : "Tir", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"}
+  "tirer"     : { label : "Tirer", cmp : "Tir", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
+  "autre"     : { label : "Autre action", cmp : "-", typeAction : "G", difficultes : { type:"N", code : { "":"" } }, conditions : "", reaction : "-"}
 }
 
 /**
@@ -94,7 +98,7 @@ LESOUBLIES.penalites = {
   "blessureLegere"    : { label : "Blessure Légère", dom : 0.5, description: "Dégats / 2", init : 0, bonus : 0 },
   "danger"            : { label : "Danger", dom : 1, description: "Resultat final de sa prochaine réaction -3", init : 0, bonus : 0 },
   "difficulte"        : { label : "Difficulte", dom : 1, description: "Résultat final -3", init : 0, bonus : -3 },
-  "facilite"          : { label : "Facilité", dom : 1, description: "Résultat final de la réaction de l'adversaire", init : 0, bonus : 0 },
+  "facilite"          : { label : "Facilité", dom : 1, description: "Résultat final de la réaction de l'adversaire est augmenté de 3 points", init : 0, bonus : 0 },
   "ralentissement"    : { label : "Ralentissement", dom : 1, description: "Initiative à -3", init : -3, bonus : 0 },
   "risque"            : { label : "Risques", dom : 1, description: "Incident en cas d'échec", init : 0, bonus : 0 }
 }

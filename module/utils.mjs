@@ -79,3 +79,41 @@ export function objNoReduce(obj) {
 export function strNoAccent(a) {
     return a.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
+
+  /**
+ * ajouteLstTxt ajouter l'element ele dans la liste listTxt et renvoie la nouvelle liste
+ * si ele est déjà dedans, il ne l'ajoute pas
+ */
+export function ajouterLstTxt(ele, listTxt, sep=';'){
+    const vrailst = sep+listTxt+sep
+    if( ! vrailst.includes(sep+ele+sep)) listTxt= (listTxt=="")? ele : listTxt+sep+ele
+    return listTxt
+  }
+
+export function estDansLstTxt(ele, listTxt, sep=';'){ //estDansLstTxt enleverLstTxt toArray ajouterLstTxt
+    const vrailst = sep+listTxt+sep
+    return  vrailst.includes(sep+ele+sep)
+  }
+
+export  function enleverLstTxt(ele, listTxt, sep=';'){
+    if(estDansLstTxt(ele,listTxt)){
+      let arr = listTxt.split(sep)
+      let ind = arr.indexOf(ele)
+      arr.splice(ind,1)
+      listTxt = arr.join(sep)
+    }
+    return listTxt
+  }
+
+export function toArrayLstTxt(listTxt="", sep=";"){
+    if(listTxt=="") return []
+    return listTxt.split(sep)
+}
+
+export function toStdProfil(profilItem){
+    let prof = profilItem
+    if(prof.toUpperCase() == 'FORCE DE LA NATURE') prof = "forceNature"
+      else if(prof == 'Athlète') prof = "athlete"
+        else prof = prof.toLowerCase()
+    return prof
+}   

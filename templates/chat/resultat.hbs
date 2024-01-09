@@ -1,0 +1,36 @@
+<div class="resultat chat">
+    {{#if titre}}
+			<h1><span class="roll-description">{{titre}}</span></h1>
+    {{/if}}
+    {{#if description}}
+			<div class="roll-description">{{description}}</div>
+    {{/if}}
+    
+    {{#if estUnSucces}}
+        <h3>Success !</h3>
+        <div class="roll-description">Votre résultat : <strong>{{resultatQual}}</strong></div>
+    {{else}}
+        <h3>Echec !</h3>
+    {{/if}}
+    {{#if aDommage}}
+        <h3>Dommages</h3>
+        les dommaegs de l'arme {{textArme}} : {{dommage}}
+    {{/if}}
+    <div class="roll-description">{{textRappel}} </div>
+    <hr>
+    {{#if lstPrimes}}
+    <h3>Rappel des primes</h3>
+        {{#each lstPrimes as |ele key| }}
+        <div>{{key}}.{{ele}} </div>
+        {{/each}}
+    {{/if}}
+    {{#if lstPenalites}}
+    <h3>Rappel des pénalités</h3>
+        {{#each lstPenalites as |ele key| }}
+        <div>{{key}}.{{ele}} </div>
+        {{/each}}
+    {{/if}}
+
+    
+
+</div>

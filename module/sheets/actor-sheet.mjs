@@ -1,5 +1,6 @@
 import { LESOUBLIES } from "../helpers/config.mjs";
 import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
+import {toStdProfil } from "../utils.mjs"
 import { afficheResultat } from "../gestion-chat.mjs"
 import { diagCmb } from "../diags/diag-cmb.mjs";
 
@@ -181,10 +182,7 @@ export class LesOubliesActorSheet extends ActorSheet {
       let ind = 0; let nbProfils = profils.length / 3; let indice =0
       if(context.aRace) {
         profils.forEach(x => {
-          let prof = x
-          if(prof.toUpperCase() == 'FORCE DE LA NATURE') prof = "forceNature"
-            else if(prof == 'Athlète') prof = "athlete"
-              else prof = prof.toLowerCase()
+        let prof = toStdProfil(x)
           let lstItem = cmpProf[x].items.toSorted((a,b) => a.name > b.name)
           //let vProf = this.actor.
           const stdProfil =  parseInt(context.race.system.profils[prof])
@@ -306,7 +304,7 @@ export class LesOubliesActorSheet extends ActorSheet {
       case 'songe':
         break;
       case 'roll': // il faudra changer quand digCmb sera au point par le transformer en diagCmp
-        if(clickTab[1] == 'diag') diagCmb({ token:this.token, cmpNom : clickTab[3], acteur:{}, caseAction:"F", equipt:{} })
+        if(clickTab[1] == 'diag') diagCmb({ tokenId:this.token.id, cmpNom : clickTab[3], score: parseInt(clickTab[4]), acteurId:this.token.actor.id, caseAction:"G", equipt:{} })
         else this._onRoll(event, element, dataset)
         break;
       case 'acteur':
@@ -359,7 +357,7 @@ export class LesOubliesActorSheet extends ActorSheet {
     const rollMode = game.settings.get('core', 'rollMode');
     r.evaluate({async :false })
     // lancer du resultat !
-    afficheResultat(this.actor, r, "Jet "+rollTab[2],"votre score est: "+score,true, score)
+    afficheResultat(this.token, this.actor, r, "Jet "+rollTab[2],"votre score est: "+score,true, score)
   }
 
   /**
