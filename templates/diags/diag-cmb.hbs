@@ -4,22 +4,25 @@
             <span >Gestion des combats</span>
             <span class="hint" >{{description}}</span>
         </header>
+        <hr>
         <div>nombre d'action libres choisie : 
             <td class="plusPolice">
-              Actions : <i class="fas fa-minus-square cmd" title="Reduit" data-action="action.set.moins.{{nbActions}}"></i> 
+              <b>Actions</b> : <i class="fas fa-minus-square cmd" title="Reduit" data-action="action.set.moins.{{nbActions}}"></i> 
               <input class="normal-input" type="text" size="1em" name="nbActions" value="{{nbActions}}" data-dtype="Number"/>
               <i class="fas fa-plus-square cmd" title="Augmente" data-action="action.set.plus.{{nbActions}}"></i>
               <span class="grdPolice">{{{visuAction}}}</span><i class="fad fa-sync rollable" data-action="action.reset.1"></i>
-            </td></div>
-        <div>Choix de la difficulté:</div>
+            </td>
+        </div>
+        <hr>
+        <div>Choix de la difficulté: armure  : {{armure}}</div>
         <div class="grid-diff">
             {{#each lstDifficultes as |diff key|}}
-        <div><a class="cmd" data-action="bonus.troggle.{{key}}.{{diff}}"><span>
-            {{#ifEq key ../difficulte}}
-                <i class="fas fa-circle-arrow-right"></i>
-            {{/ifEq}}
-            {{key}}</span></a></div>
-        <div> {{diff}} </div>
+                <div><a class="cmd" data-action="bonus.troggle.{{key}}.{{diff}}"><span>
+                    {{#ifEq key ../difficulte}}
+                        <i class="fas fa-circle-arrow-right"></i>
+                    {{/ifEq}}
+                    {{key}}</span></a></div>
+                <div> {{diff}} </div>
             {{/each}}
         </div>
         <div class="data">

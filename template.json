@@ -181,8 +181,9 @@
       "taille":1,
       "protection" : 1,
       "malus":1,
-      "jsonPrime" : "",
-      "jsonPenalite" : ""
+      "deProtection" : "",
+      "penalites" : "",
+      "primes" : ""
     },
     "cmp": {
       "templates": ["base"],

@@ -5,12 +5,12 @@
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
       <div class="grid grid-2col">
         <div class="resource">
-          <label class="resource-label">Quantity</label>
-          <input type="text" name="system.quantity" value="{{system.quantity}}" data-dtype="Number"/>
+          <label class="resource-label">taille</label>
+          <input type="text" name="system.taille" value="{{system.taille}}" data-dtype="Number"/>
         </div>
         <div class="resource">
-          <label class="resource-label">Weight</label>
-          <input type="text" name="system.weight" value="{{system.weight}}" data-dtype="Number"/>
+          <label class="resource-label">Protection max</label>
+          <input type="text" name="system.protection" value="{{system.protection}}" data-dtype="Number"/>
         </div>
       </div>
     </div>
@@ -34,9 +34,22 @@
     {{!-- Attributes Tab --}}
     <div class="tab attributes" data-group="primary" data-tab="attributes">
       {{!-- As you add new fields, add them in here! --}}
+      <div> Indication : ces valeurs sont pour une extensdion future et ne sont pas encore utilisées</div>
       <div class="resource">
-        <label class="resource-label">Roll Formula</label>
-        <input type="text" name="system.formula" value="{{system.formula}}" data-dtype="String"/>
+        <label class="resource-label">Malus</label>
+        <input type="text" name="system.malus" value="{{system.malus}}" data-dtype="Number"/>
+      </div>
+      <div class="resource">
+        <label class="resource-label">Formule de Protection</label>
+        <input type="text" name="system.deProtection" value="{{system.deProtection}}" data-dtype="Number"/>
+      </div>
+      <div class="resource">
+        <label class="resource-label">Liste des Primes(séparer par des pt virgules)</label>
+        <input type="text" name="system.primes" value="{{system.primes}}" data-dtype="String"/>
+      </div>
+      <div class="resource">
+        <label class="resource-label">Liste des Pénalités(séparer par des pt virgules)</label>
+        <input type="text" name="system.penalites" value="{{system.penalites}}" data-dtype="String"/>
       </div>
     </div>
   </section>

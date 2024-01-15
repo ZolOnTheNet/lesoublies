@@ -49,9 +49,14 @@
             <span> / </span>
             <input type="text" name="system.Cauchemard.max" value="{{system.Cauchemard.max}}" data-dtype="Number"/>
           </div>
+          <br>
+          <div class="ressource-content flexrow flex-center flex-between">
+            Armure : <select name="system.combat.protection.value">
+              {{selectOptions lstArmures selected=system.combat.protection.value}}
+            </select>
+          </div>
         </div>
       </div>
-      
     </div>
   </header>
 
@@ -71,7 +76,7 @@
       <div class="resources grid grid-2col">
         <div class="ressource flex-group-left">
           <label class="items-list flexlarge align-left">Liste des compétences</label>
-          {{#each lstCmps as |cmp key|}}        
+          {{#each lstCmps as |cmp key|}}
           <div class="ability flexrow flex-group-center">
             <label  class="resource-label flexlarge align-left rollable" data-action="roll.cmp.{{cmp.name}}.{{cmp.system.score}}">{{cmp.name}}</label>
             <span><strong>{{cmp.system.score}}</strong> <a class="rollable" data-action="acteur.edit.cmp.{{cmp._id}}.{{cmp.name}}"><i class="fas fa-edit"></i></a></span>
@@ -96,8 +101,8 @@
     </div>
 
     {{!-- Active Effects Tab --}}
-    <div class="tab effects flexcol" data-group="primary" data-tab="effects">
-      {{> "systems/lesoublies/templates/actor/parts/actor-effects.html"}}
+    <div class="tab effects flexcol" data-group="primary" data-tab="spells">
+      {{> "systems/lesoublies/templates/actor/parts/actor-spells.html"}}
     </div>
 
   </section>

@@ -1,7 +1,7 @@
 // fichier de traitement du dialogue du combat
 // transformation en fenetre foundry
 import { LESOUBLIES } from "../helpers/config.mjs"
-import { ajouterLstTxt, estDansLstTxt, enleverLstTxt } from "../utils.mjs"
+import { toStdProfil, ajouterLstTxt, estDansLstTxt, enleverLstTxt } from "../utils.mjs"
 import { afficheResultat } from "../gestion-chat.mjs"
 
 /** donne l'affichage des chiffres indiquant le nombre d'action
@@ -180,13 +180,13 @@ class DiagCMB extends FormApplication {
   }
   
   _calculDiffTotal(context){
-    let Ret =  context.diffAction + context.diffNombre + context.diffSupp
+    let Ret =  context.diffAction + context.diffNombre + context.diffSupp - context.armure
     if(estDansLstTxt("efficacite",context.choixPrimes)) Ret += LESOUBLIES.primes["efficacite"].bonus
     if(estDansLstTxt("difficulte",context.choixPenalites)) Ret += LESOUBLIES.penalites["difficulte"].bonus
     return Ret;
   }
 
-  _roll(){
+  _roll(){ // XXX a regrouper avec gerer les resultat ?
     const context = this.context
     let rollFormula = "{ 1d12x, 1d12x[black]}"; let Depense=""
     if(context.ptSongePris) {
@@ -232,7 +232,7 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
   //      left: 500
   };
   // fusion pour tout avoir
-  data = mergeObject({ tokenId:"", cmpNom : "", score: 0, acteurId:"", caseAction:"F", equipt:{} },data)
+  data = mergeObject({ tokenId:"", cmpNom : "", score: 0, acteurId:"", caseAction:"F", equipt:{}, primes:"", penalites:"" },data)
   if(data.tokenId) {
     token = game.scenes.current.tokens.get(data.tokenId)
     init = token?.combatant?.initiative
@@ -247,7 +247,31 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
     init =actor.init
     ptCauch = actor.system.Cauchemard.Points.value
     ptSonge = actor.system.Songe.Points.value
+    data.armureDef = actor.system.combat.protection.value
+    let itemArme = data.equipt?.itemId
+    data.score = 0
+    if(itemArme){
+      let itemA = actor.items.get(itemArme); let itemCmp
+      if(itemA?.cmp){
+        itemCmp = actor.items.getName(itemA.cmp)
+        data.cmpNom = itemA.name +'(' +itemA.cmp+ ')'
+      }else if(itemA?.cmpId){
+        itemCmp = actor.items.get(itemA.cmpId)
+        data.cmpNom = itemA.name +'(' +itemCmp?.name+ ')'
+      }
+      if(data.score == -1){ // on n'a pas le score
+        if(itemCmp) {
+          let itemRace = actor.items.get(actor.idRace)
+          data.score = itemCmp.system.score + itemRace.system.profils[toStdProfil(itemCmp.system.profil)]+itemA.system.bonus.score
+        }
+      }
+      data.primes = itemA?.lstPrimes
+      data.penalites = item?.lstPenalites
+      data.dommage = itemA.system.taille + +itemA.system.bonus.score
+    }
   }
+  // gestion si l'appel se fait par l'equipement
+  
   let lstAct = {}; 
   Object.entries(LESOUBLIES.actions).forEach(element => {
     lstAct[element[0]] = element[1].label  
@@ -256,6 +280,8 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
     tokenId :  data.tokenId, // pour la modification a la fin
     actorId : actor.id,
     score : data.score,
+    armure : data.armureDef, // rajout à gerer
+    dommage : data.dommage,
     lstPrimesGratuites : "",
     lstPenalitesObligatoires : "",
     description : "Utilisez cette interface pour modifier votre tour de jeu",
@@ -277,7 +303,7 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
     diffNombre : 0,
     diffSupp : 0,
     diffAction : 0,
-    diffTotal : 0,
+    diffTotal : -data.armureDef,
     lstPrimes : LESOUBLIES.primes,
     lstPenalites : LESOUBLIES.penalites,
     choixPrimes : "",

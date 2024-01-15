@@ -48,6 +48,7 @@ export class LesOubliesActorSheet extends ActorSheet {
     context.NomRace = "Hybride?" // Race par défaut
     context.type = actorData.type
     // Prepare character data and items.
+    context.lstArmures = {...LESOUBLIES.niveauProtection}; // modifié chez les personnages
     if (actorData.type == 'character') {
       this._prepareItems(context);
       this._prepareCharacterData(context);
@@ -68,7 +69,6 @@ export class LesOubliesActorSheet extends ActorSheet {
 
     if(this.autoDialogue == undefined) this.autoDialogue =game.settings.get("lesoublies","optionDialogue")
     context.autoDialogue = this.autoDialogue
-    context.lstArmures = LESOUBLIES.niveauProtection;
     return context;
   }
 
@@ -80,10 +80,18 @@ export class LesOubliesActorSheet extends ActorSheet {
    * @return {undefined}
    */
   _prepareCharacterData(context) {
-    // Handle ability scores.
-    // for (let [k, v] of Object.entries(context.system.abilities)) {
-    //   v.label = game.i18n.localize(CONFIG.LESOUBLIES.abilities[k]) ?? k;
-    // }
+    // gestion de l'amure : seul les armure autorisé sont prise
+    // càd 0 pour aucune armure
+    switch(context.system.combat.protection.max){
+      case 0:
+        delete context.lstArmures[1]
+      case 1:
+        delete context.lstArmures[2]
+      case 2:
+        delete context.lstArmures[3]
+      default:
+        break
+    }
   }
 
   /**
@@ -331,6 +339,7 @@ export class LesOubliesActorSheet extends ActorSheet {
       case 'roll': // il faudra changer quand digCmb sera au point par le transformer en diagCmp
         let dialon = event.shiftKey ? !this.autoDialogue : this.autoDialogue
         if(clickTab[1] == 'diag' &&  dialon) diagCmb({ tokenId:this.token.id, cmpNom : clickTab[3], score: parseInt(clickTab[4]), acteurId:this.token.actor.id, caseAction:"G", equipt:{} })
+        else if(clickTab[2]=='equip') diagCmb({ tokenId:this.token.id, cmpNom : "", score: -1, acteurId:this.token.actor.id, caseAction:"G", equipt:{ itemId : clickTab[3]} })
         else this._onRoll(event, element, dataset)
         break;
       case 'acteur':
@@ -341,9 +350,14 @@ export class LesOubliesActorSheet extends ActorSheet {
             break
           case 'equipr':
             let obj = this.actor.system.equipementsR
-            obj[""+Object.entries(obj).length] ={ "name": "nouv equipement", "quantity":1, "cout":0 }
+            if(clickTab[1]=='add'){
+              obj[""+Object.entries(obj).length] ={ "name": "nouv equipement", "quantity":1, "cout":0 }
+            }else if(clickTab[1]=='del'){
+              delete obj[clickTab[3]]
+              this.actor.update({"system.equipementsR": obj})
+            }
             this.actor.update({"system.equipementsR": obj})
-            //this.render(true)
+            this.render(true)
             break;
           case 'cmp':
             let itemCmp = this.actor.items.get(clickTab[3])
@@ -370,7 +384,7 @@ export class LesOubliesActorSheet extends ActorSheet {
    * @private
    */
 
-  _onRoll(event,element, dataset) {
+  _onRoll(event,element, dataset) { // regrouper avec gererResultat ? XXX
     // test sur roll
     if(dataset?.action == "") return // marquer une erreur ?
     let rollTab = dataset.action.split(".")

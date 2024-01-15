@@ -116,7 +116,7 @@ export function toStdProfil(profilItem){
       else if(prof == 'Athlète') prof = "athlete"
         else prof = prof.toLowerCase()
     return prof
-}   
+}
 /** objet  dequivalence  pour les listes */
 // function justeRapide(){
 //     let tabPrimes = toArrayLstTxt(obj.lstPrimes); let tabPenalites = toArrayLstTxt(obj.lstPenalites)

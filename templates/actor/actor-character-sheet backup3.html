@@ -41,9 +41,7 @@
           </div>
           <label for="system.Songe.dette.value" class="resource-label">Dette</label>
           <input class="normal-input" size="3em" type="text" name="system.Songe.dette.value" value="{{system.Songe.dette.value}}" data-dtype="Number"/>
-          <span> <br>Choix Armure : <select name="system.combat.protection.value">
-                {{selectOptions lstArmures selected=system.combat.protection.value}}
-              </select></span>
+          <span> <br>Choix Armure : {{system.combat.protection.value}} </span>
         </div>
 
         <div class="resource flex-group-center">
@@ -87,8 +85,8 @@
     {{!--  <a class="item" data-tab="effects">Effets</a> --}}
   </nav>
 
-  {{!-- Sheet Body : pensez à modifier le style pour l'enleve 7 permets d'avoir ce que je veux XXX --}}
-  <section class="sheet-body" style="flex: 7;">
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
 
     {{!-- Owned Features Tab --}}
     <div class="tab features" data-group="primary" data-tab="cmp">

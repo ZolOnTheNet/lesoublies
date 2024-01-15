@@ -77,7 +77,8 @@
         </div>
         <h4>{{item.name}}</h4>
       </div>
-      <div class="item-formula item-prop">{{item.system.formula}}</div>
+      <div class="item-formula item-prop">{{item.system.description}}</div>
+      <div class="item-formula item-prop">{{item.system.taille}}</div>
       <div class="item-controls">
         <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
         <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
@@ -88,7 +89,7 @@
 <hr>
 {{/if}}
 <label >Liste d'équipement "rapide"</label>
-ajouter rapidement un objet, sans interaction
+ajouter rapidement un objet n'ayant pas d'automatisme
 <ol class="items-list">
   <li class="item flexrow items-header">
     <div class="item-name flex3">Equipement Rapide</div>
@@ -100,7 +101,7 @@ ajouter rapidement un objet, sans interaction
     </div>
   </li>
   {{#each system.equipementsR as |item id|}}
-    <li class="item flexrow" data-item-id="{{id}}">
+    <li class="flexrow" data-item-id="{{id}}">
       <div class="item-name">
         <h4>{{id}}.</h4>
         <input class="flex2" type="text" name="system.equipementsR.{{id}}.name" value="{{item.name}}" data-dtype="String"/>
