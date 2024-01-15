@@ -34,5 +34,8 @@
 
   "LESOUBLIES.choixSongeOuCauchemard" : "Que choississez vous pour ce jet ?",
   "LESOUBLIES.cauchemard" : "Cauchemard",
-  "LESOUBLIES.songe" : "Songe"
+  "LESOUBLIES.songe" : "Songe",
+  "LESOUBLIES.basculeDiagTxt" : "Affiche les dialogues automatiquement par défaut",
+  "LESOUBLIES.basculeDiaghint" : "Cela permet de choisir pour ses fenêtres si les dialogues s'ouvre automatiquement"
+
 }

@@ -58,8 +58,17 @@ Hooks.once('init', async function() {
     html.find(".cmd").click((ev) =>EnventDuChat(ev, html, data));
   });
   // Preload Handlebars templates.
-  
+
   RegisterHelperHandlebar()
+
+  game.settings.register("lesoublies", "optionDialogue", {
+    name: game.i18n.localize("LESOUBLIES.basculeDiagTxt"),
+    hint: game.i18n.localize("LESOUBLIES.basculeDiaghint"),
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+});
 
   return preloadHandlebarsTemplates();
 });

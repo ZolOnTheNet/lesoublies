@@ -212,7 +212,7 @@ class DiagCMB extends FormApplication {
     //const rollMode = game.settings.get('core', 'rollMode');
     r.evaluate({async :false })
     // lancer du resultat !
-    afficheResultat(this.token, this.actor, r, "Jet "+context.cmp,"votre score est: "+score,true, score, this.context.choixPrimes, this.context.choixPenalites)
+    afficheResultat(this.token, this.actor, r, "Jet "+context.cmp+ "-Action "+this.context.noActionEnCours,"votre score est: "+score,true, score, this.context.choixPrimes, this.context.choixPenalites)
 
   }
 }
@@ -224,7 +224,7 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
 
   const etatCaseAction = ["R","G","F"]
   const labelCaseAction = { "R": "Retrait", "G" : "Garde", "F" : "Feu de l'action" }
-  let actor; let token; let init = 0; let ptCauch =0; let ptSonge = 0
+  let actor; let token; let init = 0; let ptCauch =0; let ptSonge = 0; let txtInit = ""
   const myDialogOptions = {
     width: 400
   //      height: 400,
@@ -235,6 +235,10 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
   data = mergeObject({ tokenId:"", cmpNom : "", score: 0, acteurId:"", caseAction:"F", equipt:{} },data)
   if(data.tokenId) {
     token = game.scenes.current.tokens.get(data.tokenId)
+    init = token?.combatant?.initiative
+    if(init == undefined) init = 0
+    if(init > 0) txtInit = "(Initiative: "+ init +")"
+    else txtInit = ""
     actor = token.actor
   } else  if(acteur){
     actor = game.actors.get(data.acteurId)
@@ -278,7 +282,8 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
     lstPenalites : LESOUBLIES.penalites,
     choixPrimes : "",
     choixPenalites : "",
-    init : init
+    init : init,
+    txtInit : txtInit
   };
   //context.objValue = JSON.stringify(context).replaceAll('"','|'); // plus utile
   new DiagCMB(context).render(true);

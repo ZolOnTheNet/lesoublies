@@ -7,10 +7,10 @@
     {{/if}}
     
     {{#if estUnSucces}}
-        <h3>Success !</h3>
+        <h1>Success !</h1>
         <div class="roll-description">Votre résultat : <strong>{{resultatQual}}</strong></div>
     {{else}}
-        <h3>Echec !</h3>
+        <h1>Echec !</h1>
     {{/if}}
     {{#if aDommage}}
         <h3>Dommages</h3>
@@ -19,18 +19,23 @@
     <div class="roll-description">{{textRappel}} </div>
     <hr>
     {{#if lstPrimes}}
-    <h3>Rappel des primes</h3>
-        {{#each lstPrimes as |ele key| }}
-        <div>{{key}}.{{ele}} </div>
-        {{/each}}
+    <div>
+        <h3>Rappel des primes</h3>
+        <ul class="items-header">
+            {{#each lstPrimes as |ele key| }}
+            <li><div class="item-name">{{ele.label}}</div><div class="items-list ">{{ele.description}}</div></li>
+            {{/each}}
+        </ul>
+    </div>
     {{/if}}
     {{#if lstPenalites}}
-    <h3>Rappel des pénalités</h3>
-        {{#each lstPenalites as |ele key| }}
-        <div>{{key}}.{{ele}} </div>
-        {{/each}}
+    <div>
+        <h3>Rappel des pénalités</h3>
+        <ul class="items-header">
+            {{#each lstPenalites as |ele key| }}
+            <li><div class="item-name">{{ele.label}}</div><i class="items-list ">{{ele.description}}</i></li>
+            {{/each}}
+        </ul>
+    </div>
     {{/if}}
-
-    
-
 </div>

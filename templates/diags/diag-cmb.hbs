@@ -48,12 +48,12 @@
             <div>
                 <h2 class="items-header">Votre Position</h2>
                 {{#ifEq caseAction "R"}}
-                    <h3>En retrait</h3>
+                    <h3>En retrait (Initiative : {{init}})</h3>
                     <button class="dialog-button" data-button="position.garde.G">
                         passer en garde (1 action)
                     </button>
                     {{else}}
-                    <h3>En garde</h3>
+                    <h3>En garde {{txtInit}}</h3>
                     <button class="dialog-button" data-button="position.retrait.R">
                         passer en retrait
                     </button>

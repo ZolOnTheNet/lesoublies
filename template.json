@@ -6,16 +6,16 @@
         "taille": {
           "label":"LESOUBLIES.Taille",
           "abrv" : "LESOUBLIES.ABRV.Taille",
-          "value" : 1,
+          "value" : -1,
           "min": 0,
           "max": 10          
         },
         "PdV": {
           "label":"LESOUBLIES.PdV",
           "abrv" : "LESOUBLIES.ABRV.PdV",
-          "value": 10,
+          "value": -1,
           "min": 0,
-          "max": 10,
+          "max": -1,
           "formula":"",
           "bonus" : 0
         },
@@ -36,7 +36,7 @@
             "min": 0,
             "max": 0
           },
-          "value":0,
+          "value": 1,
           "dette": {
             "label":"LESOUBLIES.PdS",
             "abrv" : "LESOUBLIES.ABRV.PdS",
@@ -44,11 +44,11 @@
           }
         },
         "Cauchemard" : {
-          "label":"LESOUBLIES.Cauchemard",
+          "label": "LESOUBLIES.Cauchemard",
           "abrv" : "LESOUBLIES.ABRV.Cauchemard",
           "EstSensible": false,
           "Points" : {
-            "label":"LESOUBLIES.PdC",
+            "label": "LESOUBLIES.PdC",
             "abrv" : "LESOUBLIES.ABRV.PdC",
             "value": -1,
             "min": 0,
@@ -64,7 +64,12 @@
         "equipementsR": {},
         "combat": {
           "position":"",
-          "init":1
+          "init":1,
+          "protection":{
+            "value":0,
+            "min": -1,
+            "max":-1
+          }
         }
       }
     },
@@ -81,7 +86,8 @@
         "label":"LESOUBLIES.SensValeur",
         "abrv" : "LESOUBLIES.ABRV.SensValeur",
         "value" : 0.5
-      }
+      },
+      "defenseTot" : 0
     },
     "npc": {
       "templates": ["base"],
@@ -155,6 +161,7 @@
     "arme": {
       "templates": ["base"],
       "taille":1,
+      "tailleRel" : false,
       "ecorse" : 20,
       "portee" : "",
       "cmp" : "",
@@ -163,8 +170,11 @@
         "score" : 0,
         "degats": ""
       },
-      "jsonPrime" : "",
-      "jsonPenalite" : ""
+      "formuleDom" : "",
+      "lstPrimes" : "",
+      "lstPenalites" : "",
+      "textRapide" : "",
+      "forceMin" : 0
     },
     "armure": {
       "templates": ["base"],

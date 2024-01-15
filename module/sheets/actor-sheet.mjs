@@ -10,6 +10,8 @@ import { diagCmb } from "../diags/diag-cmb.mjs";
  */
 export class LesOubliesActorSheet extends ActorSheet {
 
+  optionDialogue = undefined;
+
   /** @override */
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
@@ -63,6 +65,10 @@ export class LesOubliesActorSheet extends ActorSheet {
     context.effects = prepareActiveEffectCategories(this.actor.effects);
     context.infoTaille = LESOUBLIES.tailles[actorData.system.taille.value].label
     context.infoTailleCm = LESOUBLIES.tailles[actorData.system.taille.value].cm
+
+    if(this.autoDialogue == undefined) this.autoDialogue =game.settings.get("lesoublies","optionDialogue")
+    context.autoDialogue = this.autoDialogue
+    context.lstArmures = LESOUBLIES.niveauProtection;
     return context;
   }
 
@@ -96,6 +102,7 @@ export class LesOubliesActorSheet extends ActorSheet {
     const cmpProf = []
     const armes = []
     const armures = []
+    let maxa = 0; let mina = 0; //val max min des armures
     const liens = []
     //const aAfficher = [] // pour la liste complète sans colonnes
     const spells = { // il n'a que 5 niveau de sort
@@ -157,9 +164,18 @@ export class LesOubliesActorSheet extends ActorSheet {
       // Append to features.
       else if (i.type === 'arme') {
         armes.push(i);
+        //gear.push(i);
       }
       else if (i.type === 'armure') {
         armures.push(i);
+        //gerer les ponts d'armure.
+        if(i.system.protection > maxa) {
+          mina = 1; maxa = i.system.protection
+        }else if(i.system.protection>1){
+          maxa++
+        }
+        maxa = Math.min(maxa,3) // maximum 3
+        //gear.push(i);
       }
       else if (i.type === 'lien') {
         liens.push(i);
@@ -204,12 +220,17 @@ export class LesOubliesActorSheet extends ActorSheet {
     for(let i = 0; i < 11; i++) { // a changer si vous changer le nombre de cout référencés (cf spells au début)
       if(spells[i].length ==0) { const x = delete spells[i]; }
     }
+    if(context.system.combat.protection.min != mina) context.system.combat.protection.min = mina
+    if(context.system.combat.protection.max != maxa) context.system.combat.protection.max = maxa
+    // tester les nombre de protection
     context.gear = gear;
     context.features = features;
     context.spells = spells;
     context.cmps = cmpProf;
     context.profils = profils;
     context.lstCmps = lstCmps;
+    context.protection = armures
+    context.armes = armes
     //context.aAfficher = aAfficher;
     if(context.type == 'character') { // affichage en trois colonnes seulement poru les PJ
       context.aAfficher1 = aAffiche3Col[0];
@@ -301,10 +322,15 @@ export class LesOubliesActorSheet extends ActorSheet {
     const dataset = element.dataset;
     const clickTab = dataset.action.split(".")
     switch(clickTab[0]){
+      case 'diag':
+        this.autoDialogue = ! this.autoDialogue
+        this.render(true)
+        break
       case 'songe':
         break;
       case 'roll': // il faudra changer quand digCmb sera au point par le transformer en diagCmp
-        if(clickTab[1] == 'diag') diagCmb({ tokenId:this.token.id, cmpNom : clickTab[3], score: parseInt(clickTab[4]), acteurId:this.token.actor.id, caseAction:"G", equipt:{} })
+        let dialon = event.shiftKey ? !this.autoDialogue : this.autoDialogue
+        if(clickTab[1] == 'diag' &&  dialon) diagCmb({ tokenId:this.token.id, cmpNom : clickTab[3], score: parseInt(clickTab[4]), acteurId:this.token.actor.id, caseAction:"G", equipt:{} })
         else this._onRoll(event, element, dataset)
         break;
       case 'acteur':
@@ -348,6 +374,7 @@ export class LesOubliesActorSheet extends ActorSheet {
     // test sur roll
     if(dataset?.action == "") return // marquer une erreur ?
     let rollTab = dataset.action.split(".")
+    if(rollTab[1] == 'diag')  rollTab.splice(1,1) // noIndice=1 pour diag
     if(rollTab.length != 4) return // marquer une erreur ?
     let score = parseInt(rollTab[3])
     console.log("jet : ", element,dataset)
@@ -388,6 +415,17 @@ export class LesOubliesActorSheet extends ActorSheet {
 
   async _onDropItemCreate(itemData, source, shiftKey) {
     switch (itemData.type) {
+      case 'arme':
+        itemData = itemData instanceof Array ? itemData : [itemData];
+        if(itemData[0].system.tailleRel) {
+          itemData[0].system.taille = this.actor.system.taille.value + itemData[0].system.taille
+          let NomRace = this.actor.items.get(this.actor.system.idRace)?.name
+          if(NomRace != undefined) itemData[0].name += " de "+NomRace
+          itemData[0].system.tailleRel = false;
+        }
+        return await this.actor.createEmbeddedDocuments("Item", itemData ).then((items) => {
+          return items
+        })
       case "race":
         // gestion de la race : suppression des anciennes
         let listRace = this.actor.items.filter(x => x.type == 'race')
@@ -414,6 +452,10 @@ export class LesOubliesActorSheet extends ActorSheet {
           let listCompaId = listCompa.map(x => x.id)
           await this.actor.deleteEmbeddedDocuments('Item',listCompaId)
         }
+        itemData = itemData instanceof Array ? itemData : [itemData];
+        return await this.actor.createEmbeddedDocuments("Item", itemData ).then((items) => {
+          return items
+        })
         break
       case 'tribut':
         let listTribut = this.actor.items.filter(x => x.type == 'tribut')

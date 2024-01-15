@@ -75,6 +75,34 @@ export class LesOubliesActor extends Actor {
       if(actorData.system.PdV.value > actorData.system.PdV.max) actorData.system.PdV.value = actorData.system.PdV.max
     }
     // Loop through ability scores, and add their modifiers to our sheet output.
+    if( actorData.system.idRace !=''){
+      let itemRace = undefined
+      if(actorData.system.taille.value == -1) {
+        if(itemRace==undefined) itemRace= this.items.get(actorData.system.idRace)
+        actorData.system.taille.value = itemRace.system.taille
+      }
+      if(actorData.system.PdV.value == -1){
+        //if(itemRace==undefined) itemRace= this.items.get(actorData.system.idRace)
+        actorData.system.PdV.max = actorData.system.taille.value * 4
+        actorData.system.PdV.value = actorData.system.PdV.max
+      }
+      if(actorData.system.combat.protection.min == -1 || actorData.system.combat.protection.max == -1){
+        let armures = actorData.items.filter(x => x.type == 'armure')
+        let mina = 0; let maxa = 0
+        armures.forEach(a => {
+          if(a.system.protection >maxa) {
+            mina = 1; maxa = a.system.protection
+          }if(a.system.protection>1){
+            maxa++
+          }
+          maxa = Math.min(maxa,3) // maximum 3
+        })
+        actorData.system.combat.protection.min = mina
+        actorData.system.combat.protection.max = maxa
+        if(actorData.system.combat.protection.value > maxa) actorData.system.combat.protection.value = maxa
+        if(actorData.system.combat.protection.value < mina) actorData.system.combat.protection.value = mina
+      }
+    }
     // for (let [key, ability] of Object.entries(systemData.abilities)) {
     //   // Calculate the modifier using d20 rules.
     //   ability.mod = Math.floor((ability.value - 10) / 2);

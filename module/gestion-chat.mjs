@@ -28,7 +28,7 @@ export function EnventDuChat(event, html, data){
 
             }
             // donner le resultat final !
-            gererResultat({tokenId:cmdArgs[3], actorId:cmdArgs[4], titre:"Votre Choix", description:descp, score:parseInt(cmdArgs[6]), rappel: "", lstPrimes:cmdArgs[7], lstPenalites: cmdArgs[8] })
+            gererResultat({tokenId:cmdArgs[3], actorId:cmdArgs[4], titre:"Résultat du " + cmdArgs[9], description:descp, score:parseInt(cmdArgs[6]), rappel: "", lstPrimes:cmdArgs[7], lstPenalites: cmdArgs[8] })
             break;
         default :
             console.log("Event Du Chat : Devrait pas être ici", dataSet)
@@ -43,6 +43,12 @@ export function afficheResultat(token, actor, roll, titre='Jet !',descriptif='',
             actor = _token.actor
         }
     }
+    let tabPrimes = toArrayLstTxt(pLstPrimes); let tabPenalites = toArrayLstTxt(pLstPenalites)
+    let bonusPrimes = 0; let malusPenalites = 0
+    tabPrimes.forEach(ele => { bonusPrimes += LESOUBLIES.primes[ele].bonus })
+    tabPenalites.forEach(ele => {malusPenalites += LESOUBLIES.penalites[ele].bonus })
+    score = score + bonusPrimes + malusPenalites
+
     const rollData = {
         idToken : token.id,
         idActor : actor.id, // relation avec l'acteur (ajouter la dette)
@@ -53,6 +59,8 @@ export function afficheResultat(token, actor, roll, titre='Jet !',descriptif='',
         detteC : 0,
         scoreS : 0,
         scoreC : 0,
+        desS : 0,
+        desC : 0,
         lstPrimes : pLstPrimes, // transimission des penalités et des primes
         lstPenalites : pLstPenalites,
         esti : estimation,
@@ -60,6 +68,8 @@ export function afficheResultat(token, actor, roll, titre='Jet !',descriptif='',
     }
     // modification en fonction du jet
     const retArray = roll.terms[0].rolls
+    rollData.desS = retArray[0]._total
+    rollData.desC = retArray[1]._total
     rollData.scoreS = retArray[0]._total +score // le songe
     rollData.scoreC = retArray[1]._total +score
     if(actor.system.Songe.value == actor.system.Cauchemard.value) {
@@ -101,9 +111,9 @@ export function afficheResultat(token, actor, roll, titre='Jet !',descriptif='',
         resultQ = LESOUBLIES.toReussites[Math.ceil(qual/3)]
     }
     let tabPrimes = toArrayLstTxt(obj.lstPrimes); let tabPenalites = toArrayLstTxt(obj.lstPenalites)
-    let tabElePrimes = []; let tabElePenalites = []
-    tabPrimes.forEach(ele => { tabElePrimes.push(LESOUBLIES.primes[ele].label + ":" + LESOUBLIES.primes[ele].description) })
-    tabPenalites.forEach(ele => { tabElePenalites.push(LESOUBLIES.penalites[ele].label + ":" + LESOUBLIES.penalites[ele].description) })
+    let tabElePrimes = []; let tabElePenalites = []; 
+    tabPrimes.forEach(ele => { tabElePrimes.push({ label : LESOUBLIES.primes[ele].label, description: LESOUBLIES.primes[ele].description}) })
+    tabPenalites.forEach(ele => { tabElePenalites.push({ label : LESOUBLIES.penalites[ele].label, description: LESOUBLIES.penalites[ele].description}) })
     let context = {
         titre: obj.titre,
         description : obj.description,

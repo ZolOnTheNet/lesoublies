@@ -117,3 +117,18 @@ export function toStdProfil(profilItem){
         else prof = prof.toLowerCase()
     return prof
 }   
+/** objet  dequivalence  pour les listes */
+// function justeRapide(){
+//     let tabPrimes = toArrayLstTxt(obj.lstPrimes); let tabPenalites = toArrayLstTxt(obj.lstPenalites)
+//     let tabElePrimes = []; let tabElePenalites = []; 
+//     tabPrimes.forEach(ele => { tabElePrimes.push({ label : LESOUBLIES.primes[ele].label, description: LESOUBLIES.primes[ele].description}) })
+//     tabPenalites.forEach(ele => { tabElePenalites.push({ label : LESOUBLIES.penalites[ele].label, description: LESOUBLIES.penalites[ele].description}) })
+// }
+
+export function toLstObjPrime(objTab, champ1="label"){
+    let Ret = {}; const entr = Object.entries(objTab)
+    entr.forEach(ele => {
+        Ret[ele[0]] = ele[1][champ1]
+    })
+    return Ret;
+}

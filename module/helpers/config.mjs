@@ -58,6 +58,7 @@ LESOUBLIES.profilsInv = {
 LESOUBLIES.typeAction = { "G": "Gratuite", "L": "Libre", "LA": "Libre, Avancée"}
 LESOUBLIES.typeCondition = {"desengage": "Désengagé", "engage": "engagé"}
 LESOUBLIES.typeDiffcultes = { "N":"rien", "T" : "objet étant un tableau de bonus/malus", "O": "objet d'une seule valeur"}
+LESOUBLIES.niveauProtection = { "0":"rien", "1" : "Protégé", "2": "Arnaché", "3" : "Bardé"}
 // modele : "" : { label : "", cmp : "", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"}
 LESOUBLIES.actions = {
   "rien"      : { label : "", cmp : "-", typeAction : "G", difficultes : { type:"N", code : { "":"" } }, conditions : "", reaction : "-"},

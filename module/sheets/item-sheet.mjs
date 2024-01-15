@@ -1,4 +1,5 @@
-import { listCmp, listCmpMagiques, listEquipt, listPJ, objNoReduce } from "../utils.mjs";
+import { LESOUBLIES } from "../helpers/config.mjs";
+import { ajouterLstTxt, enleverLstTxt, listCmp, listCmpMagiques, listEquipt, listPJ, objNoReduce, toArrayLstTxt, toLstObjPrime } from "../utils.mjs";
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
@@ -50,23 +51,38 @@ export class LesOubliesItemSheet extends ItemSheet {
     context.type = itemData.type
     // gestion des cas particulier des type d'items : une fonction pour chaque type
     switch(itemData.type) {
+      case 'arme':
+        context.lstCmp = listCmp()
+        context.lstAction = LESOUBLIES.actions
+        context.lstPrimes = toLstObjPrime(LESOUBLIES.primes)
+        context.lstPenalites = toLstObjPrime(LESOUBLIES.penalites)
+        let lstP = toArrayLstTxt(itemData.system.lstPenalites)
+        let ob = {}; lstP.forEach(x => { ob[x] = LESOUBLIES.penalites[x].label })
+        context.Penalites = ob
+        lstP = toArrayLstTxt(itemData.system.lstPrimes)
+        ob = {}; lstP.forEach(x => { ob[x] = LESOUBLIES.primes[x].label })
+        context.Primes = ob
+        context.selectPrime = "acceleration"
+        context.selectPenalite = "abandon"
+        break
+      case 'compagnie':
+        context.LstPJ = listPJ()
+        break
+      case 'metier':
+        this.#gestionCmp(context)
+        context.LstEquipmt = listEquipt()
+        context.LstCmpMagie = listCmpMagiques()
+        break;
       case 'profil':
         this.#gestionCmp(context)
         break;
       case 'tribut':
         this.#gestionCmp(context)
         break;
-      case 'metier':
-        this.#gestionCmp(context)
-        context.LstEquipmt = listEquipt()
-        context.LstCmpMagie = listCmpMagiques()
-        break;
-      case 'compagnie':
-        context.LstPJ = listPJ()
-        break
       case 'sort':
         context.LstSongeCauch={ 0:"Cauchemard", 1:"Songe"}
         context.LstCmpMagie = listCmpMagiques()
+        break
     }
     if( context.system.description == "") context.system.description =' '
     return context;
@@ -171,6 +187,21 @@ export class LesOubliesItemSheet extends ItemSheet {
     // début des traitements
     let cmd = action.split('.')
     switch (cmd[0]){
+      case 'arme':
+        let champ = "lst"+cmd[2]+"s"; let ret = ""
+        if(cmd[1]=="add"){
+          const f = $(a).parents('form');
+          let val = f?.find('[name="select'+ cmd[2]+'"]').val()
+          ret = ajouterLstTxt(val, this.item.system[champ]);
+        } else if(cmd[1]=='del') { //arme.dell.Penalite.{{key}}
+          ret = enleverLstTxt(cmd[3],this.item.system[champ])
+        }
+        champ = "system."+champ
+        let objUdp = {}; objUdp[champ] = ret
+        this.item.update(objUdp)
+
+        //console.log(cmd)
+        break
       case 'profil':
         switch(cmd[1]) {
           case 'add': // normalement il ya cmp en cmd[2]
