@@ -1,20 +1,23 @@
 <div class="resultat chat">
-    {{#if titre}}
-			<h1><span class="roll-description">{{titre}}</span></h1>
-    {{/if}}
-    {{#if description}}
-			<div class="roll-description">{{description}}</div>
-    {{/if}}
-    
     {{#if estUnSucces}}
-        <h1>Success !</h1>
-        <div class="roll-description">Votre réussite est <strong>{{resultatQual}}</strong></div>
+        <h1> {{labelAction}} Success !</h1>
     {{else}}
         <h1>Echec !</h1>
     {{/if}}
+    {{#if titre}}
+        <h3><span class="roll-description">{{titre}}</span></h3>
+    {{/if}}
+    {{#if estUnSucces}}
+        <div class="roll-description">Votre réussite est <strong>{{resultatQual}}</strong>({{score}})</div>
+    {{else}}
+        <div class="roll-description">Votre score est {{score}}, pas suffisant</div>
+    {{/if}}
+    {{#if description}}
+			<div class="roll-description">{{description}}</div>
+    {{/if}}    
     {{#if aDommage}}
         <h3>Dommages</h3>
-        les dommaegs de l'arme {{textArme}} : {{dommage}}
+        les dommages de l'arme {{textArme}} : {{dommage}}
     {{/if}}
     <div class="roll-description">{{textRappel}} </div>
     <hr>

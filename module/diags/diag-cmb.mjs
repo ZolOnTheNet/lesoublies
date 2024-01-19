@@ -4,6 +4,8 @@ import { LESOUBLIES } from "../helpers/config.mjs"
 import { toStdProfil, ajouterLstTxt, estDansLstTxt, enleverLstTxt } from "../utils.mjs"
 import { afficheResultat } from "../gestion-chat.mjs"
 
+const labelCaseAction = { "R": "Retrait", "G" : "Garde", "F" : "Feu de l'action" }
+
 /** donne l'affichage des chiffres indiquant le nombre d'action
  *
  */
@@ -67,20 +69,29 @@ class DiagCMB extends FormApplication {
 
   _onClickButton(event) {
     event.preventDefault();
-    const id = event.currentTarget.dataset.button;
-    switch (id) {
+    const id = event.currentTarget.dataset.button.split(".");
+    switch (id[0]) {
         case "cancel" :
             return this.close();
         case "lancer" :
             console.log("lancer l'attaque !", this.context)
+            this.context.dernier = false
             this._roll()
             this.context.noActionEnCours++
             this.render(true)
             break
         case "submit" :
-            console.log("lancer l'attaque !", this.context)
+            //console.log("lancer l'attaque !", this.context)
+            this.context.dernier = true
             this._roll()
             return this._onSubmit(event);
+        case "position": // traitement des position
+        // pour info : game.combat.current.combatantId  donne le combatant en cours
+          ui.notifications.warn("Vous passez de " + labelCaseAction[this.context.caseAction] +" a " + labelCaseAction[id[2]])
+          this.context.caseAction = id[2]
+          this.actor.update({"system.coombat.position" : id[2] })
+          this.render(true)
+          break
     }
   }
 
@@ -125,9 +136,11 @@ class DiagCMB extends FormApplication {
               // s'il y est alors on l'enlève : tester si pas obligatoire ! ou gratuit
               if( ! estDansLstTxt(clickTab[2], diagcmd.context.lstPrimesGratuites)){
                 diagcmd.context.choixPrimes = enleverLstTxt(clickTab[2],diagcmd.context.choixPrimes)
+                diagcmd.context.equilibreChoix--
               }
             } else {
               diagcmd.context.choixPrimes = ajouterLstTxt(clickTab[2],diagcmd.context.choixPrimes)
+              diagcmd.context.equilibreChoix++
             }
             aRendre = true
           break;
@@ -137,9 +150,11 @@ class DiagCMB extends FormApplication {
             // s'il y est alors on l'enlève : tester si pas obligatoire ! ou gratuit
             if( ! estDansLstTxt(clickTab[2], diagcmd.context.lstPenalitesObligatoires)){
               diagcmd.context.choixPenalites = enleverLstTxt(clickTab[2],diagcmd.context.choixPenalites)
+              diagcmd.context.equilibreChoix++
             }
           } else {
             diagcmd.context.choixPenalites = ajouterLstTxt(clickTab[2],diagcmd.context.choixPenalites)
+            diagcmd.context.equilibreChoix--
           }
           aRendre = true
         break;
@@ -175,15 +190,26 @@ class DiagCMB extends FormApplication {
     }
     if(aRendre){ 
       diagcmd.context.diffTotal = this._calculDiffTotal(diagcmd.context)
+      diagcmd.context.textEquilibre = this._texteEquilibrePP(diagcmd.context)
       diagcmd.render(true)
     }
   }
   
-  _calculDiffTotal(context){
+  _calculDiffTotal(context){ // calcule de la difficulté totale
     let Ret =  context.diffAction + context.diffNombre + context.diffSupp - context.armure
     if(estDansLstTxt("efficacite",context.choixPrimes)) Ret += LESOUBLIES.primes["efficacite"].bonus
     if(estDansLstTxt("difficulte",context.choixPenalites)) Ret += LESOUBLIES.penalites["difficulte"].bonus
     return Ret;
+  }
+
+  _texteEquilibrePP(context){ // texte a retourner 
+    if(context.equilibreChoix){
+      if(context.equilibreChoix > 0){
+        return "Trop de Primes"
+      }else {
+        return "Trop de Penalités"
+      }
+    }else return ""
   }
 
   _roll(){ // XXX a regrouper avec gerer les resultat ?
@@ -212,7 +238,17 @@ class DiagCMB extends FormApplication {
     //const rollMode = game.settings.get('core', 'rollMode');
     r.evaluate({async :false })
     // lancer du resultat !
-    afficheResultat(this.token, this.actor, r, "Jet "+context.cmp+ "-Action "+this.context.noActionEnCours,"votre score est: "+score,true, score, this.context.choixPrimes, this.context.choixPenalites)
+    let titre = "Jet "+ this.context.cmp // amélioration des titres 
+    if(this.context.nbActions> 1){
+      if(this.context.noActionEnCours){
+        titre = "Action " + this.context.noActionEnCours+": " + titre
+      }else {
+        titre = "Dernier Action: " + titre
+      }
+    }
+    afficheResultat(this.token, this.actor, r, titre,"votre score est: "+score, 
+                    this.context.dernier, score, this.context.choixPrimes, this.context.choixPenalites, 
+                    this.context.action, this.context.armure, this.context.dommage)
 
   }
 }
@@ -223,7 +259,6 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
   // Pour info : [...game.combat.collections.combatants][0].update({"initiative" : 5}) change l'init du premier combatant (0) à 5
 
   const etatCaseAction = ["R","G","F"]
-  const labelCaseAction = { "R": "Retrait", "G" : "Garde", "F" : "Feu de l'action" }
   let actor; let token; let init = 0; let ptCauch =0; let ptSonge = 0; let txtInit = ""
   const myDialogOptions = {
     width: 400
@@ -242,31 +277,33 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
     actor = token.actor
   } else  if(acteur){
     actor = game.actors.get(data.acteurId)
+    if(actor)init =actor.system.init
   }
   if(actor) {
-    init =actor.init
     ptCauch = actor.system.Cauchemard.Points.value
     ptSonge = actor.system.Songe.Points.value
     data.armureDef = actor.system.combat.protection.value
     let itemArme = data.equipt?.itemId
-    data.score = 0
     if(itemArme){
+      data.score = -1; //on recalcul a partir de zero avec l'équipement
       let itemA = actor.items.get(itemArme); let itemCmp
-      if(itemA?.cmp){
-        itemCmp = actor.items.getName(itemA.cmp)
-        data.cmpNom = itemA.name +'(' +itemA.cmp+ ')'
-      }else if(itemA?.cmpId){
-        itemCmp = actor.items.get(itemA.cmpId)
-        data.cmpNom = itemA.name +'(' +itemCmp?.name+ ')'
+      if(itemA.system?.cmp){
+        itemCmp = actor.items.getName(itemA.system.cmp)
+        data.cmpNom = itemA.name +'(' +itemA.system.cmp+ ')'
+      }else if(itemA.system?.cmpId){
+        itemCmp = actor.items.get(itemA.system.cmpId)
+        data.cmpNom = itemA.name +'(' +itemCmp.name+ ')'
       }
       if(data.score == -1){ // on n'a pas le score
         if(itemCmp) {
-          let itemRace = actor.items.get(actor.idRace)
-          data.score = itemCmp.system.score + itemRace.system.profils[toStdProfil(itemCmp.system.profil)]+itemA.system.bonus.score
+          let itemRace = actor.items.get(actor.system.idRace)
+          data.score = itemCmp.system.score + parseInt(itemRace.system.profils[toStdProfil(itemCmp.system.profil)]+"")+itemA.system.bonus.score
         }
       }
-      data.primes = itemA?.lstPrimes
-      data.penalites = item?.lstPenalites
+      data.caseAction = actor.system.combat.position
+      if(data.caseAction == "") data.caseAction = "G" // par défaut
+      data.primes = itemA.system?.lstPrimes
+      data.penalites = itemA.system?.lstPenalites
       data.dommage = itemA.system.taille + +itemA.system.bonus.score
     }
   }
@@ -282,8 +319,8 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
     score : data.score,
     armure : data.armureDef, // rajout à gerer
     dommage : data.dommage,
-    lstPrimesGratuites : "",
-    lstPenalitesObligatoires : "",
+    lstPrimesGratuites : data.primes,
+    lstPenalitesObligatoires : data.penalites,
     description : "Utilisez cette interface pour modifier votre tour de jeu",
     caseAction : "G",
     //caseActionLabel : labelCaseAction["G"],
@@ -306,8 +343,11 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
     diffTotal : -data.armureDef,
     lstPrimes : LESOUBLIES.primes,
     lstPenalites : LESOUBLIES.penalites,
-    choixPrimes : "",
-    choixPenalites : "",
+    choixPrimes : data.primes,
+    choixPenalites : data.penalites,
+    textEquilibre : "",
+    dernier : true,
+    equilibreChoix : 0,
     init : init,
     txtInit : txtInit
   };

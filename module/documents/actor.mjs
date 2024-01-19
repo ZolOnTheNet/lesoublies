@@ -126,8 +126,10 @@ export class LesOubliesActor extends Actor {
     let race = undefined
     if(actorData.system.idRace == '') { 
       race = this.items.filter(x => x.type == 'race')
-      race = race[0]
-      actorData.system.idRace = race.id
+      if(race.length >0){ // Personnage ayant au moins une race !
+        race = race[0]
+        actorData.system.idRace = race.id
+      }
     } else {
       race = this.items.get(actorData.idRace)
     }
@@ -165,7 +167,7 @@ export class LesOubliesActor extends Actor {
     // recopie au niveau system tout l'ensemble des compétences 
     const raceProfil = this.items.filter(x => x.type == 'race')
     let probase = { "artiste":0, "athlete":0, "chasseur": 0, "faiseur": 0, "forceNature" :0, "guerrier" : 0, "mystique" : 0,  "ombre" : 0,  "savant" : 0 }
-    if(raceProfil) {
+    if(raceProfil.lenght) {
       probase = raceProfil[0].system.profils
       for (let [k, v] of Object.entries(probase)) { probase[k] = parseInt(v) } 
     }

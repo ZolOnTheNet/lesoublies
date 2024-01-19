@@ -10,6 +10,7 @@ import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { LESOUBLIES } from "./helpers/config.mjs";
 import { EnventDuChat } from "./gestion-chat.mjs"
 import { AffecterProfils } from "./utils.mjs";
+import { DataCom } from "./datacom.mjs"
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -53,6 +54,8 @@ Hooks.once('init', async function() {
   game.api = {
     "affecertProfils" : AffecterProfils
   }
+
+  game.lstData = new DataCom
 
   Hooks.on("renderChatMessage", (message, html, data) => {
     html.find(".cmd").click((ev) =>EnventDuChat(ev, html, data));

@@ -101,5 +101,5 @@ LESOUBLIES.penalites = {
   "difficulte"        : { label : "Difficulte", dom : 1, description: "Résultat final -3", init : 0, bonus : -3 },
   "facilite"          : { label : "Facilité", dom : 1, description: "Résultat final de la réaction de l'adversaire est augmenté de 3 points", init : 0, bonus : 0 },
   "ralentissement"    : { label : "Ralentissement", dom : 1, description: "Initiative à -3", init : -3, bonus : 0 },
-  "risque"            : { label : "Risques", dom : 1, description: "Incident en cas d'échec", init : 0, bonus : 0 }
+  "risque"            : { label : "Risques", dom : 1, description: "Incident en cas d'échec, LdR.p 129", init : 0, bonus : 0 }
 }

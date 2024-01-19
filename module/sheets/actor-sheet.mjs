@@ -64,8 +64,10 @@ export class LesOubliesActorSheet extends ActorSheet {
     if(context.system.biography == "" ) context.system.biography = ' '
     // Prepare active effects
     context.effects = prepareActiveEffectCategories(this.actor.effects);
-    context.infoTaille = LESOUBLIES.tailles[actorData.system.taille.value].label
-    context.infoTailleCm = LESOUBLIES.tailles[actorData.system.taille.value].cm
+    if(actorData.system.taille.value >-1){
+      context.infoTaille = LESOUBLIES.tailles[actorData.system.taille.value].label
+      context.infoTailleCm = LESOUBLIES.tailles[actorData.system.taille.value].cm
+    }
 
     if(this.autoDialogue == undefined) this.autoDialogue =game.settings.get("lesoublies","optionDialogue")
     context.autoDialogue = this.autoDialogue
@@ -338,8 +340,8 @@ export class LesOubliesActorSheet extends ActorSheet {
         break;
       case 'roll': // il faudra changer quand digCmb sera au point par le transformer en diagCmp
         let dialon = event.shiftKey ? !this.autoDialogue : this.autoDialogue
-        if(clickTab[1] == 'diag' &&  dialon) diagCmb({ tokenId:this.token.id, cmpNom : clickTab[3], score: parseInt(clickTab[4]), acteurId:this.token.actor.id, caseAction:"G", equipt:{} })
-        else if(clickTab[2]=='equip') diagCmb({ tokenId:this.token.id, cmpNom : "", score: -1, acteurId:this.token.actor.id, caseAction:"G", equipt:{ itemId : clickTab[3]} })
+        if(clickTab[2]=='equip') diagCmb({ tokenId:this.token.id, cmpNom : "", score: -1, acteurId:this.token.actor.id, caseAction:"G", equipt:{ itemId : clickTab[3]} })
+        else if(clickTab[1] == 'diag' &&  dialon) diagCmb({ tokenId:this.token.id, cmpNom : clickTab[3], score: parseInt(clickTab[4]), acteurId:this.token.actor.id, caseAction:"G", equipt:{} })
         else this._onRoll(event, element, dataset)
         break;
       case 'acteur':
@@ -391,7 +393,7 @@ export class LesOubliesActorSheet extends ActorSheet {
     if(rollTab[1] == 'diag')  rollTab.splice(1,1) // noIndice=1 pour diag
     if(rollTab.length != 4) return // marquer une erreur ?
     let score = parseInt(rollTab[3])
-    console.log("jet : ", element,dataset)
+    //console.log("jet : ", element,dataset)
     let r = new Roll("{ 1d12x, 1d12x[black]}")
 
     const speaker = ChatMessage.getSpeaker({ actor: this.actor });

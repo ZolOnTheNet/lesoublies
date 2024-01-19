@@ -14,7 +14,7 @@
             </td>
         </div>
         <hr>
-        <div>Choix de la difficulté: armure  : {{armure}}</div>
+        <div>Choix de la difficulté:</div>
         <div class="grid-diff">
             {{#each lstDifficultes as |diff key|}}
                 <div><a class="cmd" data-action="bonus.troggle.{{key}}.{{diff}}"><span>
@@ -28,7 +28,7 @@
         <div class="data">
             <label>Difficulté : </label>
             <input class="normal-input" size="3em" type="number" name="diffSupp" value="{{diffSupp}}"/>
-            <label>Total : {{diffTotal}}</label>
+            <label>Total : <strong>{{diffTotal}}</strong> {{#if armure}} dont armure(-{{armure}}){{/if}}</label>
         </div>
         <hr>
         <div class="grid grid-3col" >
@@ -56,15 +56,25 @@
                         passer en garde (1 action)
                     </button>
                     {{else}}
-                    <h3>En garde {{txtInit}}</h3>
-                    <button class="dialog-button" data-button="position.retrait.R">
-                        passer en retrait
-                    </button>
+                    {{#ifEq caseAction "G"}}
+                        <h3>En garde {{txtInit}}</h3>
+                        <button class="dialog-button" data-button="position.feu.F">
+                            passer dans le feu de l'action
+                        </button>
+                        <button class="dialog-button" data-button="position.retrait.R">
+                            passer en retrait
+                        </button>
+                    {{else}}
+                        <h3>Dans le feu de l'action {{txtInit}}</h3>
+                        <button class="dialog-button" data-button="position.garde.G">
+                            passer en Garde
+                        </button>
+                    {{/ifEq}}
                 {{/ifEq}}
                 <hr>
                 <br>
                 <div class="flexrow">
-                    <h2>Choix de l'action : </h2>
+                    <h2>Votre action n°{{noActionEnCours}} : </h2>
                     <select  name="action" style="width:175px !important;">
                     {{selectOptions lstActionStd selected=action}}
                     </select>
@@ -103,6 +113,11 @@
                         </div><br><br>   
                     {{/each}}
                 </div>
+                {{#if textEquilibre}}
+                <div class="txtcenter misenevidence" >
+                    {{textEquilibre}}
+                </div>
+                {{/if}}
             </div>
         </div>
         {{!--  <input name="obj" type="text" value='{{objValue}}' /> --}}

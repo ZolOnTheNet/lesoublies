@@ -111,6 +111,12 @@ export class LesOubliesItemSheet extends ItemSheet {
       case 'compagnie':
         if(! Array.isArray(this.item.system.personnages)) context.system.personnages = [ context.system.personnages ]
         break;
+      case 'arme':
+        if(this.item.system.cmpId !="") {
+          let lstCmp = listCmp()
+          this.item.update( { "system.cmp" : lstCmp[this.item.system.cmpId] })
+        }
+        break
       case 'tribut':
         //if(! Array.isArray(this.item.system.arrayCmp)) context.system.arrayCmp = [ context.system.arrayCmp ]
         break;
