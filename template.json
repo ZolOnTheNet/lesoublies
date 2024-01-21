@@ -64,6 +64,7 @@
         "equipementsR": {},
         "combat": {
           "position":"",
+          "condition" : "desengage",
           "init":1,
           "protection":{
             "value":0,

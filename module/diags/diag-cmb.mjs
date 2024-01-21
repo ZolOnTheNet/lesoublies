@@ -3,6 +3,7 @@
 import { LESOUBLIES } from "../helpers/config.mjs"
 import { toStdProfil, ajouterLstTxt, estDansLstTxt, enleverLstTxt } from "../utils.mjs"
 import { afficheResultat } from "../gestion-chat.mjs"
+import { ChoixEtResultat } from  "./diag-choix-sc.mjs"
 
 const labelCaseAction = { "R": "Retrait", "G" : "Garde", "F" : "Feu de l'action" }
 
@@ -246,7 +247,12 @@ class DiagCMB extends FormApplication {
         titre = "Dernier Action: " + titre
       }
     }
-    afficheResultat(this.token, this.actor, r, titre,"votre score est: "+score, 
+    // afficheResultat est pour le chat
+    if(LESOUBLIES.options.popupDice)
+    ChoixEtResultat(this.token, this.actor, r, {  titre: titre, score : score, dernier: this.context.dernier, primes : this.context.choixPrimes, 
+                                                  penalites : this.context.choixPenalites, action : this.context.action, 
+                                                  armure : this.context.armure, dommage : this.context.dommage})
+    else afficheResultat(this.token, this.actor, r, titre,"votre score est: "+score, 
                     this.context.dernier, score, this.context.choixPrimes, this.context.choixPenalites, 
                     this.context.action, this.context.armure, this.context.dommage)
 
@@ -261,7 +267,7 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
   const etatCaseAction = ["R","G","F"]
   let actor; let token; let init = 0; let ptCauch =0; let ptSonge = 0; let txtInit = ""
   const myDialogOptions = {
-    width: 400
+    width: 500
   //      height: 400,
   //      top: 500,
   //      left: 500

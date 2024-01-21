@@ -18,10 +18,10 @@
 
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
+      <label class="resource-label">Race principale</label>
+      <input type="text" name="system.race1" value="{{system.race1}}" data-dtype="String"/>
       <label class="resource-label">Mots clefs</label>
       <textarea name="system.motClefs" rows="3">{{{system.motClefs}}}</textarea>
-      <label class="resource-label">Langue maternelle</label>
-      <input type="text" name="system.langue" value="{{system.langue}}" data-dtype="String" />
       <label class="resource-label">Territoire</label>
       <input type="text" name="system.territoire" value="{{system.territoire}}" data-dtype="String" />
       <hr> Rem : allez jusqu'en bas pour le champ spécial (a corriger plus tard)<br>
@@ -37,8 +37,8 @@
       {{!-- As you add new fields, add them in here! --}}
       <ol class="item-list">
         <li class="item flexrow" data-item-id="{{item._id}}">
-          <label class="resource-label">Race principale</label>
-          <input type="text" name="system.race1" value="{{system.race1}}" data-dtype="String"/>
+          <label class="resource-label">Langue maternelle</label>
+          <input type="text" name="system.langue" value="{{system.langue}}" data-dtype="String" />
         </li>
         <li class="item flexrow" data-item-id="{{item._id}}">
           <label class="resource-label">Philosophie</label>

@@ -69,10 +69,15 @@ export class LesOubliesActor extends Actor {
     }
     if(actorData.system.Songe.Points.value > actorData.system.Songe.Points.max) actorData.system.Songe.Points.value = actorData.system.Songe.Points.max
     if(actorData.system.Cauchemard.Points.value > actorData.system.Cauchemard.Points.max) actorData.system.Cauchemard.Points.value = actorData.system.Cauchemard.Points.max
+    if(actorData.system.Songe.Points.value ==-1 && actorData.system.Songe.Points.max>0) actorData.system.Songe.Points.value = actorData.system.Songe.Points.max
+    if(actorData.system.Cauchemard.Points.value ==-1 && actorData.system.Cauchemard.Points.max>0) actorData.system.Cauchemard.Points.value = actorData.system.Cauchemard.Points.max
     // Cacul de PdV
     if(actorData.system.PdV.max != (actorData.system.taille.value * 4)){
       actorData.system.PdV.max = (actorData.system.taille.value * 4)
       if(actorData.system.PdV.value > actorData.system.PdV.max) actorData.system.PdV.value = actorData.system.PdV.max
+    }
+    if(actorData.system.PdV.value == -1 && actorData.system.PdV.max>1) {
+      actorData.system.PdV.value = actorData.system.PdV.max
     }
     // Loop through ability scores, and add their modifiers to our sheet output.
     if( actorData.system.idRace !=''){
@@ -129,7 +134,7 @@ export class LesOubliesActor extends Actor {
       if(race.length >0){ // Personnage ayant au moins une race !
         race = race[0]
         actorData.system.idRace = race.id
-      }
+      } else race = undefined
     } else {
       race = this.items.get(actorData.idRace)
     }

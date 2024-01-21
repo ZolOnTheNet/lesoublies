@@ -51,35 +51,34 @@
             <div>
                 <h2 class="items-header">Votre Position</h2>
                 {{#ifEq caseAction "R"}}
-                    <h3>En retrait (Initiative : {{init}})</h3>
+                    <h3>En retrait {{txtInit}}</h3>
                     <button class="dialog-button" data-button="position.garde.G">
-                        passer en garde (1 action)
+                        <i class="fas fa-arrow-right"></i> en garde (1 action)
                     </button>
                     {{else}}
                     {{#ifEq caseAction "G"}}
                         <h3>En garde {{txtInit}}</h3>
                         <button class="dialog-button" data-button="position.feu.F">
-                            passer dans le feu de l'action
+                             <i class="fas fa-arrow-right"></i> feu de l'action
                         </button>
                         <button class="dialog-button" data-button="position.retrait.R">
-                            passer en retrait
+                            <i class="fas fa-arrow-right"></i> en retrait
                         </button>
                     {{else}}
-                        <h3>Dans le feu de l'action {{txtInit}}</h3>
+                        <h3>feu de l'action {{txtInit}}</h3>
                         <button class="dialog-button" data-button="position.garde.G">
-                            passer en Garde
+                            <i class="fas fa-arrow-right"></i> en Garde
                         </button>
                     {{/ifEq}}
                 {{/ifEq}}
                 <hr>
-                <br>
                 <div class="flexrow">
                     <h2>Votre action n°{{noActionEnCours}} : </h2>
                     <select  name="action" style="width:175px !important;">
                     {{selectOptions lstActionStd selected=action}}
                     </select>
                 </div>
-                <h2>Dépense de Points : </h2>
+                <h2>Aide  :</h2>
                 {{#if nbPtSonge}}
                     <div class="cmd align-center" data-action="des.songe.1">
                         {{#if ptSongePris}}
