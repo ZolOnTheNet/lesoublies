@@ -1,7 +1,11 @@
 <form class="zol-dice-prompt" autocomplete="off">
     <div class="zol-dice-prompt">
         <header >
+            {{#if estCombat}}
             <span >Gestion des combats</span>
+            {{else}}
+            <span>Paramètre des lancers</span>
+            {{/if}}
             <span class="hint" >{{description}}</span>
         </header>
         <hr>
@@ -28,12 +32,15 @@
         <div class="data">
             <label>Difficulté : </label>
             <input class="normal-input" size="3em" type="number" name="diffSupp" value="{{diffSupp}}"/>
-            <label>Total : <strong>{{diffTotal}}</strong> {{#if armure}} dont armure(-{{armure}}){{/if}}</label>
+            <label>Total : <strong>{{diffTotal}}</strong> {{#if aArmure}} dont armure(-{{armure}}){{/if}}</label>
+            <label class="resource-label align-center">Armure compte ? :<a class="cmd" data-action="armure.toggle">{{#if aArmure}} <i class="fas fa-toggle-on"></i>Oui</a>{{else}}<i class="fas fa-toggle-off"></i>Non</a>{{/if}}</label>
         </div>
         <hr>
+        {{#if estCombat}}
         <div class="grid grid-3col" >
             
             <div>
+                <h3>Primes</h3>
                 <div class="grid-border">
                 {{#each lstPrimes as |prime key|}}
                     <div class="cmd" data-action="prime.choix.{{key}}">
@@ -78,6 +85,7 @@
                     {{selectOptions lstActionStd selected=action}}
                     </select>
                 </div>
+        {{/if}}
                 <h2>Aide  :</h2>
                 {{#if nbPtSonge}}
                     <div class="cmd align-center" data-action="des.songe.1">
@@ -97,8 +105,10 @@
                     </div>
                     <hr>
                 {{/if}}
+        {{#if estCombat}}
             </div>
             <div>
+                <h3>Pénalités</h3>
                 <div class="grid-border">
                     {{#each lstPenalites as |peine key|}}
                         <div class="cmd" data-action="penalite.choix.{{key}}">
@@ -119,6 +129,7 @@
                 {{/if}}
             </div>
         </div>
+        {{/if}}
         {{!--  <input name="obj" type="text" value='{{objValue}}' /> --}}
     </div>
     <footer class="sheet-footer grid grid-5col">

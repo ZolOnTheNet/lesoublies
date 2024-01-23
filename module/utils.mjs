@@ -132,3 +132,22 @@ export function toLstObjPrime(objTab, champ1="label"){
     })
     return Ret;
 }
+
+/**
+ * 
+ * @param {*} lstTxt une liste de valeur autorisée, si "" alors toutes
+ * @param {*} objTab objet contenant l'information
+ * @param {*} champ non du champs voulu pour l'affichage
+ * @param {*} tri si les valeur d'entree sont trié
+ * @param {*} vide 
+ */
+export function toLstObjTxt(lstTxt, objTab, champ, tri = true, vide=true){
+    let Ret = {};const entr = Object.entries(objTab)
+    if(vide) Ret = { "":""}
+    if(tri) entr.sort() // a tester si fonctionne
+    entr.forEach(ele => {
+        if(lstTxt=="") Ret[ele[0]] = ele[1][champ1]
+        else if(estDansLstTxt(ele[0],lstTxt)) Ret[ele[0]] = ele[1][champ1]
+    })
+    return Ret
+}

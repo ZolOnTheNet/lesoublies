@@ -305,8 +305,15 @@
   font-size: x-small;
 }
 
+.petit {
+  font-size: small;
+}
 .txtcenter {
   text-align: center;
+}
+
+.txtgauche {
+  text-align: left;
 }
 
 .misenevidence {

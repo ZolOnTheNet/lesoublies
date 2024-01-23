@@ -1,6 +1,7 @@
 import { LESOUBLIES } from "../helpers/config.mjs";
 import { toArrayLstTxt } from "../utils.mjs"
 import {traitementChoixSonge} from "../gestion-jets.mjs"
+import { afficheResultatCourt } from "../gestion-chat.mjs"
 
 function choixDirect(event, dialog){
     const targetElement = event.currentTarget;
@@ -60,6 +61,10 @@ export async function ChoixEtResultat(token, actor, roll, obj={}) {
         rollData.detteS = 1 // penchant pour le cauchemard, le songe coute
         rollData.cout = "Choisir le songe vous coutera 1 point de dette de songe"
     }
+    // ----------- affichage du chat pour déclanchement du jet 
+    // titre='Jet !',descriptif='', dernier=false, score=0, pAction = "",pProtection =0
+    afficheResultatCourt(token, actor, roll, context.titre, "", context.dernier, rollData.scoreS, rollData.scoreC, context.action, context.armure )
+    // --------------------------------------------------------
     const myDialogOptions = {
         width: 500,
         height: 220
@@ -105,6 +110,4 @@ export async function ChoixEtResultat(token, actor, roll, obj={}) {
         }, myDialogOptions);
         dialog.render(true);
       });
-
-
 }  

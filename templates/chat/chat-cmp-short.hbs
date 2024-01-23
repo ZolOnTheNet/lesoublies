@@ -1,0 +1,22 @@
+<div class="roll roll-skill">
+    {{#if titre}}
+			<h1><div class="roll-description">{{titre}}</div></h1>
+    {{/if}}
+    {{#if description}}
+			<div class="roll-description">{{{description}}}</div>
+    {{/if}}
+    {{#if resultatQual}}
+			<div class="roll-description">{{{resultatQual}}}</div>
+    {{/if}}
+    <hr>
+    choix entre : Songe à {{scoreS}} contre Cauchemard à {{scoreC}}
+    <hr>
+        {{cout}}.
+        {{#if dernier}}
+            <br>Dernière action du round
+            {{#if protection}}
+            : réduction de l'initiative de {{protection}}.
+            {{/if}}
+        {{/if}}
+    </div>
+</div>

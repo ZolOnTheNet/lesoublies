@@ -62,22 +62,22 @@ LESOUBLIES.typeDiffcultes = { "N":"rien", "T" : "objet étant un tableau de bonu
 LESOUBLIES.niveauProtection = { "0":"rien", "1" : "Protégé", "2": "Arnaché", "3" : "Bardé"}
 // modele : "" : { label : "", cmp : "", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"}
 LESOUBLIES.actions = {
-  "rien"      : { label : "", cmp : "-", typeAction : "G", difficultes : { type:"N", code : { "":"" } }, conditions : "", reaction : "-"},
+  "rien"      : { label : "", cmp : "-", typeAction : "", difficultes : { type:"N", code : { "":"" } }, conditions : "", reaction : "-"},
   "anticiper" : { label : "Anticiper un évènement", cmp : "-", typeAction : "G", difficultes : { type:"N", code : { "":"" } }, conditions : "", reaction : "-"},
   "debusquer" : { label : "Débusquer un adversaire", cmp : "Sens", typeAction : "L", difficultes : { type:"T", code : { "En pleine lumière":3, "Silence":3, "Pénombre" : -3, "Ambiance bruyante" : -3 } }, conditions : "desengage", reaction : "-"},
   "degainer"  : { label : "Dégainer ou rengainer une arme", cmp : "Rapidité", typeAction : "L", difficultes : { type:"T", code : { "Si désengagé":12, "Dans un foureau": 3, "Arme dissimulée" : -3, "Arme à terre":-3 } }, conditions : "", reaction : "Corps à Corps;Mélée"},
-  "deloger"   : { label : "Déloger un adversaire", cmp : "", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
-  "desarmer"  : { label : "Désarmer un adversaire", cmp : "", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
-  "detruire"  : { label : "Détruire", cmp : "", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
-  "encourager": { label : "Encourager un allié", cmp : "", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
-  "evaluer"   : { label : "Evaluer un adversaire", cmp : "", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
-  "feinter"   : { label : "Feinter", cmp : "", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
-  "frapper"   : { label : "Frapper", cmp : "Corps à corps;Mêlée", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
-  "intimider" : { label : "Intimider un adversaire", cmp : "Commandement", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
-  "maitriser" : { label : "Maîtriser un adversaire", cmp : "Corps à corps", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
-  "sedissimuler" : { label : "Se Dissimuler", cmp : "Discrétion", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
-  "sedeplacer": { label : "Se Déplacer", cmp : "Athlétisme", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
-  "tirer"     : { label : "Tirer", cmp : "Tir", typeAction : "G", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
+  "deloger"   : { label : "Déloger un adversaire", cmp : "", typeAction : "L", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
+  "desarmer"  : { label : "Désarmer un adversaire", cmp : "", typeAction : "LA", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
+  "detruire"  : { label : "Détruire", cmp : "", typeAction : "L", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
+  "encourager": { label : "Encourager un allié", cmp : "", typeAction : "L", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
+  "evaluer"   : { label : "Evaluer un adversaire", cmp : "", typeAction : "L", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
+  "feinter"   : { label : "Feinter", cmp : "", typeAction : "L", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
+  "frapper"   : { label : "Frapper", cmp : "Corps à corps;Mêlée", typeAction : "L", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
+  "intimider" : { label : "Intimider un adversaire", cmp : "Commandement", typeAction : "L", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
+  "maitriser" : { label : "Maîtriser un adversaire", cmp : "Corps à corps", typeAction : "LA", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
+  "sedissimuler" : { label : "Se Dissimuler", cmp : "Discrétion", typeAction : "L", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
+  "sedeplacer": { label : "Se Déplacer", cmp : "Athlétisme", typeAction : "L", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
+  "tirer"     : { label : "Tirer", cmp : "Tir", typeAction : "L", difficultes : { type:"O", code : { "":"" } }, conditions : "", reaction : "-"},
   "autre"     : { label : "Autre action", cmp : "-", typeAction : "G", difficultes : { type:"N", code : { "":"" } }, conditions : "", reaction : "-"}
 }
 

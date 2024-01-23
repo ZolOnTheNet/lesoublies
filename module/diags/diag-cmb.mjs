@@ -1,7 +1,7 @@
 // fichier de traitement du dialogue du combat
 // transformation en fenetre foundry
 import { LESOUBLIES } from "../helpers/config.mjs"
-import { toStdProfil, ajouterLstTxt, estDansLstTxt, enleverLstTxt } from "../utils.mjs"
+import { toStdProfil, ajouterLstTxt, estDansLstTxt, enleverLstTxt, toLstObjTxt, listCmp } from "../utils.mjs"
 import { afficheResultat } from "../gestion-chat.mjs"
 import { ChoixEtResultat } from  "./diag-choix-sc.mjs"
 
@@ -38,22 +38,24 @@ class DiagCMB extends FormApplication {
     } else  if(acteur){
       this.actor = game.actors.get(data.acteurId)
     }
+    this.options.title = this.context.estCombat?'Lancer de dés des combats':(context.cmp =="")?'Lancer avec paramaètres':'Lancer de '+context.cmp+" paramêtré"
   }
 
   static get defaultOptions() {
+    //let titre  = this.context.estCombat?'Lancer de dés des combats':'Lancer avec paramaètres'
     return mergeObject(super.defaultOptions, {
       classes: ['form'],
       popOut: true,
       template: `/systems/lesoublies/templates/diags/diag-cmb.hbs`,
       id: 'diag-cmb',
-      title: 'Lancer de dés des combats',
+      title: 'Lancer à paramètres variables',
       width: 600
     });
   }
 
   getData() {
     // Send data to the template
-    console.log("this:",this)
+    //console.log("this:",this)
     return this.context;
   }
 
@@ -102,13 +104,23 @@ class DiagCMB extends FormApplication {
     //const presetType = targetElement.dataset?.preset;
     const formElement = $(targetElement).parents('form');
     if(event.currentTarget.name=='action') {
-      this.context.action = formElement?.find('[name="action"]').val() 
+      let actuAction = formElement?.find('[name="action"]').val()
+      if(LESOUBLIES.actions[this.context.action].typeAction=="LA") this.context.equilibreChoix-- //LA donne une pénalité
+      if(LESOUBLIES.actions[actuAction].typeAction=="LA") this.context.equilibreChoix++
+      if(LESOUBLIES.actions[actuAction].cmp =="-") this.context.cmpAction.autreAction = false
+      else if(LESOUBLIES.actions[actuAction].cmp !=""){
+        this.context.cmpAction.autreAction = true
+        this.context.cmpAction.lstCmp = toLstObjTxt(LESOUBLIES.actions[actuAction].cmp,listCmp(),'name',true,true)
+      }
+      this.context.action = actuAction
     } else {
       const diffSupp = parseInt(formElement?.find('[name="diffSupp"]').val())
       console.log("difficulte :",diffSupp);
       this.context.diffSupp = diffSupp
       this.context.diffTotal = this._calculDiffTotal(this.context)
     }
+    this.context.diffTotal = this._calculDiffTotal(this.context)
+    this.context.textEquilibre = this._texteEquilibrePP(this.context)
     this.render(true)
   }
 
@@ -124,13 +136,48 @@ class DiagCMB extends FormApplication {
     let aRendre = false // refaire le rendu
     let clickTab = presetType.split(".")
     switch(clickTab[0]) {
-      case 'bonus':
-        if(clickTab[1]=='troggle') {
-          diagcmd.context.difficulte = clickTab[2]
-          diagcmd.context.diffNombre = LESOUBLIES.difficultes[diagcmd.context.difficulte]
+      case 'action':
+        if(clickTab[1]=='set'){
+          //action.set.moins.2
+          switch (clickTab[2]){
+            case 'direct':
+              diagcmd.context.nbActions = parseInt(clickTab[3])
+              break
+            case 'plus':
+              diagcmd.context.nbActions++
+              break
+            case 'moins':
+              diagcmd.context.nbActions--
+              break
+          }
+          diagcmd.context.diffAction = 3 - diagcmd.context.nbActions * 3  // ou -3 * (nbActioin-1)
+          diagcmd.context.visuAction = visuAction(diagcmd.context.nbActions)
           aRendre = true
         }
-        break;
+        break
+      case 'armure':
+        if(clickTab[1]=='toggle'){ 
+          this.context.aArmure = ! this.context.aArmure
+          aRendre = true
+        }
+        break
+      case 'bonus':
+          if(clickTab[1]=='troggle') {
+            diagcmd.context.difficulte = clickTab[2]
+            diagcmd.context.diffNombre = LESOUBLIES.difficultes[diagcmd.context.difficulte]
+            aRendre = true
+          }
+          break;
+      case 'des':
+        if(clickTab[1] == 'songe') {
+          diagcmd.context.ptSongePris = ! diagcmd.context.ptSongePris
+          if(diagcmd.context.ptSongePris) diagcmd.context.ptCauchemardPris = false
+        } else {
+          diagcmd.context.ptCauchemardPris = ! diagcmd.context.ptCauchemardPris
+          if(diagcmd.context.ptCauchemardPris) diagcmd.context.ptSongePris = false
+        }
+        aRendre = true
+        break
       case 'prime':
           if(clickTab[1]=='choix')
             if(estDansLstTxt(clickTab[2], diagcmd.context.choixPrimes)){
@@ -159,35 +206,6 @@ class DiagCMB extends FormApplication {
           }
           aRendre = true
         break;
-      case 'action':
-        if(clickTab[1]=='set'){
-          //action.set.moins.2
-          switch (clickTab[2]){
-            case 'direct':
-              diagcmd.context.nbActions = parseInt(clickTab[3])
-              break
-            case 'plus':
-              diagcmd.context.nbActions++
-              break
-            case 'moins':
-              diagcmd.context.nbActions--
-              break
-          }
-          diagcmd.context.diffAction = 3 - diagcmd.context.nbActions * 3  // ou -3 * (nbActioin-1)
-          diagcmd.context.visuAction = visuAction(diagcmd.context.nbActions)
-          aRendre = true
-        }
-        break
-      case 'des':
-        if(clickTab[1] == 'songe') {
-          diagcmd.context.ptSongePris = ! diagcmd.context.ptSongePris
-          if(diagcmd.context.ptSongePris) diagcmd.context.ptCauchemardPris = false
-        } else {
-          diagcmd.context.ptCauchemardPris = ! diagcmd.context.ptCauchemardPris
-          if(diagcmd.context.ptCauchemardPris) diagcmd.context.ptSongePris = false
-        }
-        aRendre = true
-        break
     }
     if(aRendre){ 
       diagcmd.context.diffTotal = this._calculDiffTotal(diagcmd.context)
@@ -197,7 +215,8 @@ class DiagCMB extends FormApplication {
   }
   
   _calculDiffTotal(context){ // calcule de la difficulté totale
-    let Ret =  context.diffAction + context.diffNombre + context.diffSupp - context.armure
+    let Ret =  context.diffAction + context.diffNombre + context.diffSupp 
+    if(context.aArmure) Ret -= context.armure // prise en compte du basculement armure ou pas
     if(estDansLstTxt("efficacite",context.choixPrimes)) Ret += LESOUBLIES.primes["efficacite"].bonus
     if(estDansLstTxt("difficulte",context.choixPenalites)) Ret += LESOUBLIES.penalites["difficulte"].bonus
     return Ret;
@@ -261,7 +280,7 @@ class DiagCMB extends FormApplication {
 
 window.DiagCMB = DiagCMB; // Je ne sais si c'est nécessaire mais c'est indiquer sur le wiki : https://foundryvtt.wiki/en/development/guides/understanding-form-applications
 
-export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteurId:"", caseAction:"F", equipt:{} }){ //
+export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteurId:"", caseAction:"F", equipt:{}, estCombat: true }){ //
   // Pour info : [...game.combat.collections.combatants][0].update({"initiative" : 5}) change l'init du premier combatant (0) à 5
 
   const etatCaseAction = ["R","G","F"]
@@ -273,7 +292,7 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
   //      left: 500
   };
   // fusion pour tout avoir
-  data = mergeObject({ tokenId:"", cmpNom : "", score: 0, acteurId:"", caseAction:"F", equipt:{}, primes:"", penalites:"" },data)
+  data = mergeObject({ tokenId:"", cmpNom : "", score: 0, acteurId:"", caseAction:"F", equipt:{}, primes:"", penalites:"", estCombat: true },data)
   if(data.tokenId) {
     token = game.scenes.current.tokens.get(data.tokenId)
     init = token?.combatant?.initiative
@@ -317,17 +336,19 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
   
   let lstAct = {}; 
   Object.entries(LESOUBLIES.actions).forEach(element => {
-    lstAct[element[0]] = element[1].label  
+    lstAct[element[0]] = element[1].label +((element[1].label == "")? "": "(" +element[1].typeAction+")") 
   });
   context = {
+    estCombat : data.estCombat,
     tokenId :  data.tokenId, // pour la modification a la fin
     actorId : actor.id,
     score : data.score,
     armure : data.armureDef, // rajout à gerer
+    aArmure : data.armureDef >0,
     dommage : data.dommage,
     lstPrimesGratuites : data.primes,
     lstPenalitesObligatoires : data.penalites,
-    description : "Utilisez cette interface pour modifier votre tour de jeu",
+    description : ("Utilisez cette interface pour "+((data.estCombat)?"modifier votre tour de jeu":"modifier votre lancer")),
     caseAction : "G",
     //caseActionLabel : labelCaseAction["G"],
     nbPtSonge : ptSonge,
@@ -338,6 +359,7 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
     lstActionStd : lstAct,
     action : "rien",
     nbActions : 1,
+    cmpAction : { autreAction : false }, // gestion des actions
     noActionEnCours : 1,
     visuAction : visuAction(1),
     lstCaseAction : labelCaseAction,

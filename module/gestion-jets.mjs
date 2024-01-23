@@ -75,7 +75,7 @@ export function traitementChoixSonge(cmd){
 }
 
    /**
-    * Calcul est affichage du message de chat après le choix.
+    * Calcul et affichage du message de chat après le choix.
     * Aucun décompte, juste de l'affichage pour l'instant
     * @param {*} objResultat
     */

@@ -1,7 +1,7 @@
 import { LESOUBLIES } from "../helpers/config.mjs";
 import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
 import {toStdProfil } from "../utils.mjs"
-import { afficheResultat } from "../gestion-chat.mjs"
+import { afficheResultat, affichageSort, SimpleMessageChat} from "../gestion-chat.mjs"
 import { diagCmb } from "../diags/diag-cmb.mjs";
 
 /**
@@ -18,7 +18,7 @@ export class LesOubliesActorSheet extends ActorSheet {
       classes: ["lesoublies", "sheet", "actor"],
       template: "systems/lesoublies/templates/actor/actor-sheet.html",
       width: 700,
-      height: 600,
+      height: 630,
       dragDrop: [{dragSelector: null, dropSelector: ".droppable"}],
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "cmp" }]
     });
@@ -157,6 +157,7 @@ export class LesOubliesActorSheet extends ActorSheet {
       }
       // Append to equipement
       else if (i.type === 'equipement') {
+        if(i.system.aDecrire == undefined) i.system.aDecrire = false
         gear.push(i);
       }
       else if (i.type === 'cmp') {
@@ -196,6 +197,8 @@ export class LesOubliesActorSheet extends ActorSheet {
           i.system.typeMagie = (i.system.codeSouC == 0)?"S":"C"
           i.system.coefCout = (i.system.cmpMagie==context.MagieA1)?1:2
           i.system.cout = i.system.cout * i.system.coefCout
+          if(i.system.aDecrire == undefined) i.system.aDecrire = false
+          i.system.typeMagie = (i.system.codeSouC == 0)?"Cch":"Sge"
           spells[i.system.cout].push(i);
         }
       }
@@ -337,18 +340,27 @@ export class LesOubliesActorSheet extends ActorSheet {
         this.render(true)
         break
       case 'songe':
+        if(clickTab[1]=='recalcul')this.recalculSouC("Songe")
         break;
+        case 'cauchemard':
+          if(clickTab[1]=='recalcul') this.recalculSouC("Cauchemard")
+          break;
       case 'roll': // il faudra changer quand digCmb sera au point par le transformer en diagCmp
         let dialon = event.shiftKey ? !this.autoDialogue : this.autoDialogue
-        if(clickTab[2]=='equip') diagCmb({ tokenId:this.token.id, cmpNom : "", score: -1, acteurId:this.token.actor.id, caseAction:"G", equipt:{ itemId : clickTab[3]} })
-        else if(clickTab[1] == 'diag' &&  dialon) diagCmb({ tokenId:this.token.id, cmpNom : clickTab[3], score: parseInt(clickTab[4]), acteurId:this.token.actor.id, caseAction:"G", equipt:{} })
+        if(clickTab[2]=='equip') diagCmb({ estCombat : true, tokenId:this.token.id, cmpNom : "", score: -1, acteurId:this.token.actor.id, caseAction:"G", equipt:{ itemId : clickTab[3]} })
+        else if(clickTab[2] =='sort') { this.gestionSortilege(clickTab[3], clickTab[4]) }
+        else if(clickTab[1] == 'diag' && clickTab[2]=='cmb') diagCmb({ estCombat :true, tokenId:this.token.id, cmpNom : clickTab[3], score: parseInt(clickTab[4]), acteurId:this.token.actor.id, caseAction:"G", equipt:{} })
+        else if(clickTab[1] == 'diag' &&  dialon) diagCmb({ estCombat : false, tokenId:this.token.id, cmpNom : clickTab[3], score: parseInt(clickTab[4]), acteurId:this.token.actor.id, caseAction:"G", equipt:{} })
         else this._onRoll(event, element, dataset)
         break;
       case 'acteur':
         switch(clickTab[2]) {
           case 'equip':
             let item = this.actor.items.get(clickTab[3]) // a default d'avoir l'id
-            return item.sheet.render(true);
+            if(clickTab[1]=='bascule') {
+              item.system.aDecrire = ! item.system.aDecrire
+              this.render()
+            } else return item.sheet.render(true);
             break
           case 'equipr':
             let obj = this.actor.system.equipementsR
@@ -373,6 +385,31 @@ export class LesOubliesActorSheet extends ActorSheet {
                 break;
             }
             break;
+          case 'sort': // action sur les sortilèges
+            let itemSort = this.actor.items.get(clickTab[3])
+            switch(clickTab[1]){
+              case 'bascule' :
+                itemSort.system.aDecrire = ! itemSort.system.aDecrire
+                this.render()
+                break;
+                case 'chat' :
+                //envoyer le texte formaté dans le chat.
+                affichageSort(this?.token, this.actor, itemSort, parseInt(clickTab[4]))
+                break;
+                case 'roll':
+                  // lance le sort de façon standard
+                break
+              }
+            break;
+          case 'attribut':
+            let attrib = this.actor.items.getName(clickTab[3])
+            switch(clickTab[1]){
+              case 'edit':
+                 // a default d'avoir l'id
+                return attrib.sheet.render(true);
+              break;
+            }
+            break
         }
         break
       default:
@@ -649,5 +686,43 @@ export class LesOubliesActorSheet extends ActorSheet {
     let NomCmpPresent = lesCmpPresent.map(x => x.name)
     lstCmpBase = lstCmpBase.filter(x => (! NomCmpPresent.includes(x.name)))
     return lstCmpBase
+  }
+
+  gestionSortilege(idSort, coutTxt){
+    let cout = parseInt(coutTxt)
+    let itemSort = this.actor.items.get(idSort)
+    //faire les test de points
+    let typeMagie = (itemSort.system.codeSouC == 0)?"Cauchemard":"Songe"
+    let ptMagie = this.actor.system[typeMagie].Points.value
+    let sphere = []; let ptMagieSphere = 0
+    if(itemSort.system.codeSouC == 0) sphere = this.actor.items.filter(x => x.name == 'Sphère de Cauchemard')
+      else sphere = this.actor.items.filter(x => x.name == 'Sphère de Songe')
+    sphere.forEach( x => { ptMagieSphere += x.system.quantity})
+    if(ptMagie+ptMagieSphere < cout) { // et les billes de Songe ou de cauchemard?
+      // message : pas assez de magie de
+      return ui.notifications.warn("Vous n'avez pas assez de points de "+typeMagie+" pour lancer un sort demandant "+cout+" points meême en utilisant vos sphères");
+    }
+    let resteApayer = cout - ptMagie; let objUpd = {}; let coutPtM = (resteApayer < 0)? cout:ptMagie
+    objUpd["system."+typeMagie+".Points.value"]= (resteApayer < 0)?ptMagie - cout: 0;
+    this.actor.update(objUpd)
+    let msgImportant = "Vous avez utilisez <strong>"+ coutPtM + "</strong> Points de "+ typeMagie+"<br>"
+    if(resteApayer> 0) {
+      msgImportant += "Tous vos points de songe ont été utilisés. Vous devez dépenser "+resteApayer+" Sphere de" + typeMagie+"."
+    }
+    return affichageSort(this.token, this.actor, itemSort, cout, "lance le sortilège de "+typeMagie+ ": "+itemSort.name, msgImportant)
+  }
+
+  recalculSouC(champ) {
+    let objUpd = {}
+    let html = "<p>le personnage "+ this.actor.name +" récupère tout ses points de "+champ+".<p>"
+    if(champ="Songe") { // amélioré le messages
+      html = "<h1>L'aube arrive</h1>" + html
+    }else {
+      html = "<h1>Le crépuscule arrive</h1>" + html
+    }
+    objUpd["system."+champ+".Points.value"] = this.actor.system[champ].Points.max
+    this.actor.update(objUpd)
+    SimpleMessageChat(this.token, this.actor, html)
+    this.render()
   }
 }

@@ -106,8 +106,99 @@ export function afficheResultat(token, actor, roll, titre='Jet !',descriptif='',
             rollMode: game.settings.get('core', 'rollMode'),
             content: html,
             type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-            roll
+            roll : roll
         };
         ChatMessage.create(chatData);
     })
    }
+
+/**
+ * affichage rapide pour avoir le lancer de dés !
+ *
+ * @export
+ * @param {*} token
+ * @param {*} actor
+ * @param {*} roll
+ * @param {string} [titre='Jet !']
+ * @param {string} [descriptif='']
+ * @param {boolean} [dernier=false]
+ * @param {number} [score=0]
+ * @param {string} [pAction=""]
+ * @param {number} [pProtection=0]
+ */
+export function afficheResultatCourt(token, actor, roll, titre='Jet !',descriptif='', dernier=false, scoreS=0, scoreC =0, pAction = "",pProtection =0 ) {
+    if(token) actor= token.actor
+    if(actor==undefined) {
+        if(_token) {
+            actor = _token.actor
+        }
+    }
+    const rollData = {
+        titre: titre,
+        description : descriptif,
+        scoreS : scoreS,
+        scoreC : scoreC,
+        dernier : dernier,
+        protection : pProtection
+    }
+    renderTemplate('systems/lesoublies/templates/chat/chat-cmp-short.hbs', rollData).then(html => {
+        //console.log("Texte HTLM",html)
+        const chatData = {
+            user: game.user.id,
+            speaker: { actor: actor?.id },
+            rollMode: game.settings.get('core', 'rollMode'),
+            content: html,
+            type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+            roll: roll
+        };
+        ChatMessage.create(chatData);
+    })
+}
+
+export function affichageSort(token, actor, itemSort, cout, titre="", msgImportant =""){
+    if(token) actor= token.actor
+    if(actor==undefined) {
+        if(_token) {
+            actor = _token.actor
+        }
+    }
+    let typeM = (itemSort.system.codeSouC == 0)?"Cauchemard":"Songe"
+    if(titre =="") titre = itemSort.name
+    const context = {
+        titre : titre,
+        important : msgImportant,
+        description : itemSort.system.description,
+        cout : cout,
+        portee: itemSort.system.portee,
+        duree : itemSort.system.duree,
+        preparation : itemSort.system.preparation,
+        typeMagie: typeM
+    }
+    renderTemplate('systems/lesoublies/templates/chat/chat-sort.hbs', context).then(html => {
+        //console.log("Texte HTLM",html)
+        const chatData = {
+            user: game.user.id,
+            speaker: { actor: actor?.id },
+            rollMode: game.settings.get('core', 'rollMode'),
+            content: html
+        };
+        ChatMessage.create(chatData);
+    })
+
+}
+
+export function SimpleMessageChat(token, actor, html) {
+    if(token) actor= token.actor
+    if(actor==undefined) {
+        if(_token) {
+            actor = _token.actor
+        }
+    }
+    const chatData = {
+        user: game.user.id,
+        speaker: { actor: actor?.id },
+        rollMode: game.settings.get('core', 'rollMode'),
+        content: html
+    };
+    ChatMessage.create(chatData);
+}

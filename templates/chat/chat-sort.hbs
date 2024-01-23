@@ -1,0 +1,35 @@
+<div class="roll roll-skill">
+    {{#if titre}}
+			<h1><div class="roll-description">{{titre}}</div></h1>
+    {{/if}}
+     <h4>
+            Cout : {{cout}} en Pts de {{typeMagie}}
+    </h4>
+    {{#if important}}
+    <div>
+        {{{important}}}
+    </div>
+    {{/if}}
+    <div class="dice-roll">
+        {{!-- <h3>Description : </h3> --}}
+        <div class="dice-formula"><h3>Détails : </h3>
+            <div  class="dice-tooltip">
+                <div class="txtgauche">
+                    Préparation: {{preparation}}
+                </div>
+                
+                <div class="txtgauche">
+                    Durée: {{duree}}
+                </div>
+                <div class="txtgauche">
+                    Portée: {{portee}}
+                </div>
+                {{#if description}}
+                    <hr>
+                    <h3 class="txtgauche">Descriptif : </h3>
+                    <div class="txtgauche petit">{{{description}}}</div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>

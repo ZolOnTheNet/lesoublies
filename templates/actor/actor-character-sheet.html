@@ -14,9 +14,9 @@
         and it will add a small amount of padding, a border, and will
         center all of its child elements content and text. --}}
         <div class="resource flex-group-center">
-            <strong>Race :</strong> {{NomRace}}<br>
-            <strong>Tribut :</strong> {{NomTribut}}<br>
-            <strong>metier :</strong> {{NomMetier}}<br>
+            <strong>Race :</strong> {{NomRace}} <a class="rollable" data-action="acteur.edit.attribut.{{NomRace}}"><i class="fas fa-newspaper"></i></a><br>
+            <strong>Tribut :</strong> {{NomTribut}} <a class="rollable" data-action="acteur.edit.attribut.{{NomTribut}}"><i class="fas fa-newspaper"></i></a><br>
+            <strong>metier :</strong> {{NomMetier}} <a class="rollable" data-action="acteur.edit.attribut.{{NomMetier}}"><i class="fas fa-newspaper"></i></a><br>
             <strong>taille :</strong> {{system.taille.value}} ({{infoTaille}} : {{infoTailleCm}})<br>
           <hr>
           <div class="resource-content flexrow flex-center flex-between">
@@ -30,10 +30,10 @@
 
         <div class="resource flex-group-center">
           <div class="resource-content flexrow flex-center flex-between">
-            <label for="system.Songe.value" class="resource-label">Songe <a class="rollable" data-action="songe.recalcul"><i class="fa-solid fa-arrows-rotate"></i></a></label>
+            <label for="system.Songe.value" class="resource-label">Songe</label>
             <input type="text" name="system.Songe.value" value="{{system.Songe.value}}" data-dtype="Number"/>
           </div>
-          <label for="system.Songe.Points.value" class="resource-label">Pts de Songe</label>
+          <label for="system.Songe.Points.value" class="resource-label">Pts de Songe <a class="rollable" data-action="songe.recalcul"><i class="fa-solid fa-arrows-rotate"></i></a></label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.Songe.Points.value" value="{{system.Songe.Points.value}}" data-dtype="Number"/>
             <span> / </span>
@@ -51,7 +51,7 @@
             <label for="system.Cauchemard.value" class="resource-label">Cauchemard</label>
             <input type="text" name="system.Cauchemard.value" value="{{system.Cauchemard.value}}" data-dtype="Number"/>
           </div>
-          <label for="system.Cauchemard.value" class="resource-label">Pts de Cauchemard</label>
+          <label for="system.Cauchemard.value" class="resource-label">Pts de Cauchemard <a class="rollable" data-action="cauchemard.recalcul"><i class="fa-solid fa-arrows-rotate"></i></a></label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.Cauchemard.Points.value" value="{{system.Cauchemard.Points.value}}" data-dtype="Number"/>
             <span> / </span>
@@ -60,6 +60,7 @@
           <div>
             <label for="system.Cauchemard.dette.value" class="resource-label">Dette</label>
             <input class="normal-input" size="3em" type="text" name="system.Cauchemard.dette.value" value="{{system.Cauchemard.dette.value}}" data-dtype="Number"/>
+            <span> <br><br><a class="rollable" data-action="roll.diag.cmb" > gerer un Combat <i class="fas fa-user-shield"></i></a></span>
           </div>
         </div>
       </div>
