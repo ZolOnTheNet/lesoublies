@@ -9,15 +9,26 @@
     {{/if}}
     {{#if estUnSucces}}
         <div class="roll-description">Votre réussite est <strong>{{resultatQual}}</strong>({{score}})</div>
+        <hr>
     {{else}}
         <div class="roll-description">Votre score est {{score}}, pas suffisant</div>
     {{/if}}
     {{#if description}}
 			<div class="roll-description">{{description}}</div>
+            <hr>
     {{/if}}    
     {{#if aDommage}}
+        
         <h3>Dommages</h3>
-        les dommages de l'arme {{textArme}} : {{dommage}}
+        <div class="grid grid-5col">
+            <div class="grid-span-3">les dommages de l'arme {{textArme}} : {{dommage}}</div>
+            <button class="Dommage cmd"  data-action="chat.dommage.moins.{{dommage}}.{{idToken}}.{{idActor}}">
+                <i title="Enlever les dommages sur le personnage selectionnée!" class="fa-solid fa-user-minus"></i>
+            </button>
+            <button class="Dommage cmd"  data-action="chat.dommage.plus.{{dommage}}.{{idToken}}.{{idActor}}">
+                <i title="Ajouter les dommages sur le personnage selectionnée!" class="fa-solid fa-user-plus"></i>
+            </button>
+        </div>
     {{/if}}
     <div class="roll-description">{{textRappel}} </div>
     <hr>

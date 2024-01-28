@@ -99,6 +99,8 @@ function gererResultat(objResultat={tokenId: "", actorId : "", titre:"Résultat 
     if(obj.action != "") pAction = LESOUBLIES.actions[obj.action].label
     let context = {
         titre: obj.titre,
+        idToken: obj.tokenId,
+        idActor : actorId,
         action : pAction,
         description : obj.description,
         score: obj.score,

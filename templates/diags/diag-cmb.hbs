@@ -84,6 +84,11 @@
                     <select  name="action" style="width:175px !important;">
                     {{selectOptions lstActionStd selected=action}}
                     </select>
+                    {{#if cmpAction.autreAction}}
+                    <span>Quelle Compétence ? :<select  name="actionCmp" style="width:175px !important;">
+                        {{selectOptions cmpAction.lstCmp selected=cmpAction.cmpId}}
+                    </select></span>
+                    {{/if}}
                 </div>
         {{/if}}
                 <h2>Aide  :</h2>
@@ -142,7 +147,11 @@
         </div>
         <div>
             <button class="dialog-button submit default" data-button="submit">
+                 {{#if estCombat}}
                 <i class="fa fa-check"></i> Dernier Jet !
+                {{else}}
+                <i class="fa fa-check"></i> Jet et fermer!
+                {{/if}}
             </button>
         {{else}}
             <button class="dialog-button" data-button="lancer">
@@ -150,7 +159,11 @@
             </button>
         </div><div>
             <button class="dialog-button submit default" data-button="submit">
+                {{#if estCombat}}
                 <i class="fa fa-check"></i> Jet final !
+                {{else}}
+                <i class="fa fa-check"></i> Jet et fermer!
+                {{/if}}
             </button>
         {{/ifEq}}
         </div>

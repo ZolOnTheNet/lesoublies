@@ -57,6 +57,7 @@ export class LesOubliesActorSheet extends ActorSheet {
     // Prepare NPC data and items.
     if (actorData.type == 'npc') {
       this._prepareItems(context);
+      context.lstCmps.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
     }
 
     // Add roll data for TinyMCE editors.
@@ -347,10 +348,10 @@ export class LesOubliesActorSheet extends ActorSheet {
           break;
       case 'roll': // il faudra changer quand digCmb sera au point par le transformer en diagCmp
         let dialon = event.shiftKey ? !this.autoDialogue : this.autoDialogue
-        if(clickTab[2]=='equip') diagCmb({ estCombat : true, tokenId:this.token.id, cmpNom : "", score: -1, acteurId:this.token.actor.id, caseAction:"G", equipt:{ itemId : clickTab[3]} })
+        if(clickTab[2]=='equip') diagCmb({ estCombat : true, tokenId:this.token?.id || "", cmpNom : "", score: -1, acteurId:this.actor.id, caseAction:"G", equipt:{ itemId : clickTab[3]} })
         else if(clickTab[2] =='sort') { this.gestionSortilege(clickTab[3], clickTab[4]) }
-        else if(clickTab[1] == 'diag' && clickTab[2]=='cmb') diagCmb({ estCombat :true, tokenId:this.token.id, cmpNom : clickTab[3], score: parseInt(clickTab[4]), acteurId:this.token.actor.id, caseAction:"G", equipt:{} })
-        else if(clickTab[1] == 'diag' &&  dialon) diagCmb({ estCombat : false, tokenId:this.token.id, cmpNom : clickTab[3], score: parseInt(clickTab[4]), acteurId:this.token.actor.id, caseAction:"G", equipt:{} })
+        else if(clickTab[1] == 'diag' && clickTab[2]=='cmb') diagCmb({ estCombat :true, tokenId:this.token?.id || "", cmpNom : clickTab[3], score: parseInt(clickTab[4]), acteurId:this.actor.id, caseAction:"G", equipt:{} })
+        else if(clickTab[1] == 'diag' &&  dialon) diagCmb({ estCombat : false, tokenId:this.token?.id || "", cmpNom : clickTab[3], score: parseInt(clickTab[4]), acteurId:this.token?.actor?.id || "", caseAction:"G", equipt:{} })
         else this._onRoll(event, element, dataset)
         break;
       case 'acteur':
@@ -385,6 +386,11 @@ export class LesOubliesActorSheet extends ActorSheet {
                 break;
             }
             break;
+          case 'ptv': // acteur.calc.ptv.{{system.taille.value}}
+            let objUpd = {}; objUpd["system.PdV.max"] = this.actor.system.taille.value * 4
+            objUpd["system.PdV.value"] = this.actor.system.taille.value * 4
+            this.actor.update(objUpd)
+            this.render(true)
           case 'sort': // action sur les sortilèges
             let itemSort = this.actor.items.get(clickTab[3])
             switch(clickTab[1]){
@@ -437,7 +443,7 @@ export class LesOubliesActorSheet extends ActorSheet {
     const rollMode = game.settings.get('core', 'rollMode');
     r.evaluate({async :false })
     // lancer du resultat !
-    afficheResultat(this.token, this.actor, r, "Jet "+rollTab[2],"votre score est: "+score,true, score)
+    afficheResultat(this.token?.id || "", this.actor, r, "Jet "+rollTab[2],"votre score est: "+score,true, score)
   }
 
   /**

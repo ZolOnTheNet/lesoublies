@@ -34,5 +34,15 @@
   
   "LESOUBLIES.choixSongeOuCauchemard" : "What your choise?",
   "LESOUBLIES.cauchemard" : "Nigthmare",
-  "LESOUBLIES.songe" : "Dream"
+  "LESOUBLIES.songe" : "Dream",
+  "LESOUBLIES.basculeDiagTxt" : "Show dialog by default",
+  "LESOUBLIES.basculeDiaghint" : "This lets you choose whether dialogs open automatically for your windows.",
+  
+  "LESOUBLIES.repertoireBaseCMP" : "Code Compendium des compétences de bases",
+  "LESOUBLIES.repertoireBaseCMPhint" : "Designation du nom du pack (compendium) contenant l'ensemble des compétences i.e. : world.cmpbase. Aucune répercussion sur les acteurs déjà existants",
+  "LESOUBLIES.repertoireBaseCmpTotalhint" : "Designation du nom du pack (compendium) contenant l'ensemble des compétences i.e. : world.cmptotal. Aucune répercussion sur les acteurs déjà existants",
+  "LESOUBLIES.repertoireBaseProfil" : "Code Compendium des profils référencé",
+  "LESOUBLIES.repertoireBaseProfilhint" : "Designation du nom du pack (compendium) contenant l'ensemble des profils utilisés i.e. : world.profils. Aucune répercussion sur les acteurs déjà existants",
+
+  "fin":"Dont translate it's for symplify the en of translation"
 }

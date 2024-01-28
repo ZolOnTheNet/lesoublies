@@ -11,6 +11,7 @@ import { LESOUBLIES } from "./helpers/config.mjs";
 import { EnventDuChat } from "./gestion-chat.mjs"
 import { AffecterProfils } from "./utils.mjs";
 import { DataCom } from "./datacom.mjs"
+import { mettreEnPlaceLesOptions } from "./helpers/options.mjs"
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -64,14 +65,7 @@ Hooks.once('init', async function() {
 
   RegisterHelperHandlebar()
 
-  game.settings.register("lesoublies", "optionDialogue", {
-    name: game.i18n.localize("LESOUBLIES.basculeDiagTxt"),
-    hint: game.i18n.localize("LESOUBLIES.basculeDiaghint"),
-    scope: "world",
-    config: true,
-    type: Boolean,
-    default: true,
-});
+  mettreEnPlaceLesOptions()
 
   return preloadHandlebarsTemplates();
 });

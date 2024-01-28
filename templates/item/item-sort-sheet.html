@@ -23,27 +23,45 @@
     {{!-- Attributes Tab --}}
     <div class="tab attributes" data-group="primary" data-tab="details">
       {{!-- As you add new fields, add them in here! --}}
-      <div class="resource">
-        <label class="resource-label">Songe ou Cauchemard</label>
-        <select name="system.codeSouC">
-          {{selectOptions LstSongeCauch selected=system.codeSouC}}
-        </select>
+      <div class="flexrow">
+        <div class="resource">
+          <label class="resource-label">Songe ou Cauchemard</label>
+          <select name="system.codeSouC">
+            {{selectOptions LstSongeCauch selected=system.codeSouC}}
+          </select>
+        </div>
+        <div class="resource">
+          <label class="resource-label">Compétence magique</label>
+          <select name="system.cmpMagie">
+            {{selectOptions LstCmpMagie selected=system.cmpMagie}}
+          </select>
+        </div>
       </div>
-      <div class="resource">
-        <label class="resource-label">Cout en fils de Songe ou de Cauchemard</label>
-        <input type="text" name="system.cout" value="{{system.cout}}" data-dtype="Number"/>
+        <div class="resource">
+        Cout fixe ? :<input type="checkbox" name="system.coutFixe" {{checked system.coutFixe}} />
+        {{#if system.coutFixe}}<label class="resource-label">{{typeSort}} : </label>
+        <input class="normal-input" size="3em" title="Cout en fils de Songe ou de Cauchemard" type="text" name="system.cout" value="{{system.cout}}" data-dtype="Number"/>
+        {{/if}}
       </div>
-      <div class="resource">
-        <label class="resource-label">Préparation</label>
-        <input type="text" name="system.preparation" value="{{system.preparation}}" data-dtype="String"/>
+      <div class="flexrow">
+        <div class="resource">
+          <label class="resource-label">Préparation</label>
+          <input type="text" name="system.preparation" value="{{system.preparation}}" data-dtype="String"/>
+        </div>
+        <div class="resource">
+          <label class="resource-label">Durée</label>
+          <input type="text" name="system.duree" value="{{system.duree}}" data-dtype="String"/>
+        </div>
       </div>
-      <div class="resource">
-        <label class="resource-label">Durée</label>
-        <input type="text" name="system.duree" value="{{system.duree}}" data-dtype="String"/>
-      </div>
-      <div class="resource">
-        <label class="resource-label">Portée</label>
-        <input type="text" name="system.portee" value="{{system.portee}}" data-dtype="String"/>
+      <div class="flexrow">
+        <div class="resource">
+          <label class="resource-label">Portée</label>
+          <input type="text" name="system.portee" value="{{system.portee}}" data-dtype="String"/>
+        </div>
+        <div class="resource">
+          <label class="resource-label">Dommage</label>
+          <input title="Si zero ne donne pas de dommages" type="text" name="system.dommage" value="{{system.dommage}}" data-dtype="Number"/>
+        </div>
       </div>
       <div class="resource">
         <label class="resource-label">Air d'effet</label>
@@ -52,22 +70,16 @@
       <label class="resource-label">
         <input type="checkbox" name="system.cumul" {{checked system.cumul}}/> Peut se cumuler
       </label>
+      <label class="resource-label">
+        <input type="checkbox" name="system.exclusifF" {{checked system.exclusifF}}/> est dans la liste des farfadets
+      </label>
+      <label class="resource-label">
+        <input type="checkbox" name="system.armureCompte" {{checked system.armureCompte}}/> l'armure compte si cela produit des dommages.
+      </label>
       <div class="resource">
         <label class="resource-label">Description de l'effet</label>
         <textarea name="system.effet" rows="3">{{{system.effet}}}</textarea>
       </div>
-      <div class="resource">
-        <label class="resource-label">Nom de la compétence magique</label>
-        <select name="system.cmpMagie">
-          {{selectOptions LstCmpMagie selected=system.cmpMagie}}
-        </select>
-      </div>
-      <label class="resource-label">
-        <input type="checkbox" name="system.exclusifF" {{checked source.system.exclusifF}}/> est dans la liste des farfadets
-      </label>
-      <label class="resource-label">
-        <input type="checkbox" name="system.armureCompte" {{checked source.system.armureCompte}}/> l'armure compte si cela produit des dommages.
-      </label>
     </div>
   </section>
 </form>

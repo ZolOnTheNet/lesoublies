@@ -180,6 +180,7 @@
     "armure": {
       "templates": ["base"],
       "taille":1,
+      "ecorse" : 9,
       "protection" : 1,
       "malus":1,
       "deProtection" : "",
@@ -211,7 +212,9 @@
       "cmpMagie" : "",
       "coefCout" : 1,
       "exclusifF": false,
-      "armureCompte" : true
+      "armureCompte" : true,
+      "coutFixe" : true,
+      "dommage" : 0
     },
     "compagnie" : {
       "templates": ["base"],

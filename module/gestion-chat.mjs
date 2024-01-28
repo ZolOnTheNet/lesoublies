@@ -10,7 +10,7 @@ import { toArrayLstTxt } from "./utils.mjs"
  * @param {*} data
  * @returns
  */
-export function EnventDuChat(event, html, data){
+export function EnventDuChat(event, html, data){ //dans la fonction principale
     // const btn = $(event.currentTarget);
     // const btnType = btn.data("apply");
      //console.log("EventDuChat:",btn);
@@ -21,8 +21,23 @@ export function EnventDuChat(event, html, data){
             //aiguillageGeMsg(cmdArgs, obj);
             break;
         case "chat":
-            //console.log("Commande a faire "+ dataSet.action, html, data, cmdArgs)
-            traitementChoixSonge(dataSet.action)
+            switch(cmdArgs[1]){
+                case 'choix':
+                    //console.log("Commande a faire "+ dataSet.action, html, data, cmdArgs)
+                    traitementChoixSonge(dataSet.action)
+                    break;
+                case 'dommage':
+                    if(_token){
+                        let dom = parseInt(cmdArgs[3])
+                        if(dom>0){
+                            let pvd = _token.actor.system.PdV.value
+                            if(cmdArgs[2] == 'plus') pvd += dom 
+                                else pvd -= dom
+                            _token.actor.update({ "system.PdV.value" : pvd})
+                            prendDesDommage(cmdArgs[4], cmdArgs[5], _token, dom, cmdArgs[2])
+}                    }
+                    break;
+            }
             break;
         default :
             console.log("Event Du Chat : Devrait pas être ici", dataSet)
@@ -59,7 +74,7 @@ export function afficheResultat(token, actor, roll, titre='Jet !',descriptif='',
     if(pAction == "rien") pAction =""
     if(pAction != "") labelAction = LESOUBLIES.actions[pAction].label
     const rollData = {
-        idToken : token.id,
+        idToken : token?.id || "",
         idActor : actor.id, // relation avec l'acteur (ajouter la dette)
         titre: titre,
         action: pAction,
@@ -201,4 +216,17 @@ export function SimpleMessageChat(token, actor, html) {
         content: html
     };
     ChatMessage.create(chatData);
+}
+
+function prendDesDommage(idTokenS, idActorS, tokenC, dom, cmd){
+    let tokenS; let actorS
+    if(idTokenS) {
+        tokenS = game.scenes.active.tokens.get(idTokenS)
+        if(tokenS) actorS= tokenS.actor
+    } else {
+        if(idActorS) actorS= game.actors.get(idActorS)
+    }
+    let gain = cmd=='plus'? " gagne ": " perd "
+    let html = "le personnage " + tokenC.name + gain + dom + " points de vie. Il lui en reste " + tokenC.actor.system.PdV.value+"/"+ tokenC.actor.system.PdV.max
+    SimpleMessageChat(tokenS, actorS, html)
 }

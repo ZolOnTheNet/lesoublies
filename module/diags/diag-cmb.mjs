@@ -35,8 +35,8 @@ class DiagCMB extends FormApplication {
     if(context.tokenId) {
       this.token = game.scenes.current.tokens.get(context.tokenId)
       this.actor = this.token.actor
-    } else  if(acteur){
-      this.actor = game.actors.get(data.acteurId)
+    } else  if(context.actorId){
+      this.actor = game.actors.get(context.actorId)
     }
     this.options.title = this.context.estCombat?'Lancer de dés des combats':(context.cmp =="")?'Lancer avec paramaètres':'Lancer de '+context.cmp+" paramêtré"
   }
@@ -79,15 +79,14 @@ class DiagCMB extends FormApplication {
         case "lancer" :
             console.log("lancer l'attaque !", this.context)
             this.context.dernier = false
-            this._roll()
-            this.context.noActionEnCours++
+            if(this._roll()) this.context.noActionEnCours++
             this.render(true)
             break
         case "submit" :
             //console.log("lancer l'attaque !", this.context)
             this.context.dernier = true
-            this._roll()
-            return this._onSubmit(event);
+            if(this._roll()) return this._onSubmit(event);
+            break;
         case "position": // traitement des position
         // pour info : game.combat.current.combatantId  donne le combatant en cours
           ui.notifications.warn("Vous passez de " + labelCaseAction[this.context.caseAction] +" a " + labelCaseAction[id[2]])
@@ -107,12 +106,19 @@ class DiagCMB extends FormApplication {
       let actuAction = formElement?.find('[name="action"]').val()
       if(LESOUBLIES.actions[this.context.action].typeAction=="LA") this.context.equilibreChoix-- //LA donne une pénalité
       if(LESOUBLIES.actions[actuAction].typeAction=="LA") this.context.equilibreChoix++
-      if(LESOUBLIES.actions[actuAction].cmp =="-") this.context.cmpAction.autreAction = false
+      //if(LESOUBLIES.actions[actuAction].cmp =="-") this.context.cmpAction.autreAction = false
       else if(LESOUBLIES.actions[actuAction].cmp !=""){
         this.context.cmpAction.autreAction = true
-        this.context.cmpAction.lstCmp = toLstObjTxt(LESOUBLIES.actions[actuAction].cmp,listCmp(),'name',true,true)
+        let cmpList = LESOUBLIES.actions[actuAction].cmp
+        if(cmpList == '-') cmpList = "" // on veut toutes les compétences selectionnable
+        //this.context.cmpAction.lstCmp = toLstObjTxt(LESOUBLIES.actions[actuAction].cmp,listCmp(),'name',true,true)
+        this.context.cmpAction.lstCmp = this.actor.getListCmp(cmpList,true)
+        this.context.cmpAction.cmpId = ""
       }
       this.context.action = actuAction
+    } else if(event.currentTarget.name=='actionCmp') {
+      let actuActionCmp = formElement?.find('[name="actionCmp"]').val()
+      this.context.cmpAction.cmpId = actuActionCmp
     } else {
       const diffSupp = parseInt(formElement?.find('[name="diffSupp"]').val())
       console.log("difficulte :",diffSupp);
@@ -234,6 +240,10 @@ class DiagCMB extends FormApplication {
 
   _roll(){ // XXX a regrouper avec gerer les resultat ?
     const context = this.context
+    if(context.cmp === undefined && (context.cmpAction.autreAction && context.cmpAction.cmpId =="")) {
+      return ui.notifications.warn("vous n'avez pas définie de competence, choisissez une sous le choix de l'action") && false;
+    }
+    if(context.cmpId === undefined)context.cmpId = ""
     let rollFormula = "{ 1d12x, 1d12x[black]}"; let Depense=""
     if(context.ptSongePris) {
       rollFormula = "{ 2d12xkh, 1d12x[black]}"
@@ -253,12 +263,22 @@ class DiagCMB extends FormApplication {
     }
     // calcul de la formule
     let r = new Roll(rollFormula)
-
+    // traitement pour compétence différente (suite à l'action)
+    let titre = "Jet "
+    if(context.cmpAction.autreAction && context.cmpAction.cmpId !=""){
+      let sc = this.actor.getScoreCmp(context.cmpAction.cmpId)
+      if(sc!= undefined){
+        score = sc+context.diffTotal
+        titre += this.context.cmpAction.lstCmp[context.cmpAction.cmpId]
+      } else titre += this.context.cmp // pas de cmp ?! bizzare mais on reste sur le bon score
+    }else {
+      titre += this.context.cmp // amélioration des titres 
+    }
     const speaker = ChatMessage.getSpeaker({ actor: this.actor });
     //const rollMode = game.settings.get('core', 'rollMode');
     r.evaluate({async :false })
     // lancer du resultat !
-    let titre = "Jet "+ this.context.cmp // amélioration des titres 
+    
     if(this.context.nbActions> 1){
       if(this.context.noActionEnCours){
         titre = "Action " + this.context.noActionEnCours+": " + titre
@@ -268,13 +288,13 @@ class DiagCMB extends FormApplication {
     }
     // afficheResultat est pour le chat
     if(LESOUBLIES.options.popupDice)
-    ChoixEtResultat(this.token, this.actor, r, {  titre: titre, score : score, dernier: this.context.dernier, primes : this.context.choixPrimes, 
+    ChoixEtResultat(this.token, this.actor, r, {  titre: titre, score : score, dernier: this.context.dernier && this.context.estCombat, primes : this.context.choixPrimes, 
                                                   penalites : this.context.choixPenalites, action : this.context.action, 
                                                   armure : this.context.armure, dommage : this.context.dommage})
     else afficheResultat(this.token, this.actor, r, titre,"votre score est: "+score, 
-                    this.context.dernier, score, this.context.choixPrimes, this.context.choixPenalites, 
+                    this.context.dernier && this.context.estCombat, score, this.context.choixPrimes, this.context.choixPenalites, 
                     this.context.action, this.context.armure, this.context.dommage)
-
+    return true
   }
 }
 
@@ -300,11 +320,18 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
     if(init > 0) txtInit = "(Initiative: "+ init +")"
     else txtInit = ""
     actor = token.actor
-  } else  if(acteur){
+  } else  if(data.acteurId){
     actor = game.actors.get(data.acteurId)
     if(actor)init =actor.system.init
+    if(init > 0) txtInit = "(Initiative: "+ init +")" // devrait pas se faire !
   }
+  if(data.cmp === undefined)data.cmp =""
+  data.cmpAction = { autreAction : (data.cmp == "") }
   if(actor) {
+    if(data.cmp == "") {
+      data.cmpAction.lstCmp = actor.getListCmp("",true)
+      data.cmpAction.cmpId = ""
+    }
     ptCauch = actor.system.Cauchemard.Points.value
     ptSonge = actor.system.Songe.Points.value
     data.armureDef = actor.system.combat.protection.value
@@ -322,7 +349,8 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
       if(data.score == -1){ // on n'a pas le score
         if(itemCmp) {
           let itemRace = actor.items.get(actor.system.idRace)
-          data.score = itemCmp.system.score + parseInt(itemRace.system.profils[toStdProfil(itemCmp.system.profil)]+"")+itemA.system.bonus.score
+          if(itemRace) data.score = itemCmp.system.score + parseInt(itemRace.system.profils[toStdProfil(itemCmp.system.profil)]+"")+itemA.system.bonus.score
+          else data.score = itemCmp.system.score + itemA.system.bonus.score
         }
       }
       data.caseAction = actor.system.combat.position
@@ -359,7 +387,7 @@ export  async function diagCmb(data = { tokenId:"", cmpNom : "", score:0, acteur
     lstActionStd : lstAct,
     action : "rien",
     nbActions : 1,
-    cmpAction : { autreAction : false }, // gestion des actions
+    cmpAction : data.cmpAction, // gestion des actions
     noActionEnCours : 1,
     visuAction : visuAction(1),
     lstCaseAction : labelCaseAction,

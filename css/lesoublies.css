@@ -316,6 +316,9 @@
   text-align: left;
 }
 
+.gras {
+  font-weight: bold;
+}
 .misenevidence {
   color:crimson;
   font-weight: bold;

@@ -36,6 +36,14 @@
   "LESOUBLIES.cauchemard" : "Cauchemard",
   "LESOUBLIES.songe" : "Songe",
   "LESOUBLIES.basculeDiagTxt" : "Affiche les dialogues automatiquement par défaut",
-  "LESOUBLIES.basculeDiaghint" : "Cela permet de choisir pour ses fenêtres si les dialogues s'ouvre automatiquement"
+  "LESOUBLIES.basculeDiaghint" : "Cela permet de choisir pour ses fenêtres si les dialogues s'ouvre automatiquement",
 
+  "LESOUBLIES.repertoireBaseCMP" : "Code Compendium des compétences de bases",
+  "LESOUBLIES.repertoireBaseCMPhint" : "Designation du nom du pack (compendium) contenant les compétences de base  i.e. : world.cmpbase. Aucune répercussion sur les acteurs déjà existants",
+  "LESOUBLIES.repertoireBaseCmpTotal" : "Code Compendium des toutes compétences",
+  "LESOUBLIES.repertoireBaseCmpTotalhint" : "Designation du nom du pack (compendium) contenant l'ensemble des compétences i.e. : world.cmptotal. Aucune répercussion sur les acteurs déjà existants",
+  "LESOUBLIES.repertoireBaseProfil" : "Code Compendium des profils référencé",
+  "LESOUBLIES.repertoireBaseProfilhint" : "Designation du nom du pack (compendium) contenant l'ensemble des profils utilisés i.e. : world.profils. Aucune répercussion sur les acteurs déjà existants",
+
+  "fin":"dernier texte facilite la gestion des virgules. ajouter au dessus les traductions"
 }

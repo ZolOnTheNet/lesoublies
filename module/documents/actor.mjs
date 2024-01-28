@@ -1,5 +1,5 @@
 import { LESOUBLIES } from "../helpers/config.mjs";
-import { strNoAccent } from "../utils.mjs"
+import { strNoAccent, toStdProfil } from "../utils.mjs"
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
@@ -151,6 +151,17 @@ export class LesOubliesActor extends Actor {
     if(systemData.autoDialog == undefined) systemData.autoDialog = false
   }
 
+  getScoreCmp(cmpT){
+    let cmp = this.items.get(cmpT)
+    if(cmp == undefined) {
+      cmp = this.items.getName(cmpT)
+      if(cmp == undefined) return -1 // c'est pas l'id et le nom !
+    }
+    let race = this.items.filter(x => x.type=='race')
+    let profilScore = 0
+    if(race.length> 0) profilScore = race[0].system.profils[toStdProfil(cmp.system.profil)]
+    return cmp.system.score + profilScore
+  }
   /**
    * Override getRollData() that's supplied to rolls.
    */
@@ -172,7 +183,7 @@ export class LesOubliesActor extends Actor {
     // recopie au niveau system tout l'ensemble des compétences 
     const raceProfil = this.items.filter(x => x.type == 'race')
     let probase = { "artiste":0, "athlete":0, "chasseur": 0, "faiseur": 0, "forceNature" :0, "guerrier" : 0, "mystique" : 0,  "ombre" : 0,  "savant" : 0 }
-    if(raceProfil.lenght) {
+    if(raceProfil.length) {
       probase = raceProfil[0].system.profils
       for (let [k, v] of Object.entries(probase)) { probase[k] = parseInt(v) } 
     }
@@ -194,6 +205,20 @@ export class LesOubliesActor extends Actor {
     const cmp = this.items.filter(x => x.type == 'cmp') // pas de cumul avec autre chose que l'item
     cmp.forEach(x => { data[strNoAccent(x.name)]=x.system.score })
     // Process additional NPC data here.
+  }
+
+  getListCmp(filtreNom, vide = true) {
+    let Ret = {}
+    let tab = this.items.filter(x => x.type=='cmp')
+    if(vide) Ret = { "":""}
+    let temp = ";"+filtreNom+";"
+    tab.forEach(ele => {
+      if(filtreNom == "")Ret[ele.id]=ele.name
+      else { 
+        if(temp.includes(";"+ele.name+";")) Ret[ele.id]=ele.name
+      }
+    })
+    return Ret;
   }
 
 }

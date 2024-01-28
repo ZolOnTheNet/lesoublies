@@ -81,6 +81,7 @@ export class LesOubliesItemSheet extends ItemSheet {
         break;
       case 'sort':
         context.LstSongeCauch={ 0:"Cauchemard", 1:"Songe"}
+        context.typeSort = context.LstSongeCauch[context.system.codeSouC]
         context.LstCmpMagie = listCmpMagiques()
         break
     }

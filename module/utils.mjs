@@ -1,28 +1,31 @@
 export function listCmp() {
     // retourne l'enesmble des nom des compétences dur répertoire donnee comme tel
-    // ici "Compétences", a coder au niveau interface
-    let acmp = game.items.filter(x => {return x.type == 'cmp' && x.folder?.name=="Compétences"})
+    // utilisation d'un compendium world (a tester quand on fera un module/pour l'integration.)
+    //let acmp = game.items.filter(x => {return x.type == 'cmp' && x.folder?.name=="Compétences"})
+    let acmp = [...game.packs.get(game.settings.get("lesoublies","repertoireCmpTotal")).index]
     // mise au format hbs
     let b = { "":""}
-    //let acmp2 = acmp.toSorted((a,b) => a.name > b.name)
-    let acmp2 = acmp.sort()
-    acmp2.forEach(i => { b[i.id]=i.name })
+    let acmp2 = acmp.toSorted((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
+    //let acmp2 = acmp.sort()
+    acmp2.forEach(i => { b[i._id]=i.name })
     return b;
 }
 
 export function listCmpBase() {
     // retourne l'enesmble des compétences dur répertoire donnee comme tel
     // ici "CmpBases", a coder au niveau interface
-    let acmp = game.items.filter(x => {return x.type == 'cmp' && x.folder?.name=="CmpBases"})
+    //let acmp = game.items.filter(x => {return x.type == 'cmp' && x.folder?.name=="CmpBases"})
+    let acmp = [...game.packs.get(game.settings.get("lesoublies","repertoireCmpBase")).index]
     // mise au format hbs
-    //let acmp2 = tabSkill.toSorted((a,b) => a.name > b.name)
-    let acmp2 = acmp.sort()
+    let acmp2 = acmp.toSorted((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
+    //let acmp2 = acmp.sort()
     //acmp2.forEach(i => { b[i.id]=i.name })
     return acmp2;
 }
 
 export function AffecterProfils(){
-    let profils = game.items.filter(x => x.type == 'profil')
+    //let profils = game.items.filter(x => x.type == 'profil')
+    let profils = [...game.packs.get(game.settings.get("lesoublies","repertoireProfils")).index]
     profils.forEach(x => {
         if(Array.isArray(x.system.arrayCmp)) {
             x.system.arrayCmp.forEach(y => {
