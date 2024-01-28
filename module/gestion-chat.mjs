@@ -1,6 +1,6 @@
 import { LESOUBLIES } from "./helpers/config.mjs";
 import {traitementChoixSonge} from "./gestion-jets.mjs"
-import { toArrayLstTxt } from "./utils.mjs"
+import { toArrayLstTxt, calculPointsMagie } from "./utils.mjs"
 
 /**
  * Gestion de l'évenement suite au choix du penchant choisit (Songe ou Cauchemard)/
@@ -35,8 +35,14 @@ export function EnventDuChat(event, html, data){ //dans la fonction principale
                                 else pvd -= dom
                             _token.actor.update({ "system.PdV.value" : pvd})
                             prendDesDommage(cmdArgs[4], cmdArgs[5], _token, dom, cmdArgs[2])
-}                    }
+                        }
+                    }
                     break;
+            }
+            break;
+        case 'magie':
+            if(cmdArgs[1]=="choix" && cmdArgs[2]=="direct"){
+                ui.notifications.warn("Vous ave décider de prendre "+cmdArgs[3]+" Points de "+cmdArgs[4]);
             }
             break;
         default :
@@ -179,15 +185,33 @@ export function affichageSort(token, actor, itemSort, cout, titre="", msgImporta
     }
     let typeM = (itemSort.system.codeSouC == 0)?"Cauchemard":"Songe"
     if(titre =="") titre = itemSort.name
+    let HtmlchoixPtMagie = ""
+    if( ! itemSort.system.coutFixe) {
+        cout = 0
+        let ptMagieT  = calculPointsMagie(actor, itemSort.system.codeSouC)
+        let ptMagie = ptMagieT.max
+        let itemMetier = actor.items.filter(x => x.type=='metier')
+        let coef = 2
+        if(itemMetier) {
+            itemMetier = itemMetier[0]; 
+            if(itemSort.system.cmpMagie == itemMetier.cmpMagie) coef = 1
+        }
+        for(let i = coef; i <= ptMagie;i+=coef){
+            HtmlchoixPtMagie += '<span class="cmd txtUtiOui" data-action="magie.choix.direct.' + i + '.' + typeM +'" title="' + i + '" >'+i+' </span>'
+        }
+        if(ptMagie / coef ==1) cout = coef 
+    }
     const context = {
         titre : titre,
         important : msgImportant,
         description : itemSort.system.description,
         cout : cout,
+        coutFixe : itemSort.system.coutFixe,
         portee: itemSort.system.portee,
         duree : itemSort.system.duree,
         preparation : itemSort.system.preparation,
-        typeMagie: typeM
+        typeMagie: typeM,
+        listPdM : HtmlchoixPtMagie
     }
     renderTemplate('systems/lesoublies/templates/chat/chat-sort.hbs', context).then(html => {
         //console.log("Texte HTLM",html)

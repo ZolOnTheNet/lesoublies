@@ -122,7 +122,7 @@ export class LesOubliesActor extends Actor {
 
     // Make modifications to data here. For example:
     const systemData = actorData.system;
-    systemData.xp = (systemData.cr * systemData.cr) * 100;
+   // systemData.xp = (systemData.cr * systemData.cr) * 100;
   }
 
   _prepareData(actorData){
@@ -221,4 +221,14 @@ export class LesOubliesActor extends Actor {
     return Ret;
   }
 
+  getCmpMagie(){
+    let itemMetier = this.items.get(this.system.idMetier)
+    if(itemMetier ==undefined) {
+      let tab = this.items.filter(x => x.type=='metier')
+      if(tab) itemMetier = tab[0]
+    }
+    let Ret = ""
+    if(itemMetier) Ret = itemMetier.system.cmpMagie
+    return Ret
+  }
 }

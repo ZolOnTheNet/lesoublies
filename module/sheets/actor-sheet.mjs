@@ -1,6 +1,6 @@
 import { LESOUBLIES } from "../helpers/config.mjs";
 import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
-import {toStdProfil } from "../utils.mjs"
+import {toStdProfil, calculPointsMagie } from "../utils.mjs"
 import { afficheResultat, affichageSort, SimpleMessageChat} from "../gestion-chat.mjs"
 import { diagCmb } from "../diags/diag-cmb.mjs";
 
@@ -196,8 +196,10 @@ export class LesOubliesActorSheet extends ActorSheet {
       else if (i.type === 'sort') {
         if (i.system.cout != undefined) {
           i.system.typeMagie = (i.system.codeSouC == 0)?"S":"C"
-          i.system.coefCout = (i.system.cmpMagie==context.MagieA1)?1:2
-          i.system.cout = i.system.cout * i.system.coefCout
+          if(i.system.coutFixe){
+              i.system.coefCout = (i.system.cmpMagie==context.MagieA1)?1:2
+              i.system.cout = i.system.cout * i.system.coefCout
+          }else i.system.cout = 0 // le cout variable sont en 0
           if(i.system.aDecrire == undefined) i.system.aDecrire = false
           i.system.typeMagie = (i.system.codeSouC == 0)?"Cch":"Sge"
           spells[i.system.cout].push(i);
@@ -343,7 +345,7 @@ export class LesOubliesActorSheet extends ActorSheet {
       case 'songe':
         if(clickTab[1]=='recalcul')this.recalculSouC("Songe")
         break;
-        case 'cauchemard':
+      case 'cauchemard':
           if(clickTab[1]=='recalcul') this.recalculSouC("Cauchemard")
           break;
       case 'roll': // il faudra changer quand digCmb sera au point par le transformer en diagCmp
@@ -695,25 +697,30 @@ export class LesOubliesActorSheet extends ActorSheet {
   }
 
   gestionSortilege(idSort, coutTxt){
+    // attention prendre en compte les sortilèges à cout non fixe !
     let cout = parseInt(coutTxt)
     let itemSort = this.actor.items.get(idSort)
-    //faire les test de points
     let typeMagie = (itemSort.system.codeSouC == 0)?"Cauchemard":"Songe"
-    let ptMagie = this.actor.system[typeMagie].Points.value
-    let sphere = []; let ptMagieSphere = 0
-    if(itemSort.system.codeSouC == 0) sphere = this.actor.items.filter(x => x.name == 'Sphère de Cauchemard')
-      else sphere = this.actor.items.filter(x => x.name == 'Sphère de Songe')
-    sphere.forEach( x => { ptMagieSphere += x.system.quantity})
-    if(ptMagie+ptMagieSphere < cout) { // et les billes de Songe ou de cauchemard?
-      // message : pas assez de magie de
-      return ui.notifications.warn("Vous n'avez pas assez de points de "+typeMagie+" pour lancer un sort demandant "+cout+" points meême en utilisant vos sphères");
-    }
-    let resteApayer = cout - ptMagie; let objUpd = {}; let coutPtM = (resteApayer < 0)? cout:ptMagie
-    objUpd["system."+typeMagie+".Points.value"]= (resteApayer < 0)?ptMagie - cout: 0;
-    this.actor.update(objUpd)
-    let msgImportant = "Vous avez utilisez <strong>"+ coutPtM + "</strong> Points de "+ typeMagie+"<br>"
-    if(resteApayer> 0) {
-      msgImportant += "Tous vos points de songe ont été utilisés. Vous devez dépenser "+resteApayer+" Sphere de" + typeMagie+"."
+    //faire les test de points
+    let ptMagieT = calculPointsMagie(this.actor, itemSort.system.codeSouC)
+    let ptMagie =ptMagieT.acteur
+    let ptMagieSphere = ptMagieT.spheres
+    let msgImportant = ""
+    if(itemSort.system.coutFixe){
+      if(ptMagie+ptMagieSphere < cout) { // et les billes de Songe ou de cauchemard?
+        // message : pas assez de magie de
+        return ui.notifications.warn("Vous n'avez pas assez de points de "+typeMagie+" pour lancer un sort demandant "+cout+" points meême en utilisant vos sphères");
+      }
+      let resteApayer = cout - ptMagie; let objUpd = {}; let coutPtM = (resteApayer < 0)? cout:ptMagie
+      objUpd["system."+typeMagie+".Points.value"]= (resteApayer < 0)?ptMagie - cout: 0;
+      this.actor.update(objUpd)
+      msgImportant = "Vous avez utilisez <strong>"+ coutPtM + "</strong> Points de "+ typeMagie+"<br>"
+      if(resteApayer> 0) {
+        msgImportant += "Tous vos points de songe ont été utilisés. Vous devez dépenser "+resteApayer+" Sphere de" + typeMagie+"."
+      }
+    } else { // cout variable
+      msgImportant = "Choississez le nombre de points de " + typeMagie +" que vous voulez utiliser en cliquant dessus."
+      //if(ptMagieT.max )
     }
     return affichageSort(this.token, this.actor, itemSort, cout, "lance le sortilège de "+typeMagie+ ": "+itemSort.name, msgImportant)
   }
@@ -721,7 +728,7 @@ export class LesOubliesActorSheet extends ActorSheet {
   recalculSouC(champ) {
     let objUpd = {}
     let html = "<p>le personnage "+ this.actor.name +" récupère tout ses points de "+champ+".<p>"
-    if(champ="Songe") { // amélioré le messages
+    if(champ=="Songe") { // amélioré le messages
       html = "<h1>L'aube arrive</h1>" + html
     }else {
       html = "<h1>Le crépuscule arrive</h1>" + html

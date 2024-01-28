@@ -154,3 +154,22 @@ export function toLstObjTxt(lstTxt, objTab, champ, tri = true, vide=true){
     })
     return Ret
 }
+
+/**
+ * 
+ * @param {*} actor 
+ * @param {*} SouC : 1 pour Songe et 0 Pour Cauchemard
+ * @returns 
+ */
+export function calculPointsMagie(actor, SouC = 1){
+    let sphere = []; let ptMagieSphere = 0; let ptMagie = 0
+    if(SouC == 0){
+         sphere = actor.items.filter(x => x.name == 'Sphère de Cauchemard')
+         ptMagie = actor.system.Cauchemard.Points.value
+    } else { 
+        sphere = actor.items.filter(x => x.name == 'Sphère de Songe')
+        ptMagie = actor.system.Songe.Points.value
+    }
+    sphere.forEach( x => { ptMagieSphere += x.system.quantity})
+    return { "acteur":ptMagie, "max": ptMagie+ptMagieSphere, "spheres": ptMagieSphere}
+}

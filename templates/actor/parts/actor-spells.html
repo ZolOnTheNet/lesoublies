@@ -1,7 +1,11 @@
 <ol class="items-list droppable">
   {{#each spells as |spells spellLevel|}}
     <li class="item flexrow items-header">
-      <div class="item-name">Sort de Cout {{spellLevel}}</div>
+      {{#ifeq spellLevel 0}}
+      <div class="item-name">Sorts Variables</div>
+      {{else}}
+      <div class="item-name">Sorts (Cout {{spellLevel}})</div>
+      {{/ifeq}}
       <div class="item-controls">
         <a class="item-control item-create" title="Create item" data-type="spell" data-spell-level="{{spellLevel}}"><i class="fas fa-plus"></i> {{localize "LESOUBLIES.Add"}} Sort</a>
       </div>
