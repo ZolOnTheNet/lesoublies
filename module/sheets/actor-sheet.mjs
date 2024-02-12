@@ -3,6 +3,7 @@ import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/ef
 import {toStdProfil, calculPointsMagie } from "../utils.mjs"
 import { afficheResultat, affichageSort, SimpleMessageChat} from "../gestion-chat.mjs"
 import { diagCmb } from "../diags/diag-cmb.mjs";
+import { diagNombre } from "../diags/diag-nombre.mjs"
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -706,7 +707,7 @@ export class LesOubliesActorSheet extends ActorSheet {
     let ptMagie =ptMagieT.acteur
     let ptMagieSphere = ptMagieT.spheres
     let msgImportant = ""
-    if(itemSort.system.coutFixe){
+    if( itemSort.system.coutFixe){ // cout fixe
       if(ptMagie+ptMagieSphere < cout) { // et les billes de Songe ou de cauchemard?
         // message : pas assez de magie de
         return ui.notifications.warn("Vous n'avez pas assez de points de "+typeMagie+" pour lancer un sort demandant "+cout+" points meême en utilisant vos sphères");
@@ -718,9 +719,9 @@ export class LesOubliesActorSheet extends ActorSheet {
       if(resteApayer> 0) {
         msgImportant += "Tous vos points de songe ont été utilisés. Vous devez dépenser "+resteApayer+" Sphere de" + typeMagie+"."
       }
-    } else { // cout variable
-      msgImportant = "Choississez le nombre de points de " + typeMagie +" que vous voulez utiliser en cliquant dessus."
-      //if(ptMagieT.max )
+    } else {
+      // cout variable :  { type:"magie", item:"", cout: 0, coef : 1, description : "" }
+      diagNombre(this.token, this.actor, { type:"magie", item:itemSort._id,  })
     }
     return affichageSort(this.token, this.actor, itemSort, cout, "lance le sortilège de "+typeMagie+ ": "+itemSort.name, msgImportant)
   }

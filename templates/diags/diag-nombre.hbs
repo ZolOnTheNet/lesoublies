@@ -1,0 +1,38 @@
+<form class="zol-dice-prompt" autocomplete="off">
+    <div class="zol-dice-prompt">
+        <header >
+            {{#if titre}}
+            <div>
+                <h1>{{titre}}</h1>
+            </div>
+            {{/if}}
+            {{#if important}}
+            <div>
+                {{{important}}}
+            </div>
+            {{/if}}
+        </header>
+        <div>
+            <div><h3>{{titreCodeLst1}}</h3>
+                <td class="plusPolice">
+                <b>{{codeLst1}}</b> : <i class="fas fa-minus-square cmd" title="Reduit" data-action="lst1.set.moins.{{nbActions}}"></i> 
+                <input class="normal-input" type="text" size="2em" name="valCodeLst1" value="{{valCodeLst1}}" data-dtype="Number"/>
+                <i class="fas fa-plus-square cmd" title="Augmente" data-action="lst1.set.plus.{{valCodeLst1}}"></i>
+                <span id="lstPoint1" class="grdPolice">{{{lstPoint1}}}</span><i class="fad fa-sync cmd" data-action="lst1.reset.1"></i>
+                </td>
+            </div>
+            {{#if lstPoint2}}
+            <div><h3>{{titreCodeLst2}} </h3>
+                <td class="plusPolice">
+                <b>{{codeLst2}}</b> : <i class="fas fa-minus-square cmd" title="Reduit" data-action="lst2.set.moins.{{nbActions}}"></i> 
+                <input class="normal-input" type="text" size="2em" name="valCodeLst2" value="{{valCodeLst2}}" data-dtype="Number"/>
+                <i class="fas fa-plus-square cmd" title="Augmente" data-action="lst2.set.plus.{{valCodeLst2}}"></i>
+                <span id="lstPoint2" class="grdPolice">{{{lstPoint2}}}</span><i class="fad fa-sync cmd" data-action="lst2.reset.1"></i>
+                </td>
+            </div>
+            {{/if}}
+            <h2>TOTAL</h2>
+            Total : <input class="normal-input" type="text" size="5em" name="total" value="{{total}}" data-dtype="Number"/><i class="fad fa-sync cmd" data-action="total.calcul"></i>
+        </div>
+    </div>
+</form>

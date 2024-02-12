@@ -185,22 +185,16 @@ export function affichageSort(token, actor, itemSort, cout, titre="", msgImporta
     }
     let typeM = (itemSort.system.codeSouC == 0)?"Cauchemard":"Songe"
     if(titre =="") titre = itemSort.name
+    // tout les point de magie on déjà été enlevée
     let HtmlchoixPtMagie = ""
-    if( ! itemSort.system.coutFixe) {
-        cout = 0
-        let ptMagieT  = calculPointsMagie(actor, itemSort.system.codeSouC)
-        let ptMagie = ptMagieT.max
-        let itemMetier = actor.items.filter(x => x.type=='metier')
-        let coef = 2
-        if(itemMetier) {
-            itemMetier = itemMetier[0]; 
-            if(itemSort.system.cmpMagie == itemMetier.cmpMagie) coef = 1
-        }
-        for(let i = coef; i <= ptMagie;i+=coef){
-            HtmlchoixPtMagie += '<span class="cmd txtUtiOui" data-action="magie.choix.direct.' + i + '.' + typeM +'" title="' + i + '" >'+i+' </span>'
-        }
-        if(ptMagie / coef ==1) cout = coef 
-    }
+    // if( ! itemSort.system.coutFixe) {
+    //     cout = 0
+    //     let ptMagieT  = calculPointsMagie(actor, itemSort.system.codeSouC)
+    //     let ptMagie = ptMagieT.max
+    //     let itemMetier = actor.items.filter(x => x.type=='metier')
+    //     let coef = 2
+    //     if(ptMagie / coef ==1) cout = coef 
+    // }
     const context = {
         titre : titre,
         important : msgImportant,
