@@ -197,8 +197,8 @@ export class LesOubliesActorSheet extends ActorSheet {
       else if (i.type === 'sort') {
         if (i.system.cout != undefined) {
           i.system.typeMagie = (i.system.codeSouC == 0)?"S":"C"
+          i.system.coefCout = (i.system.cmpMagie==context.MagieA1)?1:2
           if(i.system.coutFixe){
-              i.system.coefCout = (i.system.cmpMagie==context.MagieA1)?1:2
               i.system.cout = i.system.cout * i.system.coefCout
           }else i.system.cout = 0 // le cout variable sont en 0
           if(i.system.aDecrire == undefined) i.system.aDecrire = false
@@ -352,7 +352,7 @@ export class LesOubliesActorSheet extends ActorSheet {
       case 'roll': // il faudra changer quand digCmb sera au point par le transformer en diagCmp
         let dialon = event.shiftKey ? !this.autoDialogue : this.autoDialogue
         if(clickTab[2]=='equip') diagCmb({ estCombat : true, tokenId:this.token?.id || "", cmpNom : "", score: -1, acteurId:this.actor.id, caseAction:"G", equipt:{ itemId : clickTab[3]} })
-        else if(clickTab[2] =='sort') { this.gestionSortilege(clickTab[3], clickTab[4]) }
+        else if(clickTab[2] =='sort') { this.gestionSortilege(clickTab[3], clickTab[4], clickTab[5]) }
         else if(clickTab[1] == 'diag' && clickTab[2]=='cmb') diagCmb({ estCombat :true, tokenId:this.token?.id || "", cmpNom : clickTab[3], score: parseInt(clickTab[4]), acteurId:this.actor.id, caseAction:"G", equipt:{} })
         else if(clickTab[1] == 'diag' &&  dialon) diagCmb({ estCombat : false, tokenId:this.token?.id || "", cmpNom : clickTab[3], score: parseInt(clickTab[4]), acteurId:this.token?.actor?.id || "", caseAction:"G", equipt:{} })
         else this._onRoll(event, element, dataset)
@@ -697,9 +697,9 @@ export class LesOubliesActorSheet extends ActorSheet {
     return lstCmpBase
   }
 
-  gestionSortilege(idSort, coutTxt){
+  gestionSortilege(idSort, coutTxt, coefTxt = "1"){
     // attention prendre en compte les sortilèges à cout non fixe !
-    let cout = parseInt(coutTxt)
+    let cout = parseInt(coutTxt); let coef = parseInt(coefTxt)
     let itemSort = this.actor.items.get(idSort)
     let typeMagie = (itemSort.system.codeSouC == 0)?"Cauchemard":"Songe"
     //faire les test de points
@@ -719,11 +719,16 @@ export class LesOubliesActorSheet extends ActorSheet {
       if(resteApayer> 0) {
         msgImportant += "Tous vos points de songe ont été utilisés. Vous devez dépenser "+resteApayer+" Sphere de" + typeMagie+"."
       }
+      return affichageSort(this.token, this.actor, itemSort, cout, "lance le sortilège de "+typeMagie+ ": "+itemSort.name, msgImportant)
     } else {
       // cout variable :  { type:"magie", item:"", cout: 0, coef : 1, description : "" }
-      diagNombre(this.token, this.actor, { type:"magie", item:itemSort._id,  })
+
+      diagNombre(this.token, this.actor, { type:"magie", typeM:typeMagie, item:itemSort._id, maxPt: ptMagie, maxSph : ptMagieSphere, coef:coef }).then(
+        (value)=>{
+         console.log("Resultat :", value)
+         //if(value.type == 1) return affichageSort(this.token, this.actor, itemSort, cout, "lance le sortilège de "+typeMagie+ ": "+itemSort.name, msgImportant)
+      })
     }
-    return affichageSort(this.token, this.actor, itemSort, cout, "lance le sortilège de "+typeMagie+ ": "+itemSort.name, msgImportant)
   }
 
   recalculSouC(champ) {

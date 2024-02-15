@@ -15,24 +15,25 @@
         <div>
             <div><h3>{{titreCodeLst1}}</h3>
                 <td class="plusPolice">
-                <b>{{codeLst1}}</b> : <i class="fas fa-minus-square cmd" title="Reduit" data-action="lst1.set.moins.{{nbActions}}"></i> 
+                <b>{{typeM}}</b> : <i class="fas fa-minus-square cmd" title="Reduit" data-action="valCodeLst1.mod.moins.{{valCodeLst1}}"></i> 
                 <input class="normal-input" type="text" size="2em" name="valCodeLst1" value="{{valCodeLst1}}" data-dtype="Number"/>
-                <i class="fas fa-plus-square cmd" title="Augmente" data-action="lst1.set.plus.{{valCodeLst1}}"></i>
-                <span id="lstPoint1" class="grdPolice">{{{lstPoint1}}}</span><i class="fad fa-sync cmd" data-action="lst1.reset.1"></i>
+                <i class="fas fa-plus-square cmd" title="Augmente" data-action="valCodeLst1.mod.plus.{{valCodeLst1}}"></i>
+                <span id="lst_valCodeLst1" class="grdPolice">{{{lstPoint1}}}</span><i class="fad fa-sync cmd" data-action="valCodeLst1.reset.1"></i>
                 </td>
             </div>
             {{#if lstPoint2}}
             <div><h3>{{titreCodeLst2}} </h3>
                 <td class="plusPolice">
-                <b>{{codeLst2}}</b> : <i class="fas fa-minus-square cmd" title="Reduit" data-action="lst2.set.moins.{{nbActions}}"></i> 
+                <b>{{codeLst2}}</b> : <i class="fas fa-minus-square cmd" title="Reduit" data-action="valCodeLst2.mod.moins.{{nbActions}}"></i> 
                 <input class="normal-input" type="text" size="2em" name="valCodeLst2" value="{{valCodeLst2}}" data-dtype="Number"/>
-                <i class="fas fa-plus-square cmd" title="Augmente" data-action="lst2.set.plus.{{valCodeLst2}}"></i>
-                <span id="lstPoint2" class="grdPolice">{{{lstPoint2}}}</span><i class="fad fa-sync cmd" data-action="lst2.reset.1"></i>
+                <i class="fas fa-plus-square cmd" title="Augmente" data-action="valCodeLst2.mod.plus.{{valCodeLst2}}"></i>
+                <span id="lst_valCodeLst2" class="grdPolice">{{{lstPoint2}}}</span><i class="fad fa-sync cmd" data-action="valCodeLst2.reset.1"></i>
                 </td>
             </div>
             {{/if}}
             <h2>TOTAL</h2>
             Total : <input class="normal-input" type="text" size="5em" name="total" value="{{total}}" data-dtype="Number"/><i class="fad fa-sync cmd" data-action="total.calcul"></i>
+            <span id="msg_total" class="txtUtiEnCours grdPolice"></span>
         </div>
     </div>
 </form>

@@ -2,8 +2,8 @@
 export function RegisterHelperHandlebar() {
     /**
      * vrai si arg1 et égal à arg2
-     * usage : 
-     * {{#ifEq arg1 agr2}} ... {{/ifEq}} 
+     * usage :
+     * {{#ifEq arg1 agr2}} ... {{/ifEq}}
      */
     Handlebars.registerHelper('ifEq', function(arg1, arg2, options) {
         return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
@@ -11,8 +11,8 @@ export function RegisterHelperHandlebar() {
 
     /** parce que j'ai pas me prendre la tête
      * vrai si arg1 et égal à arg2
-     * usage : 
-     * {{#ifeq arg1 agr2}} ... {{/ifeq}} 
+     * usage :
+     * {{#ifeq arg1 agr2}} ... {{/ifeq}}
      */
     Handlebars.registerHelper('ifeq', function(arg1, arg2, options) {
         return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
