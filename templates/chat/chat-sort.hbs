@@ -1,9 +1,20 @@
 <div class="roll roll-skill">
     {{#if titre}}
+            <strong>lance le sortilège de {{typeMagie}} :</strong>
 			<h1><div class="roll-description">{{titre}}</div></h1>
+    {{/if}}
+    {{#if niveau}}
+    <h3>
+        Sort de niveau {{niveau}}
+    </h3>
     {{/if}}
      <h4>
         Cout : {{cout}} en Pts de {{typeMagie}}
+        {{#if CoutSphere}}
+            réparti comme suit : <br> 
+            {{coutMagie}} points en {{typeMagie}}<br>
+            {{CoutSphere}} points en sphère de  {{typeMagie}}<br>
+        {{/if}}
     </h4>
     {{#if important}}
     <div>

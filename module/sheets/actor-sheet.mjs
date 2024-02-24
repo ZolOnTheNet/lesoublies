@@ -719,21 +719,29 @@ export class LesOubliesActorSheet extends ActorSheet {
       if(resteApayer> 0) {
         msgImportant += "Tous vos points de songe ont été utilisés. Vous devez dépenser "+resteApayer+" Sphere de" + typeMagie+"."
       }
-      return affichageSort(this.token, this.actor, itemSort, cout, "lance le sortilège de "+typeMagie+ ": "+itemSort.name, msgImportant)
+      return affichageSort(this.token, this.actor, itemSort, cout, itemSort.name, msgImportant, resteApayer, coef)
     } else {
       // cout variable :  { type:"magie", item:"", cout: 0, coef : 1, description : "" }
 
       diagNombre(this.token, this.actor, { type:"magie", typeM:typeMagie, item:itemSort._id, maxPt: ptMagie, maxSph : ptMagieSphere, coef:coef }).then(
         (value)=>{
          console.log("Resultat :", value)
-         //if(value.type == 1) return affichageSort(this.token, this.actor, itemSort, cout, "lance le sortilège de "+typeMagie+ ": "+itemSort.name, msgImportant)
+         // décompter les points si type = 1
+          if(value.type == 1){
+            let objUpd = {};
+            objUpd["system."+typeMagie+".Points.value"]= this.actor.system[typeMagie].Points.value - value.obj.valCodeLst1
+            this.actor.update(objUpd)
+            msgImportant = "Tous vos points de "+ typeMagie  +" ont été décomptés. Vous devez dépenser l'équivalent de "+value.obj.valCodeLst2+" Sphere(s) de " + typeMagie+"."
+            return affichageSort(this.token, this.actor, itemSort, value.obj.total, itemSort.name, msgImportant, value.obj.valCodeLst2, coef)
+          }
+          return ui.notifications.warn("Action annulée") && false;
       })
     }
   }
 
   recalculSouC(champ) {
     let objUpd = {}
-    let html = "<p>le personnage "+ this.actor.name +" récupère tout ses points de "+champ+".<p>"
+    let html = "<p>le personnage <strong>"+ this.actor.name +"</strong> récupère tout ses points de "+champ+".<p>"
     if(champ=="Songe") { // amélioré le messages
       html = "<h1>L'aube arrive</h1>" + html
     }else {

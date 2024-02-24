@@ -176,7 +176,7 @@ export function afficheResultatCourt(token, actor, roll, titre='Jet !',descripti
     })
 }
 
-export function affichageSort(token, actor, itemSort, cout, titre="", msgImportant =""){
+export function affichageSort(token, actor, itemSort, cout, titre="", msgImportant ="", CoutSphere=0, coef=1){
     if(token) actor= token.actor
     if(actor==undefined) {
         if(_token) {
@@ -200,7 +200,10 @@ export function affichageSort(token, actor, itemSort, cout, titre="", msgImporta
         important : msgImportant,
         description : itemSort.system.description,
         cout : cout,
+        CoutSphere : CoutSphere,
+        coutMagie : (cout - CoutSphere),
         coutFixe : itemSort.system.coutFixe,
+        niveau : (cout/coef),
         portee: itemSort.system.portee,
         duree : itemSort.system.duree,
         preparation : itemSort.system.preparation,
